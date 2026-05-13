@@ -421,6 +421,29 @@ body {
 .pause-map::-webkit-scrollbar { display: none; }
 .pm-speech { border-radius: 2px 2px 0 0; background: var(--blue); opacity: 0.75; flex-shrink: 0; cursor: default; }
 .pm-gap { background: var(--red); opacity: 0.4; border-radius: 2px; flex-shrink: 0; align-self: center; cursor: default; }
+/* ── Scene notes bar ── */
+.scene-notes-bar {
+  flex-shrink: 0; display: flex; align-items: flex-start; gap: 7px;
+  padding: 7px 16px; background: var(--wabg);
+  border-bottom: 1px solid var(--bdr);
+}
+.scene-notes-icon { font-size: 12px; flex-shrink: 0; margin-top: 1px; }
+.scene-notes-text { font-size: 11px; color: var(--wafg); line-height: 1.5; }
+@media (prefers-color-scheme: dark) {
+  .scene-notes-bar { background: var(--wabg); }
+  .scene-notes-text { color: var(--wafg); }
+}
+.rec-script-wrap { flex-shrink: 0; border-bottom: 1px solid var(--bdr); background: var(--bg1); }
+.rec-script-header { display: flex; align-items: center; justify-content: space-between; padding: 7px 14px; border-bottom: 1px solid var(--bdr); }
+.rec-script-label { font-size: 11px; font-weight: 600; color: var(--text2); }
+.rec-script-toggle { font-size: 11px; color: var(--text3); border: none; background: transparent; cursor: pointer; font-family: var(--sans); padding: 2px 6px; }
+.rec-script-body { padding: 12px 16px; max-height: 180px; overflow-y: auto; font-size: 14px; font-family: var(--mono); color: var(--text2); line-height: 2; white-space: pre-wrap; -webkit-overflow-scrolling: touch; }
+.rec-script-body::-webkit-scrollbar { width: 3px; }
+.rec-script-body::-webkit-scrollbar-thumb { background: var(--bdrm); border-radius: 2px; }
+.rec-script-body.hidden { display: none; }
+.rec-script-sentence { display: inline; }
+.rec-script-sentence.punch { color: var(--red); font-weight: 600; }
+.rec-script-sentence.ideal { color: var(--text1); }
 /* ── AI Tutor ── */
 .tutor-card { background: var(--bg2); border: 1px solid var(--purple); border-radius: var(--rl); padding: 12px 14px; margin: 12px 12px 0; }
 .tutor-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--purple); display: block; margin-bottom: 4px; }
@@ -470,6 +493,10 @@ body {
     <div class="pane" id="pane-write">
       <div class="scene-strip" id="scene-strip">
         <!-- rendered by JS -->
+      </div>
+      <div class="scene-notes-bar" id="scene-notes-bar" style="display:none;">
+        <span class="scene-notes-icon">&#x1F4CC;</span>
+        <span class="scene-notes-text" id="scene-notes-text"></span>
       </div>
       <textarea id="editor"
         placeholder="Start writing. End sentences with  .  !  or  ?  to see rhythm analysis in the Analysis tab."
@@ -602,6 +629,15 @@ body {
         <span class="rec-status" id="rec-status">Ready to record</span>
         <button class="rec-transcribe" id="rec-transcribe-btn" onclick="transcribeRecording()" disabled>Transcribe &#x2728;</button>
       </div>
+
+      <!-- Script panel -->
+      <div class="rec-script-wrap" id="rec-script-wrap">
+        <div class="rec-script-header">
+          <span class="rec-script-label">&#x1F4C4; <span id="rec-script-scene-name">Current scene</span></span>
+          <button class="rec-script-toggle" onclick="toggleRecScript()" id="rec-script-toggle-btn">Hide</button>
+        </div>
+        <div class="rec-script-body" id="rec-script-body"></div>
+      </div>
       <div class="rec-results" id="rec-results">
         <div style="text-align:center;padding:28px 20px;font-size:12px;color:var(--text3);line-height:1.8;" id="rec-empty">Record a take, then tap <b>Transcribe</b> to analyze pace, pauses, filler words, and script deviation.</div>
         <div class="card" id="openai-key-card">
@@ -713,6 +749,10 @@ body {
         <button class="sheet-order-btn" onclick="moveScene(-1)">&#x2191;</button>
         <button class="sheet-order-btn" onclick="moveScene(1)">&#x2193;</button>
       </div>
+    </div>
+    <div class="sheet-row" style="align-items:flex-start;">
+      <span class="sheet-row-label" style="padding-top:8px;">Notes</span>
+      <textarea class="sheet-input" id="sheet-notes" rows="3" placeholder="Performance reminders, camera cues, things to remember..." style="resize:none;font-size:12px;line-height:1.5;"></textarea>
     </div>
     <div class="sheet-actions">
       <button class="sheet-btn danger" onclick="deleteScene()">Delete</button>
@@ -2100,6 +2140,60 @@ function updateOaiCard(){var c=document.getElementById('openai-key-card');if(c)c
 function setRecSt(m){var el=document.getElementById('rec-status');if(el)el.textContent=m;}
 function fmtRecTime(s){var m=Math.floor(s/60);s=s%60;return m+':'+(s<10?'0':'')+s;}
 
+function renderSceneNotes(){
+  var scene=getCurrentScene();
+  var bar=document.getElementById('scene-notes-bar');
+  var txt=document.getElementById('scene-notes-text');
+  if(!bar||!txt||!scene) return;
+  if(scene.notes&&scene.notes.trim()){
+    txt.textContent=scene.notes;
+    bar.style.display='flex';
+  } else {
+    bar.style.display='none';
+  }
+}
+
+function renderRecScript(){
+  var scene=getCurrentScene();
+  if(!scene) return;
+  var nameEl=document.getElementById('rec-script-scene-name');
+  var bodyEl=document.getElementById('rec-script-body');
+  if(!nameEl||!bodyEl) return;
+  nameEl.textContent=scene.name||'Current scene';
+  var text=scene.text||'';
+  var notes=scene.notes||'';
+  var html='';
+  if(notes){
+    html+='<div style="font-size:11px;color:var(--wafg);background:var(--wabg);padding:5px 8px;border-radius:var(--r);margin-bottom:8px;line-height:1.5;">&#x1F4CC; '+esc(notes)+'</div>';
+  }
+  if(!text.trim()){
+    html+='<span style="color:var(--text3);font-style:italic;">No script in this scene yet.</span>';
+    bodyEl.innerHTML=html;
+    return;
+  }
+  var sents=parseSents(text);
+  for(var i=0;i<sents.length;i++){
+    var s=sents[i];
+    var wn=wc(s);
+    var cls=wn<=5?'punch':wn<=20?'ideal':'';
+    html+='<span class="rec-script-sentence '+cls+'">'+esc(s.trim())+'</span> ';
+  }
+  bodyEl.innerHTML=html;
+}
+
+function toggleRecScript(){
+  var body=document.getElementById('rec-script-body');
+  var btn=document.getElementById('rec-script-toggle-btn');
+  if(!body||!btn) return;
+  if(body.classList.contains('hidden')){
+    body.classList.remove('hidden');
+    btn.textContent='Hide';
+  } else {
+    body.classList.add('hidden');
+    btn.textContent='Show';
+  }
+}
+
 async function toggleRecord(){
   if(recIsRecording){stopRecord();}else{await startRecord();}
 }
@@ -2432,9 +2526,9 @@ function switchScene(id){
   if(!scene)return;
   document.getElementById('editor').value=scene.text||'';
   renderSceneStrip();
+  renderSceneNotes();
   render();
-  // Force repaint on slow browsers
-  setTimeout(function(){ renderSceneStrip(); }, 50);
+  setTimeout(function(){ renderSceneStrip(); renderSceneNotes(); }, 50);
 }
 
 /* Add a new scene */
@@ -2533,6 +2627,7 @@ function openSheet(id){
   for(var i=0;i<scenes.length;i++)if(scenes[i].id===id){scene=scenes[i];break;}
   if(!scene)return;
   document.getElementById('sheet-name').value=scene.name;
+  document.getElementById('sheet-notes').value=scene.notes||'';
   sheetType=scene.type;
   sheetLoc=scene.location;
   renderSheetChips();
@@ -2573,17 +2668,21 @@ function selectLoc(l){sheetLoc=l;renderSheetChips();}
 function saveSheet(){
   if(!sheetSceneId)return;
   var name=document.getElementById('sheet-name').value.trim()||'Scene';
+  var notes=document.getElementById('sheet-notes').value.trim();
   var scenes=loadScenes();
   for(var i=0;i<scenes.length;i++){
     if(scenes[i].id===sheetSceneId){
       scenes[i].name=name;
       scenes[i].type=sheetType;
       scenes[i].location=sheetLoc;
+      scenes[i].notes=notes;
       break;
     }
   }
   saveScenes(scenes);
   renderSceneStrip();
+  renderSceneNotes();
+  renderRecScript();
   closeSheet();
 }
 
@@ -2623,7 +2722,7 @@ function switchPane(name,btn){
   if(name==='write'){toolbar.classList.remove('hidden');}else{toolbar.classList.add('hidden');}
   if(name==='practice'){renderLog();}
   if(name==='script'){renderScript();}
-  if(name==='record'){updateOaiCard();}
+  if(name==='record'){updateOaiCard();renderRecScript();}
 }
 
 /* ======================================================
@@ -2699,6 +2798,7 @@ var _initScene=getCurrentScene();
 setCurrentSceneId(_initScene.id);
 document.getElementById('editor').value=_initScene.text||'';
 renderSceneStrip();
+renderSceneNotes();
 render();
 </script>
 </body>
