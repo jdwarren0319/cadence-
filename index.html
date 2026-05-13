@@ -228,64 +228,6 @@ body {
 .rule-text { font-size: 12px; color: var(--text2); line-height: 1.6; }
 .rule-quote { font-size: 12px; color: var(--text1); line-height: 1.6; font-style: italic; }
 .rule-action { font-size: 11px; color: var(--purple); margin-top: 4px; line-height: 1.5; }
-/* ── Mode toggle ── */
-.mode-toggle { display: flex; gap: 0; border: 1px solid var(--bdrm); border-radius: 20px; overflow: hidden; flex-shrink: 0; }
-.mode-btn { font-size: 10px; font-weight: 600; font-family: var(--sans); padding: 4px 10px; border: none; background: transparent; color: var(--text3); cursor: pointer; letter-spacing: 0.04em; touch-action: manipulation; }
-.mode-btn.active { background: var(--text1); color: var(--bg1); }
-/* ── Practice pane ── */
-#pane-practice { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-/* Mirror mode overlay */
-.mirror-overlay {
-  display: none; position: fixed; inset: 0; z-index: 100;
-  background: var(--bg1); flex-direction: column;
-  align-items: center; justify-content: center; padding: 32px 24px;
-}
-.mirror-overlay.active { display: flex; }
-.mirror-sentence {
-  font-size: 26px; font-weight: 600; color: var(--text1); line-height: 1.5;
-  text-align: center; max-width: 340px; flex: 1; display: flex; align-items: center;
-}
-.mirror-progress { font-size: 12px; color: var(--text3); margin-bottom: 20px; }
-.mirror-nav { display: flex; gap: 12px; width: 100%; max-width: 320px; margin-top: 24px; }
-.mirror-btn {
-  flex: 1; padding: 14px; border-radius: var(--rl); border: 1px solid var(--bdrm);
-  background: var(--bg2); font-size: 14px; font-weight: 600; font-family: var(--sans);
-  color: var(--text1); cursor: pointer; touch-action: manipulation; text-align: center;
-}
-.mirror-btn.primary { background: var(--text1); color: var(--bg1); border-color: var(--text1); }
-.mirror-close { position: absolute; top: max(16px, env(safe-area-inset-top)); right: 16px; font-size: 13px; color: var(--text3); border: none; background: transparent; font-family: var(--sans); cursor: pointer; padding: 8px; }
-/* Rhythm map */
-.rmap { display: flex; gap: 4px; align-items: flex-end; margin-top: 6px; }
-.rmap-beat { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
-.rmap-bar { width: 100%; border-radius: 3px 3px 0 0; }
-.rmap-label { font-size: 8px; color: var(--text3); text-align: center; letter-spacing: 0.04em; }
-/* Drill cards */
-.drill-card { background: var(--bg2); border: 1px solid var(--bdr); border-radius: var(--rl); overflow: hidden; }
-.drill-header { display: flex; align-items: center; gap: 10px; padding: 12px 14px; cursor: pointer; touch-action: manipulation; }
-.drill-num { font-size: 11px; font-weight: 700; color: var(--purple); width: 18px; flex-shrink: 0; }
-.drill-title { font-size: 13px; font-weight: 600; color: var(--text1); flex: 1; }
-.drill-arrow { font-size: 11px; color: var(--text3); transition: transform 0.2s; }
-.drill-card.open .drill-arrow { transform: rotate(180deg); }
-.drill-body { display: none; padding: 12px 14px; border-top: 1px solid var(--bdr); }
-.drill-card.open .drill-body { display: block; }
-.drill-text { font-size: 12px; color: var(--text2); line-height: 1.65; }
-.drill-cue { font-size: 11px; color: var(--purple); margin-top: 6px; font-weight: 500; }
-/* Checklist */
-.check-item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--bdr); }
-.check-item:last-child { border-bottom: none; }
-.check-item input[type=checkbox] { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; accent-color: var(--green); cursor: pointer; }
-.check-label { font-size: 12px; color: var(--text2); line-height: 1.5; }
-.check-label.checked { color: var(--text3); text-decoration: line-through; }
-.check-reset { font-size: 11px; color: var(--text3); border: none; background: transparent; font-family: var(--sans); cursor: pointer; padding: 4px 0; margin-top: 6px; }
-/* Log */
-.log-form { display: flex; flex-direction: column; gap: 8px; }
-.log-input { background: var(--bg3); border: 1px solid var(--bdrm); border-radius: var(--r); padding: 10px 12px; font-size: 13px; font-family: var(--mono); color: var(--text1); resize: none; outline: none; }
-.log-input::placeholder { color: var(--text3); }
-.log-add-btn { background: var(--text1); color: var(--bg1); border: none; border-radius: var(--r); padding: 10px; font-size: 13px; font-weight: 600; font-family: var(--sans); cursor: pointer; touch-action: manipulation; }
-.log-entry { background: var(--bg2); border: 1px solid var(--bdr); border-radius: var(--rl); padding: 10px 12px; }
-.log-date { font-size: 10px; color: var(--text3); margin-bottom: 4px; letter-spacing: 0.04em; }
-.log-text { font-size: 12px; color: var(--text2); line-height: 1.55; white-space: pre-wrap; }
-.log-del { font-size: 10px; color: var(--text3); border: none; background: transparent; font-family: var(--sans); cursor: pointer; float: right; padding: 0 0 4px 8px; }
 </style>
 </head>
 <body>
@@ -308,11 +250,7 @@ body {
     <button class="btn" onclick="copyText()">Copy</button>
     <button class="btn" onclick="clearText()">Clear</button>
     <button class="btn" onclick="dlText()">Save .txt</button>
-    <div style="flex:1"></div>
-    <div class="mode-toggle">
-      <button class="mode-btn" id="mode-standup" onclick="setMode('standup')">Stand-up</button>
-      <button class="mode-btn active" id="mode-video" onclick="setMode('video')">Video</button>
-    </div>
+    <button class="btn" onclick="dlSession()">Save</button>
   </div>
 
   <!-- Content area -->
@@ -349,11 +287,11 @@ body {
         </div>
         <div class="len-chart" id="a-chart"></div>
         <div class="chart-leg">
-          <div class="cl-item"><div class="cl-dot" style="background:var(--red)"></div><span id="leg-punch">Punch (1&#x2013;4w)</span></div>
-          <div class="cl-item"><div class="cl-dot" style="background:var(--green)"></div><span id="leg-ideal">Ideal (5&#x2013;20w)</span></div>
-          <div class="cl-item"><div class="cl-dot" style="background:var(--blue)"></div><span id="leg-setup">Setup (21&#x2013;30w)</span></div>
-          <div class="cl-item"><div class="cl-dot" style="background:var(--amber)"></div><span id="leg-long">Long (31&#x2013;40w)</span></div>
-          <div class="cl-item"><div class="cl-dot" style="background:var(--gray)"></div><span id="leg-cut">Cut (40w+)</span></div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--red)"></div>Punch (1&#x2013;5w)</div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--green)"></div>Ideal (6&#x2013;12w)</div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--blue)"></div>Setup (13&#x2013;20w)</div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--amber)"></div>Long (21&#x2013;30w)</div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--gray)"></div>Cut (30w+)</div>
         </div>
       </div>
 
@@ -413,65 +351,7 @@ body {
       </div>
     </div>
 
-    <!-- PRACTICE PANE -->
-    <div class="pane hidden" id="pane-practice">
-
-      <!-- Mirror Mode launcher -->
-      <div class="card" style="margin:12px 12px 0">
-        <span class="card-label">Mirror Mode</span>
-        <div class="card-desc">One sentence at a time, full screen. Tap to advance. Use this to rehearse before recording — get off the page and on your feet.</div>
-        <button onclick="startMirror()" style="width:100%;margin-top:8px;padding:12px;background:var(--text1);color:var(--bg1);border:none;border-radius:var(--r);font-size:14px;font-weight:700;font-family:var(--sans);cursor:pointer;touch-action:manipulation;">Start Mirror Mode</button>
-      </div>
-
-      <!-- Bit Rhythm Guide -->
-      <div class="card" style="margin:0 12px" id="rhythm-guide-card">
-        <span class="card-label" id="rhythm-guide-label">Video Show Bit Rhythm</span>
-        <div class="card-desc" id="rhythm-guide-desc">For a scripted video show, you have room to breathe. A bit moves through five beats — the punchline doesn't need to come on sentence three.</div>
-        <div class="rmap" id="rhythm-map"></div>
-        <div style="font-size:10px;color:var(--text3);margin-top:8px;" id="rhythm-guide-note">Switch to Stand-up mode in the Write tab to see the compression model instead.</div>
-      </div>
-
-      <!-- Drills -->
-      <div class="card" style="margin:0 12px">
-        <span class="card-label">Performance Drills</span>
-        <div class="card-desc">Run these before recording. Each one trains a different part of your performance instinct.</div>
-        <div id="drill-list" style="margin-top:8px;display:flex;flex-direction:column;gap:6px;"></div>
-      </div>
-
-      <!-- Pre-Record Checklist -->
-      <div class="card" style="margin:0 12px">
-        <span class="card-label">Pre-Record Checklist</span>
-        <div class="card-desc">Run through this before you hit record. Tap each item as you confirm it.</div>
-        <div id="checklist"></div>
-        <button class="check-reset" onclick="resetChecklist()">Reset all</button>
-      </div>
-
-      <!-- Performance Log -->
-      <div class="card" style="margin:0 12px">
-        <span class="card-label">Performance Log</span>
-        <div class="card-desc">After watching back, log what you noticed. Be specific — timestamps, exact moments, exact words.</div>
-        <div class="log-form">
-          <textarea class="log-input" id="log-input" rows="3" placeholder="e.g. Ep3 track2: rushed the punchline by ~1sec. Last word was 'it' — weak ender. Fix: end on 'obliterate.'"></textarea>
-          <button class="log-add-btn" onclick="addLogEntry()">Add entry</button>
-        </div>
-        <div id="log-entries" style="margin-top:10px;display:flex;flex-direction:column;gap:8px;"></div>
-      </div>
-
-      <div style="height:12px"></div>
-    </div>
-
   </main>
-
-  <!-- Mirror Mode Overlay -->
-  <div class="mirror-overlay" id="mirror-overlay">
-    <button class="mirror-close" onclick="closeMirror()">&#x2715; Exit</button>
-    <div class="mirror-progress" id="mirror-progress">1 / 1</div>
-    <div class="mirror-sentence" id="mirror-sentence">No text yet.</div>
-    <div class="mirror-nav">
-      <button class="mirror-btn" onclick="mirrorPrev()">&#x2190; Back</button>
-      <button class="mirror-btn primary" onclick="mirrorNext()">Next &#x2192;</button>
-    </div>
-  </div>
 
   <!-- Tab bar -->
   <nav class="tab-bar">
@@ -482,10 +362,6 @@ body {
     <button class="tab-item" onclick="switchPane('analysis',this)">
       <span class="tab-icon">&#x25C8;</span>
       <span class="tab-label">Analysis</span>
-    </button>
-    <button class="tab-item" onclick="switchPane('practice',this)">
-      <span class="tab-icon">&#x25B6;</span>
-      <span class="tab-label">Practice</span>
     </button>
     <button class="tab-item" onclick="switchPane('learn',this)">
       <span class="tab-icon">&#x25CE;</span>
@@ -506,17 +382,6 @@ var WEASEL_W  = ['probably','possibly','perhaps','maybe','virtually','nearly','a
 var VAGUE     = {'thing':1,'things':1,'stuff':1,'something':1,'someone':1,'somebody':1,'somewhere':1,'somehow':1,'everything':1,'everyone':1,'everybody':1,'everywhere':1,'nothing':1,'nobody':1,'nowhere':1,'anything':1,'anyone':1,'anybody':1,'anywhere':1,'people':1,'person':1,'place':1,'places':1,'way':1,'ways':1,'certain':1,'various':1,'different':1,'some':1,'many':1,'lot':1,'lots':1,'much':1};
 
 var ACT_VERBS = {'walk':1,'run':1,'fall':1,'grab':1,'throw':1,'hit':1,'push':1,'pull':1,'point':1,'turn':1,'look':1,'sit':1,'stand':1,'jump':1,'reach':1,'touch':1,'wave':1,'shake':1,'nod':1,'shrug':1,'lean':1,'step':1,'drop':1,'pick':1,'hold':1,'swing':1,'spin':1,'crawl':1,'climb':1,'slide':1,'stomp':1,'slam':1,'bang':1,'slap':1,'kick':1,'punch':1,'snap':1,'clap':1,'tap':1,'knock':1,'pound':1,'spit':1,'stare':1,'glare':1,'gesture':1,'mime':1};
-
-var MODE = 'video';
-
-function setMode(m){
-  MODE = m;
-  document.getElementById('mode-standup').classList.toggle('active', m==='standup');
-  document.getElementById('mode-video').classList.toggle('active', m==='video');
-  try{localStorage.setItem('cadence_mode',m);}catch(e){}
-  updateRhythmGuide();
-  render();
-}
 
 function syl(word) {
   var w = word.toLowerCase().replace(/[^a-z]/g,'');
@@ -596,19 +461,11 @@ function longBreaths(s){
 }
 
 function lenBadge(n){
-  if(MODE==='video'){
-    if(n<=4)  return {l:'Punch',c:'dng'};
-    if(n<=20) return {l:'Ideal',c:'good'};
-    if(n<=30) return {l:'Setup',c:'neu'};
-    if(n<=40) return {l:'Long', c:'warn'};
-    return           {l:'Cut',  c:'dng'};
-  } else {
-    if(n<=5)  return {l:'Punch',c:'dng'};
-    if(n<=12) return {l:'Ideal',c:'good'};
-    if(n<=20) return {l:'Setup',c:'neu'};
-    if(n<=30) return {l:'Long', c:'warn'};
-    return           {l:'Cut',  c:'dng'};
-  }
+  if(n<=5)  return {l:'Punch',c:'dng'};
+  if(n<=12) return {l:'Ideal',c:'good'};
+  if(n<=20) return {l:'Setup',c:'neu'};
+  if(n<=30) return {l:'Long', c:'warn'};
+  return           {l:'Cut',  c:'dng'};
 }
 
 function hasActOut(s){
@@ -708,7 +565,6 @@ function render(){
   var t=ftime(wcTotal);
   document.getElementById('vtime').textContent=t;
   document.getElementById('a-time').textContent=t;
-  updateLegend();
 
   /* Rhythm blocks */
   var rb=document.getElementById('rblocks');
@@ -999,59 +855,6 @@ var LEARN = [
        text:'For a comedy review show: your reaction is funnier than your opinion. "I think this is a 7/10" is an opinion. "This made me want to call my landlord and apologise" is a reaction. Go for the reaction.',
        action:'For each track you\'re reviewing: what did it make you want to DO? That\'s your bit.'}
     ]
-  },
-  {
-    icon:'&#x25B6;',
-    title:'YouTube Craft: The Hook Science',
-    rules:[
-      {src:'universal',label:'YouTube Data',
-       text:'55% of viewers drop off within the first 60 seconds. The average YouTube video retains only 23.7% of its audience total. You are not fighting for attention during the video \u2014 you are fighting for it in the first 15 seconds or the rest doesn\'t matter.'},
-      {src:'universal',label:'YouTube Data',
-       text:'The cold open: start in the middle of your funniest moment, then cut back to the beginning. Breaking Bad opened with Walter White in his underwear in the desert. You open with your sharpest line from the episode. The viewer needs to know immediately that the ride is worth it.'},
-      {src:'universal',label:'YouTube Data',
-       text:'Your persona must be legible in the first 30 seconds. Not explained \u2014 legible. The audience should feel who you are before you tell them anything. Energy, posture, first word choice, eye contact \u2014 all of it signals "this is the kind of show this is."'},
-      {src:'universal',label:'YouTube Data',
-       text:'Pattern interrupts every 3 minutes. MrBeast documented this systematically: re-engagement points prevent the gradual drop-off that kills long videos. For JD Warren Versus this means a change of energy, a physical bit, a hard cut, or a callback at the 3-minute mark. Script these deliberately.'},
-      {src:'universal',label:'YouTube Data',
-       text:'The premise must be clear in one sentence before anything else happens. "I\'m reviewing records I\'ve never heard before, on vinyl, live on camera" is one sentence. If your viewer can\'t explain your show to a friend in 10 seconds, you haven\'t established your premise.',
-       action:'Write your show\'s premise in one sentence. Then write your cold open line. These two things are your entire retention strategy.'}
-    ]
-  },
-  {
-    icon:'&#x1F3B5;',
-    title:'The Review Show as Comedy Form',
-    rules:[
-      {src:'universal',label:'Todd in the Shadows',
-       text:'"I always considered myself a comedian first and foremost." Todd Nathanson built one of the most successful music review channels on YouTube by treating the music as straight man and himself as the comic. His critical opinions are real \u2014 but the comedy frame is what makes people watch. Sound familiar?'},
-      {src:'universal',label:'Todd in the Shadows',
-       text:'The format is the structure; your personality is the content. Todd\'s formula is identical every episode: piano cover intro, setup the song\'s context, react track by track, deliver verdict. The audience doesn\'t come for surprises in the format \u2014 they come for surprises in the reactions. Lock the format, free the personality.'},
-      {src:'universal',label:'The Review Show',
-       text:'The subject is always the straight man. The album doesn\'t know it\'s being reviewed. It just sits there, deadly serious, doing its thing. You are the only one in the room who finds this absurd. That asymmetry \u2014 the serious thing vs. the person laughing at it \u2014 IS the comedy engine. Never forget the album is your straight man.'},
-      {src:'universal',label:'The Review Show',
-       text:'Your opinion and your reaction are different things and you need both. Opinion: "this is a well-constructed record." Reaction: "this made me feel like I owed someone money." Use opinions to establish credibility. Use reactions to get laughs. Credibility makes the reactions land harder.'},
-      {src:'universal',label:'The Review Show',
-       text:'The moment you discovered the album \u2014 the exact first second of genuine surprise, confusion, or delight \u2014 is always funnier than anything you planned. Script everything, but leave room to be genuinely caught off guard. The unscripted moment of real reaction is worth more than ten prepared jokes.'},
-      {src:'universal',label:'The Review Show',
-       text:'Study Todd\'s influence: The Daily Show with Jon Stewart. Stewart could make a serious point while being genuinely funny, never sacrificing one for the other. The joke had a real target. The opinion had a real point. Comedy without conviction is just noise. Conviction without comedy is a lecture.',
-       action:'Watch one Todd in the Shadows review before your next episode. Not for the content \u2014 for the structure. Map when the jokes land relative to the critical analysis.'}
-    ]
-  },
-  {
-    icon:'&#x26A1;',
-    title:'Accelerating: The Deliberate Practice Loop',
-    rules:[
-      {src:'universal',label:'Process',
-       text:'The loop is: Write in Cadence \u2192 Read aloud (never skip this) \u2192 Rehearse in Mirror mode \u2192 Record \u2192 Watch back without sound first \u2192 Watch back without picture \u2192 Watch normally \u2192 Log what you learned \u2192 Rewrite. One full loop per episode minimum. Two if something didn\'t work.'},
-      {src:'universal',label:'Process',
-       text:'Watch without sound first. Your body will telegraph the jokes before your mouth delivers them \u2014 a micro-look away, a shoulder drop, a slight smile. These kill the surprise. You will only see them without the distraction of your own voice.'},
-      {src:'universal',label:'Process',
-       text:'Watch without picture second. Listen only. Where do you rush? Where does the rhythm drag? Where do weasel words creep in that the page didn\'t catch? Your ear hears things your eye misses when watching normally.'},
-      {src:'universal',label:'Process',
-       text:'Log specifically, not generally. Not "bit 3 didn\'t land." Instead: "bit 3, lost eye contact at setup, rushed the punchline by approximately 1 second, last word was \'it\' which is a weak ender." Specific diagnosis = specific fix. General diagnosis = vague improvement.'},
-      {src:'seinfeld',label:'Seinfeld',
-       text:'Seinfeld spent two years perfecting one pop-tart joke. Not the bit \u2014 one joke within one bit. The gap between a funny person and a comedian is not talent. It is the number of deliberate revision cycles. You are already funny. The app is the revision system.',
-       action:'After every recording: timestamp three specific moments. One that worked, one that didn\'t, one you\'re not sure about. That\'s your next rewrite agenda.'}
-    ]
   }
 ];
 
@@ -1087,279 +890,8 @@ function toggleSection(i){
 }
 
 /* ======================================================
-   MODE & LEGEND UPDATE
+   NAVIGATION
    ====================================================== */
-function updateLegend(){
-  if(MODE==='video'){
-    document.getElementById('leg-punch').textContent='Punch (1\u20134w)';
-    document.getElementById('leg-ideal').textContent='Ideal (5\u201320w)';
-    document.getElementById('leg-setup').textContent='Setup (21\u201330w)';
-    document.getElementById('leg-long').textContent='Long (31\u201340w)';
-    document.getElementById('leg-cut').textContent='Cut (40w+)';
-  } else {
-    document.getElementById('leg-punch').textContent='Punch (1\u20135w)';
-    document.getElementById('leg-ideal').textContent='Ideal (6\u201312w)';
-    document.getElementById('leg-setup').textContent='Setup (13\u201320w)';
-    document.getElementById('leg-long').textContent='Long (21\u201330w)';
-    document.getElementById('leg-cut').textContent='Cut (30w+)';
-  }
-}
-
-/* ======================================================
-   PRACTICE — RHYTHM GUIDE
-   ====================================================== */
-var VIDEO_BEATS = [
-  {label:'Establish',words:20,color:'var(--blue)',height:52,desc:'Set the scene. Who, what, where. Can breathe — 15-25 words.'},
-  {label:'Develop',words:15,color:'var(--blue)',height:42,desc:'Heighten it. Add detail, build absurdity. 10-18 words.'},
-  {label:'Punchline',words:6,color:'var(--red)',height:18,desc:'Short. Staccato. Under 8 words. Land it hard.'},
-  {label:'Tag',words:10,color:'var(--amber)',height:28,desc:'Optional extra joke riding the first laugh. 8-14 words.'},
-  {label:'Reset',words:14,color:'var(--green)',height:36,desc:'Transition to next beat. Legato ending. 10-18 words.'}
-];
-var STANDUP_BEATS = [
-  {label:'Setup',words:12,color:'var(--blue)',height:36,desc:'Short, single-subject setup. Under 15 words. No extras.'},
-  {label:'Punchline',words:5,color:'var(--red)',height:16,desc:'As short as possible. Staccato. Stop consonant preferred.'},
-  {label:'Tag',words:8,color:'var(--amber)',height:24,desc:'Optional extra joke on the same punchline. Very short.'},
-  {label:'Reset',words:6,color:'var(--green)',height:18,desc:'One breath. Move on. Never explain the joke.'}
-];
-
-function updateRhythmGuide(){
-  var beats = MODE==='video' ? VIDEO_BEATS : STANDUP_BEATS;
-  var label = document.getElementById('rhythm-guide-label');
-  var desc = document.getElementById('rhythm-guide-desc');
-  var note = document.getElementById('rhythm-guide-note');
-  var map = document.getElementById('rhythm-map');
-  if(label) label.textContent = MODE==='video' ? 'Video Show Bit Rhythm' : 'Stand-up Bit Rhythm';
-  if(desc) desc.textContent = MODE==='video'
-    ? 'For a scripted video show you can breathe. A bit moves through five beats — punchline doesn\'t have to come on sentence three.'
-    : 'Stand-up is compression. Setup is already too long. Punchline must arrive before the room cools. Every extra word costs.';
-  if(note) note.textContent = MODE==='video'
-    ? 'Switch to Stand-up mode in Write tab to see the compression model.'
-    : 'Switch to Video mode in Write tab to see the video show rhythm model.';
-  if(!map) return;
-  var h='';
-  for(var i=0;i<beats.length;i++){
-    var b=beats[i];
-    h+='<div class="rmap-beat" title="'+b.desc+'">';
-    h+='<div class="rmap-bar" style="height:'+b.height+'px;background:'+b.color+';opacity:0.85;"></div>';
-    h+='<div class="rmap-label">'+b.label+'</div>';
-    h+='</div>';
-  }
-  map.innerHTML=h;
-}
-
-/* ======================================================
-   PRACTICE — DRILLS
-   ====================================================== */
-var DRILLS = [
-  {
-    num:'01', title:'The Whisper Drill',
-    text:'Whisper your entire script out loud. At a whisper, volume can\'t carry the jokes — only rhythm and structure can. Every weak sentence reveals itself immediately. Every strong sentence survives.',
-    cue:'Do this once before every recording. It takes 3 minutes and finds more problems than 10 read-throughs.'
-  },
-  {
-    num:'02', title:'The Beat Drill',
-    text:'Read through your script and say the word "BEAT" out loud before every punchline. This forces you to physically mark the pause. After a few runs, the beat becomes instinctive — you\'ll feel where it wants to live.',
-    cue:'If you can\'t find where the beat goes, the setup isn\'t set up yet. Rewrite first.'
-  },
-  {
-    num:'03', title:'The Speed Drill',
-    text:'Run through a single bit three times: at 50% of your natural speed, at 100%, then at 150%. The 50% run reveals where you\'re hiding behind pace. The 150% run reveals where the rhythm is fragile. Your natural speed is somewhere between the two runs that felt right.',
-    cue:'Most people discover they\'re rushing setups and dragging punchlines. The fix is usually the opposite.'
-  },
-  {
-    num:'04', title:'The Cut Drill',
-    text:'Read a sentence. Now remove one word — any word — and read it again. Does it still work? If yes, cut it permanently. Do this for every sentence. What survives IS the script. What gets cut was just comfort padding.',
-    cue:'If removing a word breaks the rhythm but not the meaning, that word is load-bearing rhythm. Keep it. Seinfeld counts syllables for this reason.'
-  },
-  {
-    num:'05', title:'The Watch-Back Protocol',
-    text:'After recording: (1) Watch without sound. Look only at your body. Where do you go small? Where do you telegraph the joke before you say it? (2) Listen without picture. Where do you rush? Where do weasel words appear that the page hid? (3) Watch normally. Timestamp three moments: one that worked, one that didn\'t, one you\'re unsure about.',
-    cue:'Log those three timestamps in the Performance Log below. That\'s your next rewrite agenda.'
-  }
-];
-
-function buildDrills(){
-  var el=document.getElementById('drill-list');
-  if(!el)return;
-  var h='';
-  for(var i=0;i<DRILLS.length;i++){
-    var d=DRILLS[i];
-    h+='<div class="drill-card" id="drill'+i+'">';
-    h+='<div class="drill-header" onclick="toggleDrill('+i+')">';
-    h+='<span class="drill-num">'+d.num+'</span>';
-    h+='<span class="drill-title">'+d.title+'</span>';
-    h+='<span class="drill-arrow">&#x25BE;</span>';
-    h+='</div>';
-    h+='<div class="drill-body">';
-    h+='<div class="drill-text">'+d.text+'</div>';
-    h+='<div class="drill-cue">\u2192 '+d.cue+'</div>';
-    h+='</div></div>';
-  }
-  el.innerHTML=h;
-}
-
-function toggleDrill(i){
-  var c=document.getElementById('drill'+i);
-  if(c)c.classList.toggle('open');
-}
-
-/* ======================================================
-   PRACTICE — CHECKLIST
-   ====================================================== */
-var CHECKS = [
-  'Cold open scripted — start mid-action, not at the beginning',
-  'Persona legible in first 30 seconds — don\'t explain yourself, just be yourself',
-  'Opening line is your second-strongest material',
-  'At least one act-out identified and rehearsed',
-  'Punchlines end on strong words — no weak enders (a, the, it, was)',
-  'Pattern interrupt planned at the 3-minute mark',
-  'Weasel words checked and cut in Analysis tab',
-  'Passive voice cleared in Analysis tab',
-  'Closer is your strongest bit — end on a staccato punch'
-];
-
-function buildChecklist(){
-  var el=document.getElementById('checklist');
-  if(!el)return;
-  var h='';
-  for(var i=0;i<CHECKS.length;i++){
-    h+='<div class="check-item">';
-    h+='<input type="checkbox" id="chk'+i+'" onchange="saveChecklist()">';
-    h+='<label class="check-label" id="chklabel'+i+'" for="chk'+i+'">'+CHECKS[i]+'</label>';
-    h+='</div>';
-  }
-  el.innerHTML=h;
-  loadChecklist();
-}
-
-function saveChecklist(){
-  var state=[];
-  for(var i=0;i<CHECKS.length;i++){
-    var cb=document.getElementById('chk'+i);
-    var lbl=document.getElementById('chklabel'+i);
-    if(cb){
-      state.push(cb.checked?1:0);
-      if(lbl)lbl.className='check-label'+(cb.checked?' checked':'');
-    }
-  }
-  try{localStorage.setItem('cadence_checklist',JSON.stringify(state));}catch(e){}
-}
-
-function loadChecklist(){
-  try{
-    var s=localStorage.getItem('cadence_checklist');
-    if(!s)return;
-    var state=JSON.parse(s);
-    for(var i=0;i<CHECKS.length;i++){
-      var cb=document.getElementById('chk'+i);
-      var lbl=document.getElementById('chklabel'+i);
-      if(cb&&state[i]){cb.checked=true;if(lbl)lbl.className='check-label checked';}
-    }
-  }catch(e){}
-}
-
-function resetChecklist(){
-  for(var i=0;i<CHECKS.length;i++){
-    var cb=document.getElementById('chk'+i);
-    var lbl=document.getElementById('chklabel'+i);
-    if(cb){cb.checked=false;}
-    if(lbl)lbl.className='check-label';
-  }
-  try{localStorage.removeItem('cadence_checklist');}catch(e){}
-}
-
-/* ======================================================
-   PRACTICE — PERFORMANCE LOG
-   ====================================================== */
-var LOG_KEY='cadence_log';
-
-function loadLog(){
-  try{var s=localStorage.getItem(LOG_KEY);return s?JSON.parse(s):[];}catch(e){return[];}
-}
-
-function saveLog(entries){
-  try{localStorage.setItem(LOG_KEY,JSON.stringify(entries));}catch(e){}
-}
-
-function addLogEntry(){
-  var inp=document.getElementById('log-input');
-  if(!inp||!inp.value.trim())return;
-  var entries=loadLog();
-  var now=new Date();
-  var dateStr=now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' '+now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
-  entries.unshift({date:dateStr,text:inp.value.trim()});
-  saveLog(entries);
-  inp.value='';
-  renderLog();
-}
-
-function deleteLogEntry(i){
-  var entries=loadLog();
-  entries.splice(i,1);
-  saveLog(entries);
-  renderLog();
-}
-
-function renderLog(){
-  var el=document.getElementById('log-entries');
-  if(!el)return;
-  var entries=loadLog();
-  if(!entries.length){el.innerHTML='<div style="font-size:12px;color:var(--text3);padding:8px 0;">No entries yet. Log something after your next recording.</div>';return;}
-  var h='';
-  for(var i=0;i<entries.length;i++){
-    h+='<div class="log-entry">';
-    h+='<button class="log-del" onclick="deleteLogEntry('+i+')">&#x2715;</button>';
-    h+='<div class="log-date">'+esc(entries[i].date)+'</div>';
-    h+='<div class="log-text">'+esc(entries[i].text)+'</div>';
-    h+='</div>';
-  }
-  el.innerHTML=h;
-}
-
-/* ======================================================
-   MIRROR MODE
-   ====================================================== */
-var mirrorSents=[], mirrorIdx=0;
-
-function startMirror(){
-  var text=document.getElementById('editor').value;
-  mirrorSents=parseSents(text).map(function(s){return s.trim();}).filter(function(s){return s.length>0;});
-  if(!mirrorSents.length){alert('Nothing to rehearse — write something first.');return;}
-  mirrorIdx=0;
-  updateMirror();
-  document.getElementById('mirror-overlay').classList.add('active');
-}
-
-function updateMirror(){
-  document.getElementById('mirror-sentence').textContent=mirrorSents[mirrorIdx]||'';
-  document.getElementById('mirror-progress').textContent=(mirrorIdx+1)+' / '+mirrorSents.length;
-}
-
-function mirrorNext(){
-  if(mirrorIdx<mirrorSents.length-1){mirrorIdx++;updateMirror();}
-  else{closeMirror();}
-}
-
-function mirrorPrev(){
-  if(mirrorIdx>0){mirrorIdx--;updateMirror();}
-}
-
-function closeMirror(){
-  document.getElementById('mirror-overlay').classList.remove('active');
-}
-
-// Swipe support for mirror mode
-(function(){
-  var sx=0;
-  document.addEventListener('touchstart',function(e){if(document.getElementById('mirror-overlay').classList.contains('active'))sx=e.touches[0].clientX;},{passive:true});
-  document.addEventListener('touchend',function(e){
-    if(!document.getElementById('mirror-overlay').classList.contains('active'))return;
-    var dx=e.changedTouches[0].clientX-sx;
-    if(Math.abs(dx)>50){if(dx<0)mirrorNext();else mirrorPrev();}
-  },{passive:true});
-})();
-
-
 function switchPane(name,btn){
   var items=document.querySelectorAll('.tab-item');
   for(var i=0;i<items.length;i++)items[i].classList.remove('active');
@@ -1369,7 +901,6 @@ function switchPane(name,btn){
   document.getElementById('pane-'+name).classList.remove('hidden');
   var toolbar=document.getElementById('write-toolbar');
   if(name==='write'){toolbar.classList.remove('hidden');}else{toolbar.classList.add('hidden');}
-  if(name==='practice'){renderLog();}
 }
 
 /* ======================================================
@@ -1381,11 +912,7 @@ function copyText(){
 }
 function clearText(){
   if(!document.getElementById('editor').value)return;
-  if(window.confirm('Clear all text?')){
-    document.getElementById('editor').value='';
-    try{localStorage.removeItem(SAVE_KEY);}catch(e){}
-    render();
-  }
+  if(window.confirm('Clear all text?')){document.getElementById('editor').value='';render();}
 }
 function dlText(){
   var t=document.getElementById('editor').value;
@@ -1410,20 +937,8 @@ function dlSession(){
 /* ======================================================
    INIT
    ====================================================== */
-var SAVE_KEY='cadence_draft';
-function loadDraft(){try{var s=localStorage.getItem(SAVE_KEY);if(s)document.getElementById('editor').value=s;}catch(e){}}
-function saveDraft(){try{localStorage.setItem(SAVE_KEY,document.getElementById('editor').value);}catch(e){}}
-document.getElementById('editor').addEventListener('input',function(){saveDraft();render();});
-
-// Restore saved mode
-try{var sm=localStorage.getItem('cadence_mode');if(sm==='standup')setMode('standup');}catch(e){}
-
+document.getElementById('editor').addEventListener('input',render);
 buildLearn();
-buildDrills();
-buildChecklist();
-updateRhythmGuide();
-updateLegend();
-loadDraft();
 render();
 </script>
 </body>
