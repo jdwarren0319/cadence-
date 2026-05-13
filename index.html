@@ -442,6 +442,7 @@ body {
   <header class="topbar">
     <div class="app-name">Cadence</div>
     <div class="stats-row">
+      <span id="save-indicator" style="font-size:10px;color:var(--text3);margin-right:4px;"></span>
       <div class="stat"><b id="wc">0</b>w</div>
       <div class="stat"><b id="sc">0</b>syl</div>
       <div class="stat"><b id="stc">0</b>st</div>
@@ -2373,7 +2374,19 @@ function loadScenes(){
 }
 
 function saveScenes(scenes){
-  try{localStorage.setItem(SCENE_KEY,JSON.stringify(scenes));}catch(e){}
+  try{
+    localStorage.setItem(SCENE_KEY,JSON.stringify(scenes));
+    var ind=document.getElementById('save-indicator');
+    if(ind){
+      ind.textContent='Saved';
+      clearTimeout(ind._t);
+      ind._t=setTimeout(function(){ind.textContent='';},1500);
+    }
+  }catch(e){
+    var ind=document.getElementById('save-indicator');
+    if(ind) ind.textContent='Save failed';
+    console.error('Save error:',e);
+  }
 }
 
 function getCurrentSceneId(){
@@ -2419,6 +2432,8 @@ function switchScene(id){
   document.getElementById('editor').value=scene.text||'';
   renderSceneStrip();
   render();
+  // Force repaint on slow browsers
+  setTimeout(function(){ renderSceneStrip(); }, 50);
 }
 
 /* Add a new scene */
@@ -2653,16 +2668,19 @@ var SAVE_KEY='cadence_draft';
 // Scene-aware save on input
 document.getElementById('editor').addEventListener('input',function(){
   saveCurrentSceneText();
-  // Clear AI status if text changed since last analysis
   if(aiLastText && document.getElementById('editor').value !== aiLastText){
     setAiStatus('Text changed \u2014 re-analyze when ready.');
   }
   render();
 });
 
-// Page hide — save scene text
+// Belt-and-suspenders: save every 2 seconds automatically
+setInterval(function(){ saveCurrentSceneText(); }, 2000);
+
+// Save on page hide / tab switch
 window.addEventListener('pagehide', function(){ saveCurrentSceneText(); });
 window.addEventListener('visibilitychange', function(){ if(document.visibilityState==='hidden') saveCurrentSceneText(); });
+window.addEventListener('beforeunload', function(){ saveCurrentSceneText(); });
 
 // Restore saved mode
 try{var sm=localStorage.getItem('cadence_mode');if(sm==='standup')setMode('standup');}catch(e){}
