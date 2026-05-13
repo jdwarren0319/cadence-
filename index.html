@@ -192,7 +192,7 @@ body {
 }
 .tab-item.active { color: var(--text1); }
 .tab-icon { font-size: 18px; line-height: 1; }
-.tab-label { font-size: 10px; font-weight: 500; letter-spacing: 0.03em; }
+.tab-label { font-size: 9px; font-weight: 500; letter-spacing: 0.03em; }
 /* ── Learn pane ── */
 #pane-learn { padding: 0; }
 .learn-inner { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
@@ -228,8 +228,213 @@ body {
 .rule-text { font-size: 12px; color: var(--text2); line-height: 1.6; }
 .rule-quote { font-size: 12px; color: var(--text1); line-height: 1.6; font-style: italic; }
 .rule-action { font-size: 11px; color: var(--purple); margin-top: 4px; line-height: 1.5; }
+/* ── Mode toggle ── */
+.mode-toggle { display: flex; gap: 0; border: 1px solid var(--bdrm); border-radius: 20px; overflow: hidden; flex-shrink: 0; }
+.mode-btn { font-size: 10px; font-weight: 600; font-family: var(--sans); padding: 4px 10px; border: none; background: transparent; color: var(--text3); cursor: pointer; letter-spacing: 0.04em; touch-action: manipulation; }
+.mode-btn.active { background: var(--text1); color: var(--bg1); }
+/* ── Practice pane ── */
+#pane-practice { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+/* Mirror mode overlay */
+.mirror-overlay {
+  display: none; position: fixed; inset: 0; z-index: 100;
+  background: var(--bg1); flex-direction: column;
+  align-items: center; justify-content: center; padding: 32px 24px;
+}
+.mirror-overlay.active { display: flex; }
+.mirror-sentence {
+  font-size: 26px; font-weight: 600; color: var(--text1); line-height: 1.5;
+  text-align: center; max-width: 340px; flex: 1; display: flex; align-items: center;
+}
+.mirror-progress { font-size: 12px; color: var(--text3); margin-bottom: 20px; }
+.mirror-nav { display: flex; gap: 12px; width: 100%; max-width: 320px; margin-top: 24px; }
+.mirror-btn {
+  flex: 1; padding: 14px; border-radius: var(--rl); border: 1px solid var(--bdrm);
+  background: var(--bg2); font-size: 14px; font-weight: 600; font-family: var(--sans);
+  color: var(--text1); cursor: pointer; touch-action: manipulation; text-align: center;
+}
+.mirror-btn.primary { background: var(--text1); color: var(--bg1); border-color: var(--text1); }
+.mirror-close { position: absolute; top: max(16px, env(safe-area-inset-top)); right: 16px; font-size: 13px; color: var(--text3); border: none; background: transparent; font-family: var(--sans); cursor: pointer; padding: 8px; }
+/* Rhythm map */
+.rmap { display: flex; gap: 4px; align-items: flex-end; margin-top: 6px; }
+.rmap-beat { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
+.rmap-bar { width: 100%; border-radius: 3px 3px 0 0; }
+.rmap-label { font-size: 8px; color: var(--text3); text-align: center; letter-spacing: 0.04em; }
+/* Drill cards */
+.drill-card { background: var(--bg2); border: 1px solid var(--bdr); border-radius: var(--rl); overflow: hidden; }
+.drill-header { display: flex; align-items: center; gap: 10px; padding: 12px 14px; cursor: pointer; touch-action: manipulation; }
+.drill-num { font-size: 11px; font-weight: 700; color: var(--purple); width: 18px; flex-shrink: 0; }
+.drill-title { font-size: 13px; font-weight: 600; color: var(--text1); flex: 1; }
+.drill-arrow { font-size: 11px; color: var(--text3); transition: transform 0.2s; }
+.drill-card.open .drill-arrow { transform: rotate(180deg); }
+.drill-body { display: none; padding: 12px 14px; border-top: 1px solid var(--bdr); }
+.drill-card.open .drill-body { display: block; }
+.drill-text { font-size: 12px; color: var(--text2); line-height: 1.65; }
+.drill-cue { font-size: 11px; color: var(--purple); margin-top: 6px; font-weight: 500; }
+/* Checklist */
+.check-item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--bdr); }
+.check-item:last-child { border-bottom: none; }
+.check-item input[type=checkbox] { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; accent-color: var(--green); cursor: pointer; }
+.check-label { font-size: 12px; color: var(--text2); line-height: 1.5; }
+.check-label.checked { color: var(--text3); text-decoration: line-through; }
+.check-reset { font-size: 11px; color: var(--text3); border: none; background: transparent; font-family: var(--sans); cursor: pointer; padding: 4px 0; margin-top: 6px; }
+/* Log */
+.log-form { display: flex; flex-direction: column; gap: 8px; }
+.log-input { background: var(--bg3); border: 1px solid var(--bdrm); border-radius: var(--r); padding: 10px 12px; font-size: 13px; font-family: var(--mono); color: var(--text1); resize: none; outline: none; }
+.log-input::placeholder { color: var(--text3); }
+.log-add-btn { background: var(--text1); color: var(--bg1); border: none; border-radius: var(--r); padding: 10px; font-size: 13px; font-weight: 600; font-family: var(--sans); cursor: pointer; touch-action: manipulation; }
+.log-entry { background: var(--bg2); border: 1px solid var(--bdr); border-radius: var(--rl); padding: 10px 12px; }
+.log-date { font-size: 10px; color: var(--text3); margin-bottom: 4px; letter-spacing: 0.04em; }
+.log-text { font-size: 12px; color: var(--text2); line-height: 1.55; white-space: pre-wrap; }
+.log-del { font-size: 10px; color: var(--text3); border: none; background: transparent; font-family: var(--sans); cursor: pointer; float: right; padding: 0 0 4px 8px; }
+/* ── Scene strip ── */
+.scene-strip {
+  flex-shrink: 0; display: flex; align-items: center;
+  border-bottom: 1px solid var(--bdr); background: var(--bg1);
+  overflow-x: auto; scrollbar-width: none; gap: 0;
+  padding: 0 8px; min-height: 40px;
+}
+.scene-strip::-webkit-scrollbar { display: none; }
+.scene-tab {
+  display: flex; align-items: center; gap: 5px;
+  padding: 0 10px; height: 40px; flex-shrink: 0;
+  font-size: 11px; font-family: var(--sans); font-weight: 500;
+  color: var(--text3); background: transparent; border: none;
+  border-bottom: 2px solid transparent; cursor: pointer;
+  touch-action: manipulation; white-space: nowrap;
+}
+.scene-tab.active { color: var(--text1); border-bottom-color: var(--text1); }
+.scene-tab-type { font-size: 9px; padding: 1px 5px; border-radius: 10px; background: var(--bg3); color: var(--text3); }
+.scene-tab.active .scene-tab-type { background: var(--text1); color: var(--bg1); }
+.scene-tab-wrap { display: flex; align-items: center; flex-shrink: 0; border-right: 1px solid var(--bdr); padding-right: 2px; }
+.scene-tab-wrap.active { border-right-color: transparent; }
+.scene-edit-btn {
+  flex-shrink: 0; width: 22px; height: 22px; border-radius: 4px;
+  border: none; background: transparent; color: var(--text3);
+  font-size: 12px; cursor: pointer; touch-action: manipulation;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.15s;
+}
+.scene-tab-wrap:hover .scene-edit-btn { opacity: 1; }
+.scene-tab-wrap.active .scene-edit-btn { opacity: 0.6; }
+.scene-tab-wrap.active:hover .scene-edit-btn { opacity: 1; }
+.scene-add-btn {
+  flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+  border: 1px solid var(--bdrm); background: transparent;
+  color: var(--text2); font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  touch-action: manipulation; margin-left: 4px; font-family: var(--sans); line-height: 1;
+}
+.sheet-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.4); }
+.sheet-overlay.active { display: block; }
+.sheet {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 201;
+  background: var(--bg1); border-radius: 16px 16px 0 0;
+  padding: 0 0 max(20px,env(safe-area-inset-bottom));
+  transform: translateY(100%); transition: transform 0.25s ease;
+}
+.sheet.active { transform: translateY(0); }
+.sheet-handle { width: 36px; height: 4px; background: var(--bdrm); border-radius: 2px; margin: 12px auto 14px; }
+.sheet-title { font-size: 13px; font-weight: 700; color: var(--text1); padding: 0 16px 12px; }
+.sheet-row { display: flex; align-items: center; padding: 10px 16px; border-top: 1px solid var(--bdr); gap: 10px; }
+.sheet-row-label { font-size: 11px; color: var(--text2); flex-shrink: 0; width: 60px; }
+.sheet-input { flex: 1; background: var(--bg2); border: 1px solid var(--bdrm); border-radius: var(--r); padding: 8px 10px; font-size: 13px; font-family: var(--sans); color: var(--text1); outline: none; }
+.sheet-chips { display: flex; flex-wrap: wrap; gap: 5px; flex: 1; }
+.sheet-chip { font-size: 10px; font-weight: 600; padding: 4px 9px; border-radius: 20px; border: 1px solid var(--bdrm); background: transparent; color: var(--text2); cursor: pointer; touch-action: manipulation; font-family: var(--sans); }
+.sheet-chip.active { background: var(--text1); color: var(--bg1); border-color: var(--text1); }
+.sheet-actions { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--bdr); }
+.sheet-btn { flex: 1; padding: 12px; border-radius: var(--r); font-size: 13px; font-weight: 600; font-family: var(--sans); cursor: pointer; touch-action: manipulation; border: 1px solid var(--bdrm); background: var(--bg2); color: var(--text2); }
+.sheet-btn.primary { background: var(--text1); color: var(--bg1); border-color: var(--text1); }
+.sheet-btn.danger  { color: var(--red); border-color: transparent; background: transparent; }
+.sheet-order { display: flex; gap: 6px; margin-left: auto; }
+.sheet-order-btn { width: 30px; height: 30px; border-radius: var(--r); border: 1px solid var(--bdrm); background: var(--bg2); color: var(--text2); font-size: 13px; cursor: pointer; touch-action: manipulation; display: flex; align-items: center; justify-content: center; }
+#pane-script { padding: 0; }
+.script-inner { padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+.script-scene { background: var(--bg2); border: 1px solid var(--bdr); border-radius: var(--rl); overflow: hidden; }
+.script-scene-hdr { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-bottom: 1px solid var(--bdr); }
+.script-scene-num { font-size: 9px; font-weight: 700; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; flex-shrink: 0; }
+.script-scene-name { font-size: 12px; font-weight: 700; color: var(--text1); flex: 1; }
+.script-scene-loc { font-size: 9px; color: var(--text3); background: var(--bg3); padding: 2px 7px; border-radius: 10px; flex-shrink: 0; }
+.script-scene-body { padding: 10px 12px; font-size: 12px; font-family: var(--mono); color: var(--text2); line-height: 1.8; white-space: pre-wrap; }
+.script-export-btn { width: 100%; padding: 13px; background: var(--text1); color: var(--bg1); border: none; border-radius: var(--rl); font-size: 14px; font-weight: 700; font-family: var(--sans); cursor: pointer; touch-action: manipulation; }
+/* ── Comic structure ── */
+.lpm-row { display: flex; align-items: baseline; gap: 8px; margin: 4px 0 10px; }
+.lpm-big { font-size: 28px; font-weight: 700; color: var(--text1); font-variant-numeric: tabular-nums; line-height: 1; }
+.lpm-label { font-size: 11px; color: var(--text2); }
+.struct-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--bdr); }
+.struct-row:last-child { border-bottom: none; }
+.struct-row-label { font-size: 12px; color: var(--text2); line-height: 1.4; }
+.struct-row-val { font-size: 13px; font-weight: 700; color: var(--text1); flex-shrink: 0; margin-left: 8px; }
+.struct-row-val.good { color: var(--green); }
+.struct-row-val.warn { color: var(--amber); }
+.struct-row-val.bad  { color: var(--red); }
+.chart-roles { display: flex; gap: 2px; margin-top: 4px; overflow: hidden; }
+.role-pip { height: 3px; border-radius: 1px; flex-shrink: 0; }
+/* ── AI analysis ── */
+.ai-btn {
+  font-size: 12px; font-weight: 600; font-family: var(--sans);
+  padding: 8px 14px; border-radius: var(--r);
+  background: var(--purple); color: #fff; border: none;
+  cursor: pointer; touch-action: manipulation; flex-shrink: 0;
+}
+.ai-btn:disabled { opacity: 0.5; cursor: default; }
+.ai-btn.loading { opacity: 0.7; }
+.ai-status { font-size: 11px; color: var(--text3); flex: 1; }
+.ai-group { background: var(--bg3); border-radius: var(--r); padding: 9px 10px; margin-bottom: 6px; }
+.ai-group-head { font-size: 10px; font-weight: 700; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+.ai-sent { display: flex; gap: 6px; align-items: flex-start; margin-bottom: 4px; }
+.ai-sent:last-child { margin-bottom: 0; }
+.ai-role-badge { font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; margin-top: 1px; letter-spacing: 0.06em; }
+.air-S { background: var(--lebg); color: var(--lefg); }
+.air-P { background: var(--stbg); color: var(--stfg); }
+.air-T { background: var(--wabg); color: var(--wafg); }
+.air-N { background: var(--gbg); color: var(--gfg); }
+.ai-sent-text { font-size: 11px; color: var(--text2); line-height: 1.5; }
+.ai-note { font-size: 10px; color: var(--purple); margin-top: 4px; font-style: italic; }
+.ai-overall { font-size: 11px; color: var(--text2); line-height: 1.5; padding: 8px 0 2px; border-top: 1px solid var(--bdr); margin-top: 6px; }
+/* ── Record tab ── */
+#pane-record { display: flex; flex-direction: column; overflow: hidden; }
+.rec-preview-wrap { position: relative; background: #000; flex-shrink: 0; }
+.rec-video { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+.rec-video.hidden { display: none; }
+.rec-placeholder { width: 100%; aspect-ratio: 16/9; background: var(--bg3); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+.rec-ph-icon { font-size: 36px; }
+.rec-ph-text { font-size: 12px; color: var(--text3); }
+.rec-timer { position: absolute; top: 10px; right: 12px; font-size: 13px; font-weight: 700; color: #fff; background: rgba(0,0,0,0.55); padding: 3px 10px; border-radius: 20px; font-variant-numeric: tabular-nums; display: none; }
+.rec-timer.on { display: block; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.rec-dot-live { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--red); margin-right: 4px; animation: blink 1s infinite; vertical-align: middle; }
+.rec-controls { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--bdr); flex-shrink: 0; }
+.rec-btn { width: 52px; height: 52px; border-radius: 50%; border: 3px solid var(--text1); background: transparent; cursor: pointer; touch-action: manipulation; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color 0.15s; }
+.rec-btn-dot { width: 26px; height: 26px; border-radius: 50%; background: var(--red); transition: all 0.2s; }
+.rec-btn.recording .rec-btn-dot { width: 14px; height: 14px; border-radius: 3px; }
+.rec-btn:disabled { opacity: 0.4; }
+.rec-status { flex: 1; font-size: 11px; color: var(--text3); line-height: 1.5; }
+.rec-transcribe { font-size: 12px; font-weight: 700; font-family: var(--sans); padding: 10px 14px; border-radius: var(--r); background: var(--purple); color: #fff; border: none; cursor: pointer; touch-action: manipulation; flex-shrink: 0; }
+.rec-transcribe:disabled { opacity: 0.4; cursor: default; }
+.rec-results { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.rec-results::-webkit-scrollbar { width: 3px; }
+.pace-gauge { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+.pace-track { flex: 1; height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; }
+.pace-fill { height: 100%; border-radius: 4px; transition: width 0.4s; }
+.pace-num { font-size: 20px; font-weight: 700; color: var(--text1); font-variant-numeric: tabular-nums; flex-shrink: 0; }
+.pause-map { display: flex; gap: 2px; align-items: flex-end; height: 48px; margin-top: 8px; overflow-x: auto; scrollbar-width: none; }
+.pause-map::-webkit-scrollbar { display: none; }
+.pm-speech { border-radius: 2px 2px 0 0; background: var(--blue); opacity: 0.75; flex-shrink: 0; cursor: default; }
+.pm-gap { background: var(--red); opacity: 0.4; border-radius: 2px; flex-shrink: 0; align-self: center; cursor: default; }
+/* ── AI Tutor ── */
+.tutor-card { background: var(--bg2); border: 1px solid var(--purple); border-radius: var(--rl); padding: 12px 14px; margin: 12px 12px 0; }
+.tutor-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--purple); display: block; margin-bottom: 4px; }
+.tutor-desc { font-size: 11px; color: var(--text3); line-height: 1.5; margin-bottom: 8px; }
+.tutor-input { width: 100%; background: var(--bg3); border: 1px solid var(--bdrm); border-radius: var(--r); padding: 8px 10px; font-size: 13px; font-family: var(--sans); color: var(--text1); outline: none; resize: none; }
+.tutor-input::placeholder { color: var(--text3); }
+.tutor-row { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
+.tutor-btn { font-size: 12px; font-weight: 700; font-family: var(--sans); padding: 8px 14px; border-radius: var(--r); background: var(--purple); color: #fff; border: none; cursor: pointer; touch-action: manipulation; flex-shrink: 0; }
+.tutor-btn:disabled { opacity: 0.4; }
+.tutor-ctx { font-size: 10px; color: var(--text3); flex: 1; }
+.tutor-response { margin-top: 10px; font-size: 12px; color: var(--text2); line-height: 1.7; white-space: pre-wrap; display: none; }
+.tutor-response.visible { display: block; }
+.tutor-response-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple); margin-bottom: 4px; }
 </style>
-</head>
 <body>
 <div class="app">
 
@@ -250,7 +455,11 @@ body {
     <button class="btn" onclick="copyText()">Copy</button>
     <button class="btn" onclick="clearText()">Clear</button>
     <button class="btn" onclick="dlText()">Save .txt</button>
-    <button class="btn" onclick="dlSession()">Save</button>
+    <div style="flex:1"></div>
+    <div class="mode-toggle">
+      <button class="mode-btn" id="mode-standup" onclick="setMode('standup')">Stand-up</button>
+      <button class="mode-btn active" id="mode-video" onclick="setMode('video')">Video</button>
+    </div>
   </div>
 
   <!-- Content area -->
@@ -258,6 +467,9 @@ body {
 
     <!-- WRITE PANE -->
     <div class="pane" id="pane-write">
+      <div class="scene-strip" id="scene-strip">
+        <!-- rendered by JS -->
+      </div>
       <textarea id="editor"
         placeholder="Start writing. End sentences with  .  !  or  ?  to see rhythm analysis in the Analysis tab."
         spellcheck="true"
@@ -287,12 +499,39 @@ body {
         </div>
         <div class="len-chart" id="a-chart"></div>
         <div class="chart-leg">
-          <div class="cl-item"><div class="cl-dot" style="background:var(--red)"></div>Punch (1&#x2013;5w)</div>
-          <div class="cl-item"><div class="cl-dot" style="background:var(--green)"></div>Ideal (6&#x2013;12w)</div>
-          <div class="cl-item"><div class="cl-dot" style="background:var(--blue)"></div>Setup (13&#x2013;20w)</div>
-          <div class="cl-item"><div class="cl-dot" style="background:var(--amber)"></div>Long (21&#x2013;30w)</div>
-          <div class="cl-item"><div class="cl-dot" style="background:var(--gray)"></div>Cut (30w+)</div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--red)"></div><span id="leg-punch">Punch (1&#x2013;4w)</span></div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--green)"></div><span id="leg-ideal">Ideal (5&#x2013;20w)</span></div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--blue)"></div><span id="leg-setup">Setup (21&#x2013;30w)</span></div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--amber)"></div><span id="leg-long">Long (31&#x2013;40w)</span></div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--gray)"></div><span id="leg-cut">Cut (40w+)</span></div>
         </div>
+      </div>
+
+      <div class="card" style="margin:0 12px">
+        <span class="card-label">Comic structure</span>
+        <div class="card-desc">Pattern detection based on real comedy scripts. S&#x2192;P = Setup&#x2192;Punchline. S&#x2192;P&#x2192;T adds a Tag. Dead zones are 5+ sentences with no punch. The AI version reads your actual meaning.</div>
+        <div class="lpm-row">
+          <span class="lpm-big" id="cs-lpm">&#x2014;</span>
+          <span class="lpm-label" id="cs-lpm-label">LPM &mdash; laughs per minute</span>
+        </div>
+        <div id="cs-rows"></div>
+        <div class="chart-roles" id="cs-roles" style="margin-top:8px;"></div>
+        <div style="margin-top:10px;display:flex;gap:8px;align-items:center;">
+          <button class="ai-btn" id="ai-analyze-btn" onclick="aiAnalyze()">&#x2728; Analyze with AI</button>
+          <span class="ai-status" id="ai-status"></span>
+        </div>
+        <div id="ai-results" style="margin-top:8px;"></div>
+      </div>
+
+      <div class="card" style="margin:0 12px" id="api-key-card">
+        <span class="card-label">AI Analysis &mdash; API Key</span>
+        <div class="card-desc">Enter your Anthropic API key to enable semantic joke structure detection. Stored only in your browser, never sent anywhere except directly to Anthropic.</div>
+        <div style="display:flex;gap:6px;margin-top:6px;">
+          <input class="sheet-input" id="api-key-input" type="password" placeholder="sk-ant-..." style="flex:1;font-size:12px;">
+          <button class="sheet-btn primary" onclick="saveApiKey()" style="flex:0;padding:8px 12px;font-size:12px;">Save</button>
+        </div>
+        <div id="api-key-status" style="font-size:11px;color:var(--text3);margin-top:6px;"></div>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px;">Get a key at console.anthropic.com &rarr; API Keys</div>
       </div>
 
       <div class="card" style="margin:0 12px">
@@ -344,16 +583,151 @@ body {
       <div style="height:12px"></div>
     </div>
 
+    <!-- RECORD PANE -->
+    <div class="pane hidden" id="pane-record">
+      <div class="rec-preview-wrap">
+        <video class="rec-video hidden" id="rec-preview" autoplay muted playsinline></video>
+        <video class="rec-video hidden" id="rec-playback" controls playsinline></video>
+        <div class="rec-placeholder" id="rec-placeholder">
+          <span class="rec-ph-icon">&#x1F3A4;</span>
+          <span class="rec-ph-text">Tap record to begin</span>
+        </div>
+        <div class="rec-timer" id="rec-timer"><span class="rec-dot-live"></span><span id="rec-timer-val">0:00</span></div>
+      </div>
+      <div class="rec-controls">
+        <button class="rec-btn" id="rec-btn" onclick="toggleRecord()">
+          <div class="rec-btn-dot"></div>
+        </button>
+        <span class="rec-status" id="rec-status">Ready to record</span>
+        <button class="rec-transcribe" id="rec-transcribe-btn" onclick="transcribeRecording()" disabled>Transcribe &#x2728;</button>
+      </div>
+      <div class="rec-results" id="rec-results">
+        <div style="text-align:center;padding:28px 20px;font-size:12px;color:var(--text3);line-height:1.8;" id="rec-empty">Record a take, then tap <b>Transcribe</b> to analyze pace, pauses, filler words, and script deviation.</div>
+        <div class="card" id="openai-key-card">
+          <span class="card-label">Whisper API Key (OpenAI)</span>
+          <div class="card-desc">For speech transcription. Get a key at platform.openai.com &#x2192; API Keys. Stored only in your browser, sent only to OpenAI.</div>
+          <div style="display:flex;gap:6px;margin-top:6px;">
+            <input class="sheet-input" id="openai-key-input" type="password" placeholder="sk-..." style="flex:1;font-size:12px;">
+            <button class="sheet-btn primary" onclick="saveOpenAiKey()" style="flex:0;padding:8px 12px;font-size:12px;">Save</button>
+          </div>
+          <div id="openai-key-status" style="font-size:11px;color:var(--text3);margin-top:5px;"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- LEARN PANE -->
     <div class="pane hidden" id="pane-learn">
-      <div class="learn-inner" id="learn-inner">
-        <!-- rendered by JS -->
+      <div class="tutor-card">
+        <span class="tutor-label">&#x2728; AI Comedy Tutor</span>
+        <div class="tutor-desc">Ask Claude anything about comedy craft. Your current scene is included as context automatically.</div>
+        <textarea class="tutor-input" id="tutor-input" rows="2" placeholder="How would Carlin have written this bit? What&#39;s wrong with my setup? How do I make this punchline shorter?"></textarea>
+        <div class="tutor-row">
+          <button class="tutor-btn" id="tutor-btn" onclick="askTutor()">Ask Claude</button>
+          <span class="tutor-ctx" id="tutor-ctx">Uses your Anthropic API key</span>
+        </div>
+        <div class="tutor-response" id="tutor-response">
+          <div class="tutor-response-label">Claude</div>
+          <div id="tutor-response-text"></div>
+        </div>
+      </div>
+      <div class="learn-inner" id="learn-inner"></div>
+    </div>
+
+    <!-- PRACTICE PANE -->
+    <div class="pane hidden" id="pane-practice">
+
+      <!-- Mirror Mode launcher -->
+      <div class="card" style="margin:12px 12px 0">
+        <span class="card-label">Mirror Mode</span>
+        <div class="card-desc">One sentence at a time, full screen. Tap to advance. Use this to rehearse before recording — get off the page and on your feet.</div>
+        <button onclick="startMirror()" style="width:100%;margin-top:8px;padding:12px;background:var(--text1);color:var(--bg1);border:none;border-radius:var(--r);font-size:14px;font-weight:700;font-family:var(--sans);cursor:pointer;touch-action:manipulation;">Start Mirror Mode</button>
+      </div>
+
+      <!-- Bit Rhythm Guide -->
+      <div class="card" style="margin:0 12px" id="rhythm-guide-card">
+        <span class="card-label" id="rhythm-guide-label">Video Show Bit Rhythm</span>
+        <div class="card-desc" id="rhythm-guide-desc">For a scripted video show, you have room to breathe. A bit moves through five beats — the punchline doesn't need to come on sentence three.</div>
+        <div class="rmap" id="rhythm-map"></div>
+        <div style="font-size:10px;color:var(--text3);margin-top:8px;" id="rhythm-guide-note">Switch to Stand-up mode in the Write tab to see the compression model instead.</div>
+      </div>
+
+      <!-- Drills -->
+      <div class="card" style="margin:0 12px">
+        <span class="card-label">Performance Drills</span>
+        <div class="card-desc">Run these before recording. Each one trains a different part of your performance instinct.</div>
+        <div id="drill-list" style="margin-top:8px;display:flex;flex-direction:column;gap:6px;"></div>
+      </div>
+
+      <!-- Pre-Record Checklist -->
+      <div class="card" style="margin:0 12px">
+        <span class="card-label">Pre-Record Checklist</span>
+        <div class="card-desc">Run through this before you hit record. Tap each item as you confirm it.</div>
+        <div id="checklist"></div>
+        <button class="check-reset" onclick="resetChecklist()">Reset all</button>
+      </div>
+
+      <!-- Performance Log -->
+      <div class="card" style="margin:0 12px">
+        <span class="card-label">Performance Log</span>
+        <div class="card-desc">After watching back, log what you noticed. Be specific — timestamps, exact moments, exact words.</div>
+        <div class="log-form">
+          <textarea class="log-input" id="log-input" rows="3" placeholder="e.g. Ep3 track2: rushed the punchline by ~1sec. Last word was 'it' — weak ender. Fix: end on 'obliterate.'"></textarea>
+          <button class="log-add-btn" onclick="addLogEntry()">Add entry</button>
+        </div>
+        <div id="log-entries" style="margin-top:10px;display:flex;flex-direction:column;gap:8px;"></div>
+      </div>
+
+      <div style="height:12px"></div>
+    </div>
+
+    <!-- SCRIPT PANE -->
+    <div class="pane hidden" id="pane-script">
+      <div class="script-inner" id="script-inner">
+        <div style="font-size:12px;color:var(--text3);text-align:center;padding:40px 20px;">Add scenes in the Write tab to build your script.</div>
       </div>
     </div>
 
   </main>
 
-  <!-- Tab bar -->
+  <!-- Scene edit sheet -->
+  <div class="sheet-overlay" id="sheet-overlay" onclick="closeSheet()"></div>
+  <div class="sheet" id="scene-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="sheet-title">Edit Scene</div>
+    <div class="sheet-row">
+      <span class="sheet-row-label">Name</span>
+      <input class="sheet-input" id="sheet-name" type="text" placeholder="Scene name" maxlength="30">
+    </div>
+    <div class="sheet-row">
+      <span class="sheet-row-label">Type</span>
+      <div class="sheet-chips" id="sheet-type-chips"></div>
+    </div>
+    <div class="sheet-row">
+      <span class="sheet-row-label">Location</span>
+      <div class="sheet-chips" id="sheet-loc-chips"></div>
+    </div>
+    <div class="sheet-row" style="justify-content:space-between;">
+      <span class="sheet-row-label" style="width:auto;">Order</span>
+      <div class="sheet-order">
+        <button class="sheet-order-btn" onclick="moveScene(-1)">&#x2191;</button>
+        <button class="sheet-order-btn" onclick="moveScene(1)">&#x2193;</button>
+      </div>
+    </div>
+    <div class="sheet-actions">
+      <button class="sheet-btn danger" onclick="deleteScene()">Delete</button>
+      <button class="sheet-btn primary" onclick="saveSheet()">Done</button>
+    </div>
+  </div>
+  <div class="mirror-overlay" id="mirror-overlay">
+    <button class="mirror-close" onclick="closeMirror()">&#x2715; Exit</button>
+    <div class="mirror-progress" id="mirror-progress">1 / 1</div>
+    <div class="mirror-sentence" id="mirror-sentence">No text yet.</div>
+    <div class="mirror-nav">
+      <button class="mirror-btn" onclick="mirrorPrev()">&#x2190; Back</button>
+      <button class="mirror-btn primary" onclick="mirrorNext()">Next &#x2192;</button>
+    </div>
+  </div>
+
   <nav class="tab-bar">
     <button class="tab-item active" onclick="switchPane('write',this)">
       <span class="tab-icon">&#x270D;</span>
@@ -362,6 +736,18 @@ body {
     <button class="tab-item" onclick="switchPane('analysis',this)">
       <span class="tab-icon">&#x25C8;</span>
       <span class="tab-label">Analysis</span>
+    </button>
+    <button class="tab-item" onclick="switchPane('script',this)">
+      <span class="tab-icon">&#x1F4CB;</span>
+      <span class="tab-label">Script</span>
+    </button>
+    <button class="tab-item" onclick="switchPane('record',this)">
+      <span class="tab-icon">&#x1F3A4;</span>
+      <span class="tab-label">Record</span>
+    </button>
+    <button class="tab-item" onclick="switchPane('practice',this)">
+      <span class="tab-icon">&#x25B6;</span>
+      <span class="tab-label">Practice</span>
     </button>
     <button class="tab-item" onclick="switchPane('learn',this)">
       <span class="tab-icon">&#x25CE;</span>
@@ -382,6 +768,17 @@ var WEASEL_W  = ['probably','possibly','perhaps','maybe','virtually','nearly','a
 var VAGUE     = {'thing':1,'things':1,'stuff':1,'something':1,'someone':1,'somebody':1,'somewhere':1,'somehow':1,'everything':1,'everyone':1,'everybody':1,'everywhere':1,'nothing':1,'nobody':1,'nowhere':1,'anything':1,'anyone':1,'anybody':1,'anywhere':1,'people':1,'person':1,'place':1,'places':1,'way':1,'ways':1,'certain':1,'various':1,'different':1,'some':1,'many':1,'lot':1,'lots':1,'much':1};
 
 var ACT_VERBS = {'walk':1,'run':1,'fall':1,'grab':1,'throw':1,'hit':1,'push':1,'pull':1,'point':1,'turn':1,'look':1,'sit':1,'stand':1,'jump':1,'reach':1,'touch':1,'wave':1,'shake':1,'nod':1,'shrug':1,'lean':1,'step':1,'drop':1,'pick':1,'hold':1,'swing':1,'spin':1,'crawl':1,'climb':1,'slide':1,'stomp':1,'slam':1,'bang':1,'slap':1,'kick':1,'punch':1,'snap':1,'clap':1,'tap':1,'knock':1,'pound':1,'spit':1,'stare':1,'glare':1,'gesture':1,'mime':1};
+
+var MODE = 'video';
+
+function setMode(m){
+  MODE = m;
+  document.getElementById('mode-standup').classList.toggle('active', m==='standup');
+  document.getElementById('mode-video').classList.toggle('active', m==='video');
+  try{localStorage.setItem('cadence_mode',m);}catch(e){}
+  updateRhythmGuide();
+  render();
+}
 
 function syl(word) {
   var w = word.toLowerCase().replace(/[^a-z]/g,'');
@@ -461,11 +858,19 @@ function longBreaths(s){
 }
 
 function lenBadge(n){
-  if(n<=5)  return {l:'Punch',c:'dng'};
-  if(n<=12) return {l:'Ideal',c:'good'};
-  if(n<=20) return {l:'Setup',c:'neu'};
-  if(n<=30) return {l:'Long', c:'warn'};
-  return           {l:'Cut',  c:'dng'};
+  if(MODE==='video'){
+    if(n<=4)  return {l:'Punch',c:'dng'};
+    if(n<=20) return {l:'Ideal',c:'good'};
+    if(n<=30) return {l:'Setup',c:'neu'};
+    if(n<=40) return {l:'Long', c:'warn'};
+    return           {l:'Cut',  c:'dng'};
+  } else {
+    if(n<=5)  return {l:'Punch',c:'dng'};
+    if(n<=12) return {l:'Ideal',c:'good'};
+    if(n<=20) return {l:'Setup',c:'neu'};
+    if(n<=30) return {l:'Long', c:'warn'};
+    return           {l:'Cut',  c:'dng'};
+  }
 }
 
 function hasActOut(s){
@@ -565,6 +970,7 @@ function render(){
   var t=ftime(wcTotal);
   document.getElementById('vtime').textContent=t;
   document.getElementById('a-time').textContent=t;
+  updateLegend();
 
   /* Rhythm blocks */
   var rb=document.getElementById('rblocks');
@@ -580,6 +986,77 @@ function render(){
   renderSents(data,sents);
 }
 
+/* ======================================================
+   COMIC STRUCTURE DETECTION
+   ====================================================== */
+function detectComicPatterns(data){
+  var PUNCH_MAX = MODE==='video' ? 7 : 6;
+  var SETUP_MIN = MODE==='video' ? 12 : 10;
+  var sp=0, spt=0;
+  var deadZones=[], dzStart=-1, dzLen=0;
+  var roles=[];
+
+  for(var i=0;i<data.length;i++) roles.push('n'); // n=neutral
+
+  for(var i=0;i<data.length;i++){
+    var isPunch = data[i].wn <= PUNCH_MAX && data[i].wn > 0;
+    var isSetup  = data[i].wn >= SETUP_MIN;
+
+    // Dead zone tracking
+    if(!isPunch){ dzLen++; if(dzLen===1) dzStart=i; }
+    else{
+      if(dzLen>=5) deadZones.push({start:dzStart,end:i-1});
+      dzLen=0; dzStart=-1;
+    }
+
+    // S→P detection
+    if(isPunch && i>0 && data[i-1].wn>=SETUP_MIN){
+      roles[i-1]='S'; roles[i]='P';
+      // S→P→T: next sentence is also short
+      if(i<data.length-1 && data[i+1].wn<=PUNCH_MAX+2 && data[i+1].wn>0){
+        roles[i+1]='T'; spt++;
+      } else { sp++; }
+    }
+  }
+  if(dzLen>=5) deadZones.push({start:dzStart,end:data.length-1});
+
+  return {sp:sp, spt:spt, deadZones:deadZones, roles:roles};
+}
+
+function findReversals(sents){
+  var REV=['but','however','except','yet','though','although','until','unless','despite','instead','actually','turns out','only to'];
+  var count=0;
+  for(var i=0;i<sents.length;i++){
+    var s=sents[i].toLowerCase();
+    var words=s.split(/\s+/);
+    if(words.length<4) continue;
+    var secondHalf=words.slice(Math.floor(words.length/2)).join(' ');
+    for(var j=0;j<REV.length;j++){
+      if(secondHalf.indexOf(REV[j])>=0){count++;break;}
+    }
+  }
+  return count;
+}
+
+function calcLPM(data, wcTotal){
+  var PUNCH_MAX = MODE==='video' ? 7 : 6;
+  var punches=0;
+  for(var i=0;i<data.length;i++) if(data[i].wn<=PUNCH_MAX&&data[i].wn>0) punches++;
+  var mins=wcTotal/130;
+  if(mins<0.1) return null;
+  return Math.round(punches/mins*10)/10;
+}
+
+function operativeCheck(s){
+  // Is the most syllabic word in the last 25% of the sentence?
+  var words=s.trim().replace(/[.!?]+$/,'').split(/\s+/).filter(function(w){return w.length>0;});
+  if(words.length<4) return true; // too short to flag
+  var maxSyl=0,maxIdx=0;
+  for(var i=0;i<words.length;i++){var sy=syl(words[i]);if(sy>maxSyl){maxSyl=sy;maxIdx=i;}}
+  var cutoff=Math.floor(words.length*0.75);
+  return maxIdx>=cutoff; // true = good, operative near end
+}
+
 function renderAnalysis(data,sents,text){
   /* Variance */
   var lens=[];for(var i=0;i<data.length;i++)lens.push(data[i].wn);
@@ -592,22 +1069,71 @@ function renderAnalysis(data,sents,text){
     vd.textContent=desc;
   }
 
-  /* Chart */
+  /* Comic structure detection */
+  var patterns=detectComicPatterns(data);
+  var reversals=findReversals(sents);
+  var wcArr2=text.trim().split(/\s+/).filter(function(w){return w.length>0;});
+  var wcTotal2=text.trim()?wcArr2.length:0;
+  var lpm=calcLPM(data,wcTotal2);
+  var lpmEl=document.getElementById('cs-lpm');
+  var lpmLbl=document.getElementById('cs-lpm-label');
+  if(lpmEl){
+    if(lpm===null){lpmEl.textContent='\u2014';lpmLbl.textContent='LPM \u2014 write more to calculate';}
+    else{
+      lpmEl.textContent=lpm.toFixed(1);
+      var lpmDesc=lpm<1?'Low \u2014 needs more punches':lpm<2?'Building':lpm<3?'Good rhythm':lpm<=4?'Carlin territory':'Very dense';
+      lpmLbl.textContent='LPM \u2014 '+lpmDesc+' (target: 3+)';
+    }
+  }
+  var csRows=document.getElementById('cs-rows');
+  if(csRows){
+    var totalPats=patterns.sp+patterns.spt;
+    var opFails=0;
+    for(var oi=0;oi<sents.length;oi++) if(!operativeCheck(sents[oi])) opFails++;
+    var h='';
+    h+='<div class="struct-row"><span class="struct-row-label">S\u2192P sequences detected</span><span class="struct-row-val '+(totalPats>0?'good':'warn')+'">'+totalPats+'</span></div>';
+    h+='<div class="struct-row"><span class="struct-row-label">S\u2192P\u2192T (with tag) detected</span><span class="struct-row-val '+(patterns.spt>0?'good':'')+'">'+patterns.spt+'</span></div>';
+    h+='<div class="struct-row"><span class="struct-row-label">Dead zones (5+ sentences, no punch)</span><span class="struct-row-val '+(patterns.deadZones.length>0?'bad':'good')+'">'+patterns.deadZones.length+'</span></div>';
+    h+='<div class="struct-row"><span class="struct-row-label">Reversals (contrast word in 2nd half)</span><span class="struct-row-val '+(reversals>0?'good':'')+'">'+reversals+'</span></div>';
+    h+='<div class="struct-row"><span class="struct-row-label">Strong word buried, not near end</span><span class="struct-row-val '+(opFails>2?'warn':opFails>0?'':'good')+'">'+opFails+'</span></div>';
+    csRows.innerHTML=h;
+  }
+
+  /* Chart with role pips */
   var chart=document.getElementById('a-chart');
   chart.innerHTML='';
+  var rolesEl=document.getElementById('cs-roles');
+  if(rolesEl) rolesEl.innerHTML='';
   if(data.length>0){
     var maxL=0;for(var i=0;i<lens.length;i++)if(lens[i]>maxL)maxL=lens[i];
     var bw=Math.max(6,Math.min(18,Math.floor(280/Math.max(data.length,1))));
+    var deadSet={};
+    for(var di=0;di<patterns.deadZones.length;di++){
+      for(var k=patterns.deadZones[di].start;k<=patterns.deadZones[di].end;k++) deadSet[k]=1;
+    }
+    var pipH='';
     for(var i=0;i<data.length;i++){
       var b=document.createElement('div');
       b.className='len-bar';
       b.style.height=(maxL>0?Math.max(4,Math.round(data[i].wn/maxL*52)):4)+'px';
       b.style.width=bw+'px';
-      var col=data[i].wn<=5?'var(--red)':data[i].wn<=12?'var(--green)':data[i].wn<=20?'var(--blue)':data[i].wn<=30?'var(--amber)':'var(--gray)';
+      var punchMax=MODE==='video'?4:5;
+      var col;
+      if(deadSet[i]){col='var(--red)';b.style.opacity='0.4';}
+      else if(data[i].wn<=punchMax) col='var(--red)';
+      else if(data[i].wn<=(MODE==='video'?20:12)) col='var(--green)';
+      else if(data[i].wn<=(MODE==='video'?30:20)) col='var(--blue)';
+      else if(data[i].wn<=40) col='var(--amber)';
+      else col='var(--gray)';
       b.style.background=col;
-      b.title=data[i].wn+'w';
+      var r=patterns.roles[i];
+      b.title=data[i].wn+'w'+(r!=='n'?' ['+r+']':'')+(deadSet[i]?' DEAD ZONE':'');
       chart.appendChild(b);
+      // pip
+      var pc=r==='S'?'var(--blue)':r==='P'?'var(--red)':r==='T'?'var(--amber)':'transparent';
+      pipH+='<div class="role-pip" style="width:'+bw+'px;flex-shrink:0;background:'+pc+';"></div>';
     }
+    if(rolesEl) rolesEl.innerHTML=pipH;
   }
 
   /* Questions */
@@ -855,6 +1381,203 @@ var LEARN = [
        text:'For a comedy review show: your reaction is funnier than your opinion. "I think this is a 7/10" is an opinion. "This made me want to call my landlord and apologise" is a reaction. Go for the reaction.',
        action:'For each track you\'re reviewing: what did it make you want to DO? That\'s your bit.'}
     ]
+  },
+  {
+    icon:'&#x25B6;',
+    title:'YouTube Craft: The Hook Science',
+    rules:[
+      {src:'universal',label:'YouTube Data',
+       text:'55% of viewers drop off within the first 60 seconds. The average YouTube video retains only 23.7% of its audience total. You are not fighting for attention during the video \u2014 you are fighting for it in the first 15 seconds or the rest doesn\'t matter.'},
+      {src:'universal',label:'YouTube Data',
+       text:'The cold open: start in the middle of your funniest moment, then cut back to the beginning. Breaking Bad opened with Walter White in his underwear in the desert. You open with your sharpest line from the episode. The viewer needs to know immediately that the ride is worth it.'},
+      {src:'universal',label:'YouTube Data',
+       text:'Your persona must be legible in the first 30 seconds. Not explained \u2014 legible. The audience should feel who you are before you tell them anything. Energy, posture, first word choice, eye contact \u2014 all of it signals "this is the kind of show this is."'},
+      {src:'universal',label:'YouTube Data',
+       text:'Pattern interrupts every 3 minutes. MrBeast documented this systematically: re-engagement points prevent the gradual drop-off that kills long videos. For JD Warren Versus this means a change of energy, a physical bit, a hard cut, or a callback at the 3-minute mark. Script these deliberately.'},
+      {src:'universal',label:'YouTube Data',
+       text:'The premise must be clear in one sentence before anything else happens. "I\'m reviewing records I\'ve never heard before, on vinyl, live on camera" is one sentence. If your viewer can\'t explain your show to a friend in 10 seconds, you haven\'t established your premise.',
+       action:'Write your show\'s premise in one sentence. Then write your cold open line. These two things are your entire retention strategy.'}
+    ]
+  },
+  {
+    icon:'&#x1F3B5;',
+    title:'The Review Show as Comedy Form',
+    rules:[
+      {src:'universal',label:'Todd in the Shadows',
+       text:'"I always considered myself a comedian first and foremost." Todd Nathanson built one of the most successful music review channels on YouTube by treating the music as straight man and himself as the comic. His critical opinions are real \u2014 but the comedy frame is what makes people watch. Sound familiar?'},
+      {src:'universal',label:'Todd in the Shadows',
+       text:'The format is the structure; your personality is the content. Todd\'s formula is identical every episode: piano cover intro, setup the song\'s context, react track by track, deliver verdict. The audience doesn\'t come for surprises in the format \u2014 they come for surprises in the reactions. Lock the format, free the personality.'},
+      {src:'universal',label:'The Review Show',
+       text:'The subject is always the straight man. The album doesn\'t know it\'s being reviewed. It just sits there, deadly serious, doing its thing. You are the only one in the room who finds this absurd. That asymmetry \u2014 the serious thing vs. the person laughing at it \u2014 IS the comedy engine. Never forget the album is your straight man.'},
+      {src:'universal',label:'The Review Show',
+       text:'Your opinion and your reaction are different things and you need both. Opinion: "this is a well-constructed record." Reaction: "this made me feel like I owed someone money." Use opinions to establish credibility. Use reactions to get laughs. Credibility makes the reactions land harder.'},
+      {src:'universal',label:'The Review Show',
+       text:'The moment you discovered the album \u2014 the exact first second of genuine surprise, confusion, or delight \u2014 is always funnier than anything you planned. Script everything, but leave room to be genuinely caught off guard. The unscripted moment of real reaction is worth more than ten prepared jokes.'},
+      {src:'universal',label:'The Review Show',
+       text:'Study Todd\'s influence: The Daily Show with Jon Stewart. Stewart could make a serious point while being genuinely funny, never sacrificing one for the other. The joke had a real target. The opinion had a real point. Comedy without conviction is just noise. Conviction without comedy is a lecture.',
+       action:'Watch one Todd in the Shadows review before your next episode. Not for the content \u2014 for the structure. Map when the jokes land relative to the critical analysis.'}
+    ]
+  },
+  {
+    icon:'&#x26A1;',
+    title:'Accelerating: The Deliberate Practice Loop',
+    rules:[
+      {src:'universal',label:'Process',
+       text:'The loop is: Write in Cadence \u2192 Read aloud (never skip this) \u2192 Rehearse in Mirror mode \u2192 Record \u2192 Watch back without sound first \u2192 Watch back without picture \u2192 Watch normally \u2192 Log what you learned \u2192 Rewrite. One full loop per episode minimum. Two if something didn\'t work.'},
+      {src:'universal',label:'Process',
+       text:'Watch without sound first. Your body will telegraph the jokes before your mouth delivers them \u2014 a micro-look away, a shoulder drop, a slight smile. These kill the surprise. You will only see them without the distraction of your own voice.'},
+      {src:'universal',label:'Process',
+       text:'Watch without picture second. Listen only. Where do you rush? Where does the rhythm drag? Where do weasel words creep in that the page didn\'t catch? Your ear hears things your eye misses when watching normally.'},
+      {src:'universal',label:'Process',
+       text:'Log specifically, not generally. Not "bit 3 didn\'t land." Instead: "bit 3, lost eye contact at setup, rushed the punchline by approximately 1 second, last word was \'it\' which is a weak ender." Specific diagnosis = specific fix. General diagnosis = vague improvement.'},
+      {src:'seinfeld',label:'Seinfeld',
+       text:'Seinfeld spent two years perfecting one pop-tart joke. Not the bit \u2014 one joke within one bit. The gap between a funny person and a comedian is not talent. It is the number of deliberate revision cycles. You are already funny. The app is the revision system.',
+       action:'After every recording: timestamp three specific moments. One that worked, one that didn\'t, one you\'re not sure about. That\'s your next rewrite agenda.'}
+    ]
+  },
+  {
+    icon:'&#x25B6;',
+    title:'MrBeast: Retention Engineering',
+    rules:[
+      {src:'yourshow',label:'MrBeast Doc',
+       text:'From his leaked 36-page internal production document: "We lost 21 million viewers in the first minute of the video." That is not a failure \u2014 it is average for YouTube. The entire game is minimising that number. Your first 60 seconds either wins or loses the audience. Everything after that is consolidation.'},
+      {src:'yourshow',label:'MrBeast Doc',
+       text:'"Crazy progression" \u2014 instead of covering Day 1 for 3 minutes, show multiple days. Never spend time building linearly to something. Jump to the action. For JD Warren Versus: don\'t open with you sitting down and picking up the record. Open in the middle of your strongest reaction. Then cut back to the beginning.'},
+      {src:'yourshow',label:'MrBeast Doc',
+       text:'Pattern interrupt every 3 minutes. After a few minutes, viewers drift and need a re-engagement event \u2014 a change of energy, a physical move, a hard cut, an unexpected visual. Script these deliberately. For your show: the needle drop, a reaction cut, a stand-up moment, a graphic. Know exactly where your 3-minute marks are.'},
+      {src:'yourshow',label:'MrBeast Doc',
+       text:'"No dull moments." Every second serves. If a quarter-second does nothing in the edit, cut it. This is not about pace \u2014 a slow moment can be powerful if it has tension. A dull moment has neither pace nor tension. The difference is intention.'},
+      {src:'yourshow',label:'MrBeast Doc',
+       text:'Never signal the video is ending. End abruptly. Keep energy high through the final frame. The instinct to wrap up and say goodbye is the enemy. Cut to black at the highest point. The audience should feel slightly robbed \u2014 that feeling is what makes them click the next video.',
+       action:'Identify your 3-minute marks in your script right now. Write a pattern interrupt at each one. It can be one sentence. It just needs to be different energy.'}
+    ]
+  },
+  {
+    icon:'&#x1F3A4;',
+    title:'MrBeast: The Wow Factor (and Yours)',
+    rules:[
+      {src:'yourshow',label:'MrBeast Doc',
+       text:'"Anytime we do something that no other creator can do, that separates us in their mind and makes our videos more special to them. You can\'t track the wow factor but I can describe it." His wow factor is scale \u2014 cranes, $500k, 100 days in a field. Yours is something entirely different and equally specific.'},
+      {src:'yourshow',label:'Your Show',
+       text:'Your wow factor is the vinyl ritual. Nobody else on YouTube is doing a comedy record review where the host genuinely hasn\'t heard the album, experiencing it for the first time on camera, on vinyl, with the needle drop as a live event. That combination \u2014 genuine first listen, vinyl format, comedy voice \u2014 is yours. No one else can replicate it because it requires all three simultaneously.'},
+      {src:'yourshow',label:'Your Show',
+       text:'The needle drop IS a production event. The moment the needle hits the record is the closest thing your show has to MrBeast lifting a house with a crane. It costs nothing and it\'s irreplaceable. Script the seconds before it. Script your body language during it. The audience should feel the anticipation.'},
+      {src:'yourshow',label:'MrBeast Doc',
+       text:'"CTR is what dictates what we do for videos. \'I Spent 50 Hours In My Front Yard\' is lame, and you wouldn\'t click it. But you would click \'I Spent 50 Hours In Ketchup.\'" The title and thumbnail make a promise. The first 60 seconds keeps it. For your show: what is the most specific, absurd version of your episode title? Not "I Reviewed This Album" \u2014 something that makes someone think "what the hell is this."',
+       action:'Write three possible titles for your next episode. The best one is probably the most specific and most surprising. Not the most descriptive.'}
+    ]
+  },
+  {
+    icon:'&#x1F4AC;',
+    title:'Drew Gooden: Commentary-Comedy Structure',
+    rules:[
+      {src:'yourshow',label:'Drew Gooden',
+       text:'Gooden\'s key structural insight: the sketch you make should parody the thing you\'re talking about, not stand apart from it. The commentary and the comedy are the same thing. For JD Warren Versus: your reaction to a track IS the sketch. You don\'t need a separate bit \u2014 the bit is your response to what you just heard.'},
+      {src:'yourshow',label:'Drew Gooden',
+       text:'The subject is always the straight man. The internet thing, the movie, the album \u2014 it sits there deadly serious doing its thing, unaware it is being observed. You are the only one in the room who finds this absurd. That asymmetry \u2014 the serious subject vs. the person laughing at it \u2014 is the entire engine of the format.'},
+      {src:'yourshow',label:'Drew Gooden',
+       text:'"It\'s a really good format to break off and do other things within it \u2014 it\'s easy to break off and do a sketch and put it in the video." Commentary is a container. Inside it you can do anything: a song, a sketch, a physical bit, a rant, a callback, a monologue. The container justifies everything. JD Warren Versus is your container.'},
+      {src:'yourshow',label:'Drew Gooden',
+       text:'Go overboard on one specific thing per video and commit fully. Drew sold actual "Road Work Ahead" signs because of one Vine. Danny makes full songs about one moment in a movie. The bit that goes too far, if you commit to it completely, becomes the thing people remember and share. Find the one thing per episode you\'ll fully go overboard on.',
+       action:'For your current episode: what is the one specific thing you can go completely overboard on? A deep dive on one detail, a running joke, a character voice you commit to fully?'}
+    ]
+  },
+  {
+    icon:'&#x1F4DD;',
+    title:'hbomberguy: Long-form Essay Architecture',
+    rules:[
+      {src:'yourshow',label:'hbomberguy',
+       text:'Hbomberguy\'s structure is a slow burn to a massive absurdist payoff. He builds a legitimate, serious argument for 20-40 minutes and then detonates it with a joke that only lands because of everything that came before. The length IS the joke. The patience of the setup IS the punchline. For long-form video comedy, the essay structure earns the laugh at the end.'},
+      {src:'yourshow',label:'hbomberguy',
+       text:'The register shift: switching suddenly between formal analytical language and completely casual or absurd language. Academic sentence, academic sentence, academic sentence \u2014 "anyway this is stupid." The whiplash IS the joke. Cadence\'s sentence length variance is this at the micro level. Register shift is this at the macro level.'},
+      {src:'yourshow',label:'hbomberguy',
+       text:'The documentary interspersed with comedic sketches. Not documentary, then comedy. Simultaneously \u2014 the comedy grows out of the documentary material. Every piece of information is also a setup. Every fact can be a punchline. The format trains you to find the joke in the research, not apply jokes to research.',
+       action:'For each track you review: what is the most interesting factual thing about it? Now find the comedy in that fact. The fact is the setup. Your reaction is the punchline.'}
+    ]
+  },
+  {
+    icon:'&#x2702;',
+    title:'Dunkey: The Edit as Punchline',
+    rules:[
+      {src:'yourshow',label:'Dunkey',
+       text:'Dunkey\'s core insight: where you cut is a joke. The cut to silence after a statement, the abrupt end of a sentence before completion, the cut to a completely unrelated image \u2014 these are structural punchlines that require no words. The edit does the comedy work the script doesn\'t.'},
+      {src:'yourshow',label:'Dunkey',
+       text:'Repetition through editing is funnier than repetition through language. Playing the same clip three times at slightly different lengths lands harder than saying the same thing three times. This is why your editor\'s instincts matter as much as your writing instincts. The cut IS the timing.'},
+      {src:'yourshow',label:'Dunkey',
+       text:'Trust the audience. Never explain the joke in the edit. If you made the point, cut immediately. The instinct after a good joke is to let it breathe \u2014 but on video, the cut IS the breath. An immediate cut to the next thing signals confidence. Lingering signals doubt.'},
+      {src:'yourshow',label:'Dunkey',
+       text:'For JD Warren Versus specifically: your reaction face after a track plays is edit material. The cut from music to your face before you say anything is already a punchline if the face is right. Script your reaction beats the same way you script your words. What does your body do in the first second after a track ends?',
+       action:'In your next edit: find three places where you can replace a verbal joke with a cut. Remove the words. Does the cut make the same point? If yes, use the cut.'}
+    ]
+  },
+  {
+    icon:'&#x26A1;',
+    title:'Lenny Bruce: The Foundation',
+    rules:[
+      {src:'carlin',label:'Bruce via Carlin',
+       text:'Carlin said Bruce influenced him "as much as a man in his moral thinking and attitudes as he did as a comedian." Pryor said hearing Bruce for the first time "changed my life." Bruce is not the beginning of the chain \u2014 he is the root. Carlin, Pryor, Chappelle, Hicks all trace directly back to him. Understanding Bruce is understanding where every comedian in this app learned their most important lesson.'},
+      {src:'universal',label:'Lenny Bruce',
+       text:'The bit as argument. Bruce treated every routine as a genuine thesis he was trying to prove. Not a series of jokes on a topic \u2014 a case being made. The laughs came from the argument, not from jokes inserted into an argument. This is the single most important structural difference between a comedian with a point of view and one who just does material.'},
+      {src:'universal',label:'Lenny Bruce',
+       text:'"The audience knew it was dishonest. It wasn\'t me." Bruce said this about his early conventional act. He abandoned it entirely and started performing as himself. Every comedian who followed him \u2014 Pryor, Carlin, Chappelle \u2014 had the same crisis and made the same choice. The dishonest act is always visible to the audience before the comedian knows it.'},
+      {src:'universal',label:'Lenny Bruce',
+       text:'Both aggressive and vulnerable in the same bit. Bruce\'s most memorable routines had sharp attacks and exposed confessionals in the same breath. Not aggression OR vulnerability \u2014 both simultaneously. The aggression is believable because of the vulnerability. The vulnerability is protected by the aggression. This is the structure of the Sombr intro you wrote.',
+       action:'Read your script. Find a sentence that attacks something. Now find the personal truth underneath that attack. Put both in the same paragraph.'}
+    ]
+  },
+  {
+    icon:'&#x1F610;',
+    title:'Larry David: Follow It to the End',
+    rules:[
+      {src:'universal',label:'Larry David',
+       text:'"No hugging and no learning." David\'s rule for Seinfeld \u2014 characters never grow, never apologise, never have a redemption arc. The comedy lives in the gap between what the character should do and what they actually do. The moment they learn something, the joke dies. For your show: never soften your position at the end of a bit. If you think Sombr is spreading his butt cheeks on Spotify, that is your position at the end of the episode too.'},
+      {src:'universal',label:'Larry David',
+       text:'Follow the situation to its logical conclusion no matter how uncomfortable. Every Curb episode is built on this: take a premise, find the most logical next step, follow it to where it leads, keep going past where a reasonable person would stop. The further you follow it, the funnier it gets. The comedy is always further down the road than you think it is.'},
+      {src:'universal',label:'Larry David',
+       text:'The "keep it real" rule \u2014 from his editors. If a line sounds "jokey" or "written," cut it even if it gets a huge laugh. The test is: does this sound like something a real person would say in this situation? Manufactured jokes break the reality. Reality IS the joke on Curb. For your show: does your script sound like you talking, or does it sound like a comedy script?'},
+      {src:'universal',label:'Larry David',
+       text:'Find a small, universal annoyance, name it, exaggerate it. Larry David has made 12 seasons out of wobbly tables, people who hog cabinet space, and the social contract around gifts. The annoyance is specific and real, which is why everyone recognises it. Your sleep apnea bit works on this principle. The satanic sacrifice is the exaggeration of a real, specific fear.',
+       action:'List three genuinely specific things that annoy you. Not "rude people" \u2014 specific: "people who don\'t hold the door when you\'re three feet away." One of those is a bit.'}
+    ]
+  },
+  {
+    icon:'&#x1F3A9;',
+    title:'Norm Macdonald: Patience as Comedy',
+    rules:[
+      {src:'universal',label:'Norm Macdonald',
+       text:'Commitment to a bad joke long enough makes the commitment the joke. Norm could take a deliberately terrible premise, a groan-worthy setup, and by holding the room through their discomfort and continuing to build on the unfunny thing, eventually the audience would break and laugh \u2014 not at the joke but at his refusal to abandon it. The patience IS the punchline.'},
+      {src:'universal',label:'Norm Macdonald',
+       text:'Anti-comedy: the joke is that there is no joke, and then there is. Norm\'s moth joke is four minutes long and ends with a punchline so deliberately bad that the audience howls. The length and the anticipation are the actual joke. The content is almost irrelevant. For a fast talker like you, this is the extreme opposite of your instinct \u2014 worth studying precisely because it is so foreign.'},
+      {src:'universal',label:'Norm Macdonald',
+       text:'Sincerity at full volume. Norm was the least performatively ironic comedian of his generation. He meant everything he said, even when it was absurd. There was no winking at the camera. No signal that he knew this was weird. The absence of self-awareness about the weirdness is what made it devastating. Applied to your show: commit to your absurdist tangents without signalling that they\'re absurd.',
+       action:'Find a moment in your script where you undercut your own bit with a meta-comment. Remove the meta-comment. Commit to the bit at full volume.'}
+    ]
+  },
+  {
+    icon:'&#x1F3BB;',
+    title:'Steve Martin: Persona as the Joke',
+    rules:[
+      {src:'universal',label:'Steve Martin',
+       text:'Martin\'s radical early insight: make the comedian the joke, not the material. His entire 1970s act was essentially a parody of a bad stand-up comedian performed with complete commitment. The audience laughed at the character of "Steve Martin, Comedian" before they laughed at any specific joke. The persona was the premise.'},
+      {src:'universal',label:'Steve Martin',
+       text:'"I was trying to get to where the audience was laughing at something other than jokes." His anti-comedy predates Norm Macdonald by 15 years. Arrow through the head. Fake nose and glasses. Banjo. None of it is a joke \u2014 it is a statement about the form. For a YouTube show: your relationship with your own format can be meta in the same way. The show reviewing an album with no title is itself a bit.'},
+      {src:'universal',label:'Steve Martin',
+       text:'Craftsmanship at the level of individual words. Martin has spoken about spending hours on single word choices in his prose and scripts. Shorter words. Harder consonants. The same principles Seinfeld uses. The difference is Martin came to them through performance rather than analysis \u2014 he felt what worked before he understood why.',
+       action:'Watch Steve Martin\'s 1978 stand-up. Notice: he never does a joke. Everything is a premise sustained by commitment. Map that commitment onto one of your bits.'}
+    ]
+  },
+  {
+    icon:'&#x1F300;',
+    title:'Maria Bamford: Structure as Comedy',
+    rules:[
+      {src:'universal',label:'Maria Bamford',
+       text:'Bamford nests stories inside stories, switches characters mid-sentence, and uses fragmentation as a rhythmic device. Her sentence structure IS the comedy \u2014 the way a sentence breaks and restarts, the sudden register shift, the incomplete thought that completes itself three sentences later. This is the most structurally innovative work in comedy today.'},
+      {src:'universal',label:'Maria Bamford',
+       text:'The unexpected character voice. Bamford will be mid-sentence as herself and suddenly be her mother, then back, then a different character, all within one paragraph. No announcement. No "and then my mother said." Just the shift. The audience tracks it because the voice is specific enough. Specificity of character voice is what makes this work at speed.'},
+      {src:'universal',label:'Maria Bamford',
+       text:'Comedy about the machinery of comedy itself. Bamford has bits that are explicitly about how bits work, about the performance of vulnerability, about what the audience expects from a comedian talking about mental health. The subject of the comedy and the form of the comedy are the same thing simultaneously. For your show: the format of reviewing records you\'ve never heard is already this. The machinery is visible.',
+       action:'In your next script: try switching to a character voice mid-sentence without announcing it. Just become the person you\'re describing. One sentence. See if it lands.'}
+    ]
   }
 ];
 
@@ -890,8 +1613,989 @@ function toggleSection(i){
 }
 
 /* ======================================================
-   NAVIGATION
+   MODE & LEGEND UPDATE
    ====================================================== */
+function updateLegend(){
+  if(MODE==='video'){
+    document.getElementById('leg-punch').textContent='Punch (1\u20134w)';
+    document.getElementById('leg-ideal').textContent='Ideal (5\u201320w)';
+    document.getElementById('leg-setup').textContent='Setup (21\u201330w)';
+    document.getElementById('leg-long').textContent='Long (31\u201340w)';
+    document.getElementById('leg-cut').textContent='Cut (40w+)';
+  } else {
+    document.getElementById('leg-punch').textContent='Punch (1\u20135w)';
+    document.getElementById('leg-ideal').textContent='Ideal (6\u201312w)';
+    document.getElementById('leg-setup').textContent='Setup (13\u201320w)';
+    document.getElementById('leg-long').textContent='Long (21\u201330w)';
+    document.getElementById('leg-cut').textContent='Cut (30w+)';
+  }
+}
+
+/* ======================================================
+   PRACTICE — RHYTHM GUIDE
+   ====================================================== */
+var VIDEO_BEATS = [
+  {label:'Establish',words:20,color:'var(--blue)',height:52,desc:'Set the scene. Who, what, where. Can breathe — 15-25 words.'},
+  {label:'Develop',words:15,color:'var(--blue)',height:42,desc:'Heighten it. Add detail, build absurdity. 10-18 words.'},
+  {label:'Punchline',words:6,color:'var(--red)',height:18,desc:'Short. Staccato. Under 8 words. Land it hard.'},
+  {label:'Tag',words:10,color:'var(--amber)',height:28,desc:'Optional extra joke riding the first laugh. 8-14 words.'},
+  {label:'Reset',words:14,color:'var(--green)',height:36,desc:'Transition to next beat. Legato ending. 10-18 words.'}
+];
+var STANDUP_BEATS = [
+  {label:'Setup',words:12,color:'var(--blue)',height:36,desc:'Short, single-subject setup. Under 15 words. No extras.'},
+  {label:'Punchline',words:5,color:'var(--red)',height:16,desc:'As short as possible. Staccato. Stop consonant preferred.'},
+  {label:'Tag',words:8,color:'var(--amber)',height:24,desc:'Optional extra joke on the same punchline. Very short.'},
+  {label:'Reset',words:6,color:'var(--green)',height:18,desc:'One breath. Move on. Never explain the joke.'}
+];
+
+function updateRhythmGuide(){
+  var beats = MODE==='video' ? VIDEO_BEATS : STANDUP_BEATS;
+  var label = document.getElementById('rhythm-guide-label');
+  var desc = document.getElementById('rhythm-guide-desc');
+  var note = document.getElementById('rhythm-guide-note');
+  var map = document.getElementById('rhythm-map');
+  if(label) label.textContent = MODE==='video' ? 'Video Show Bit Rhythm' : 'Stand-up Bit Rhythm';
+  if(desc) desc.textContent = MODE==='video'
+    ? 'For a scripted video show you can breathe. A bit moves through five beats — punchline doesn\'t have to come on sentence three.'
+    : 'Stand-up is compression. Setup is already too long. Punchline must arrive before the room cools. Every extra word costs.';
+  if(note) note.textContent = MODE==='video'
+    ? 'Switch to Stand-up mode in Write tab to see the compression model.'
+    : 'Switch to Video mode in Write tab to see the video show rhythm model.';
+  if(!map) return;
+  var h='';
+  for(var i=0;i<beats.length;i++){
+    var b=beats[i];
+    h+='<div class="rmap-beat" title="'+b.desc+'">';
+    h+='<div class="rmap-bar" style="height:'+b.height+'px;background:'+b.color+';opacity:0.85;"></div>';
+    h+='<div class="rmap-label">'+b.label+'</div>';
+    h+='</div>';
+  }
+  map.innerHTML=h;
+}
+
+/* ======================================================
+   PRACTICE — DRILLS
+   ====================================================== */
+var DRILLS = [
+  {
+    num:'01', title:'The Whisper Drill',
+    text:'Whisper your entire script out loud. At a whisper, volume can\'t carry the jokes — only rhythm and structure can. Every weak sentence reveals itself immediately. Every strong sentence survives.',
+    cue:'Do this once before every recording. It takes 3 minutes and finds more problems than 10 read-throughs.'
+  },
+  {
+    num:'02', title:'The Beat Drill',
+    text:'Read through your script and say the word "BEAT" out loud before every punchline. This forces you to physically mark the pause. After a few runs, the beat becomes instinctive — you\'ll feel where it wants to live.',
+    cue:'If you can\'t find where the beat goes, the setup isn\'t set up yet. Rewrite first.'
+  },
+  {
+    num:'03', title:'The Speed Drill',
+    text:'Run through a single bit three times: at 50% of your natural speed, at 100%, then at 150%. The 50% run reveals where you\'re hiding behind pace. The 150% run reveals where the rhythm is fragile. Your natural speed is somewhere between the two runs that felt right.',
+    cue:'Most people discover they\'re rushing setups and dragging punchlines. The fix is usually the opposite.'
+  },
+  {
+    num:'04', title:'The Cut Drill',
+    text:'Read a sentence. Now remove one word — any word — and read it again. Does it still work? If yes, cut it permanently. Do this for every sentence. What survives IS the script. What gets cut was just comfort padding.',
+    cue:'If removing a word breaks the rhythm but not the meaning, that word is load-bearing rhythm. Keep it. Seinfeld counts syllables for this reason.'
+  },
+  {
+    num:'05', title:'The Watch-Back Protocol',
+    text:'After recording: (1) Watch without sound. Look only at your body. Where do you go small? Where do you telegraph the joke before you say it? (2) Listen without picture. Where do you rush? Where do weasel words appear that the page hid? (3) Watch normally. Timestamp three moments: one that worked, one that didn\'t, one you\'re unsure about.',
+    cue:'Log those three timestamps in the Performance Log below. That\'s your next rewrite agenda.'
+  }
+];
+
+function buildDrills(){
+  var el=document.getElementById('drill-list');
+  if(!el)return;
+  var h='';
+  for(var i=0;i<DRILLS.length;i++){
+    var d=DRILLS[i];
+    h+='<div class="drill-card" id="drill'+i+'">';
+    h+='<div class="drill-header" onclick="toggleDrill('+i+')">';
+    h+='<span class="drill-num">'+d.num+'</span>';
+    h+='<span class="drill-title">'+d.title+'</span>';
+    h+='<span class="drill-arrow">&#x25BE;</span>';
+    h+='</div>';
+    h+='<div class="drill-body">';
+    h+='<div class="drill-text">'+d.text+'</div>';
+    h+='<div class="drill-cue">\u2192 '+d.cue+'</div>';
+    h+='</div></div>';
+  }
+  el.innerHTML=h;
+}
+
+function toggleDrill(i){
+  var c=document.getElementById('drill'+i);
+  if(c)c.classList.toggle('open');
+}
+
+/* ======================================================
+   PRACTICE — CHECKLIST
+   ====================================================== */
+var CHECKS = [
+  'Cold open scripted — start mid-action, not at the beginning',
+  'Persona legible in first 30 seconds — don\'t explain yourself, just be yourself',
+  'Opening line is your second-strongest material',
+  'At least one act-out identified and rehearsed',
+  'Punchlines end on strong words — no weak enders (a, the, it, was)',
+  'Pattern interrupt planned at the 3-minute mark',
+  'Weasel words checked and cut in Analysis tab',
+  'Passive voice cleared in Analysis tab',
+  'Closer is your strongest bit — end on a staccato punch'
+];
+
+function buildChecklist(){
+  var el=document.getElementById('checklist');
+  if(!el)return;
+  var h='';
+  for(var i=0;i<CHECKS.length;i++){
+    h+='<div class="check-item">';
+    h+='<input type="checkbox" id="chk'+i+'" onchange="saveChecklist()">';
+    h+='<label class="check-label" id="chklabel'+i+'" for="chk'+i+'">'+CHECKS[i]+'</label>';
+    h+='</div>';
+  }
+  el.innerHTML=h;
+  loadChecklist();
+}
+
+function saveChecklist(){
+  var state=[];
+  for(var i=0;i<CHECKS.length;i++){
+    var cb=document.getElementById('chk'+i);
+    var lbl=document.getElementById('chklabel'+i);
+    if(cb){
+      state.push(cb.checked?1:0);
+      if(lbl)lbl.className='check-label'+(cb.checked?' checked':'');
+    }
+  }
+  try{localStorage.setItem('cadence_checklist',JSON.stringify(state));}catch(e){}
+}
+
+function loadChecklist(){
+  try{
+    var s=localStorage.getItem('cadence_checklist');
+    if(!s)return;
+    var state=JSON.parse(s);
+    for(var i=0;i<CHECKS.length;i++){
+      var cb=document.getElementById('chk'+i);
+      var lbl=document.getElementById('chklabel'+i);
+      if(cb&&state[i]){cb.checked=true;if(lbl)lbl.className='check-label checked';}
+    }
+  }catch(e){}
+}
+
+function resetChecklist(){
+  for(var i=0;i<CHECKS.length;i++){
+    var cb=document.getElementById('chk'+i);
+    var lbl=document.getElementById('chklabel'+i);
+    if(cb){cb.checked=false;}
+    if(lbl)lbl.className='check-label';
+  }
+  try{localStorage.removeItem('cadence_checklist');}catch(e){}
+}
+
+/* ======================================================
+   PRACTICE — PERFORMANCE LOG
+   ====================================================== */
+var LOG_KEY='cadence_log';
+
+function loadLog(){
+  try{var s=localStorage.getItem(LOG_KEY);return s?JSON.parse(s):[];}catch(e){return[];}
+}
+
+function saveLog(entries){
+  try{localStorage.setItem(LOG_KEY,JSON.stringify(entries));}catch(e){}
+}
+
+function addLogEntry(){
+  var inp=document.getElementById('log-input');
+  if(!inp||!inp.value.trim())return;
+  var entries=loadLog();
+  var now=new Date();
+  var dateStr=now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' '+now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+  entries.unshift({date:dateStr,text:inp.value.trim()});
+  saveLog(entries);
+  inp.value='';
+  renderLog();
+}
+
+function deleteLogEntry(i){
+  var entries=loadLog();
+  entries.splice(i,1);
+  saveLog(entries);
+  renderLog();
+}
+
+function renderLog(){
+  var el=document.getElementById('log-entries');
+  if(!el)return;
+  var entries=loadLog();
+  if(!entries.length){el.innerHTML='<div style="font-size:12px;color:var(--text3);padding:8px 0;">No entries yet. Log something after your next recording.</div>';return;}
+  var h='';
+  for(var i=0;i<entries.length;i++){
+    h+='<div class="log-entry">';
+    h+='<button class="log-del" onclick="deleteLogEntry('+i+')">&#x2715;</button>';
+    h+='<div class="log-date">'+esc(entries[i].date)+'</div>';
+    h+='<div class="log-text">'+esc(entries[i].text)+'</div>';
+    h+='</div>';
+  }
+  el.innerHTML=h;
+}
+
+/* ======================================================
+   MIRROR MODE
+   ====================================================== */
+var mirrorSents=[], mirrorIdx=0;
+
+function startMirror(){
+  var text=document.getElementById('editor').value;
+  mirrorSents=parseSents(text).map(function(s){return s.trim();}).filter(function(s){return s.length>0;});
+  if(!mirrorSents.length){alert('Nothing to rehearse — write something first.');return;}
+  mirrorIdx=0;
+  updateMirror();
+  document.getElementById('mirror-overlay').classList.add('active');
+}
+
+function updateMirror(){
+  document.getElementById('mirror-sentence').textContent=mirrorSents[mirrorIdx]||'';
+  document.getElementById('mirror-progress').textContent=(mirrorIdx+1)+' / '+mirrorSents.length;
+}
+
+function mirrorNext(){
+  if(mirrorIdx<mirrorSents.length-1){mirrorIdx++;updateMirror();}
+  else{closeMirror();}
+}
+
+function mirrorPrev(){
+  if(mirrorIdx>0){mirrorIdx--;updateMirror();}
+}
+
+function closeMirror(){
+  document.getElementById('mirror-overlay').classList.remove('active');
+}
+
+// Swipe support for mirror mode
+(function(){
+  var sx=0;
+  document.addEventListener('touchstart',function(e){if(document.getElementById('mirror-overlay').classList.contains('active'))sx=e.touches[0].clientX;},{passive:true});
+  document.addEventListener('touchend',function(e){
+    if(!document.getElementById('mirror-overlay').classList.contains('active'))return;
+    var dx=e.changedTouches[0].clientX-sx;
+    if(Math.abs(dx)>50){if(dx<0)mirrorNext();else mirrorPrev();}
+  },{passive:true});
+})();
+
+
+/* ======================================================
+   AI SEMANTIC ANALYSIS
+   ====================================================== */
+var AI_KEY_STORE = 'cadence_api_key';
+var aiRolesCache = null;  // cached AI roles array
+var aiLastText   = null;  // text that produced the cache
+
+function getApiKey(){
+  try{ return localStorage.getItem(AI_KEY_STORE)||''; }catch(e){ return ''; }
+}
+
+function saveApiKey(){
+  var val = document.getElementById('api-key-input').value.trim();
+  if(!val){ setKeyStatus('Enter a key first.', false); return; }
+  if(!val.startsWith('sk-')){ setKeyStatus('Keys start with sk-', false); return; }
+  try{
+    localStorage.setItem(AI_KEY_STORE, val);
+    document.getElementById('api-key-input').value='';
+    setKeyStatus('Saved. Ready to analyze.', true);
+    updateKeyCardVisibility();
+  }catch(e){ setKeyStatus('Could not save.', false); }
+}
+
+function setKeyStatus(msg, good){
+  var el=document.getElementById('api-key-status');
+  if(el){ el.textContent=msg; el.style.color=good?'var(--green)':'var(--red)'; }
+}
+
+function updateKeyCardVisibility(){
+  var card=document.getElementById('api-key-card');
+  if(!card) return;
+  var key=getApiKey();
+  card.style.display = key ? 'none' : '';
+}
+
+function setAiStatus(msg){ var el=document.getElementById('ai-status'); if(el) el.textContent=msg; }
+function setAiBtn(loading){
+  var btn=document.getElementById('ai-analyze-btn');
+  if(!btn) return;
+  btn.disabled=loading;
+  btn.textContent=loading?'Analyzing\u2026':'\u2728 Analyze with AI';
+  btn.className='ai-btn'+(loading?' loading':'');
+}
+
+async function aiAnalyze(){
+  var key=getApiKey();
+  if(!key){
+    var card=document.getElementById('api-key-card');
+    if(card){ card.style.display=''; card.scrollIntoView({behavior:'smooth'}); }
+    setAiStatus('Add your API key below first.');
+    return;
+  }
+
+  var text=document.getElementById('editor').value;
+  var sents=parseSents(text).map(function(s){return s.trim();}).filter(function(s){return s.length>0;});
+  if(sents.length<2){ setAiStatus('Write at least 2 sentences to analyze.'); return; }
+  if(sents.length>60){ setAiStatus('Too many sentences \u2014 analyze a single scene at a time.'); return; }
+
+  setAiBtn(true); setAiStatus('Reading your script\u2026');
+  document.getElementById('ai-results').innerHTML='';
+
+  var numbered='';
+  for(var i=0;i<sents.length;i++) numbered+=(i+1)+'. "'+sents[i]+'"\n';
+
+  var prompt='You are a comedy writing analyst. Analyze this script for joke structure.\n\n'+
+    'Classify each numbered sentence as:\n'+
+    'S = Setup: establishes a premise or expectation in the audience\'s mind\n'+
+    'P = Punchline: subverts the setup\'s expectation, delivers the laugh or surprise\n'+
+    'T = Tag: additional short punchline riding the first laugh, no new setup needed\n'+
+    'N = Neutral: transitional, informational, connective, or not part of a joke\n\n'+
+    'Rules:\n'+
+    '- A P must follow an S (directly or after multiple S sentences)\n'+
+    '- A T must follow a P or another T\n'+
+    '- Multiple S sentences before one P is valid (S S P is fine)\n'+
+    '- Classify by MEANING not length\n'+
+    '- A sentence can only have ONE role\n\n'+
+    'Also identify joke groups: each complete S\u2192P sequence with optional tags.\n\n'+
+    'Return ONLY valid JSON with no other text, no markdown, no explanation:\n'+
+    '{"roles":["N","S","P","T",...],"groups":[{"setups":[0],"punch":1,"tags":[2],"note":"why this works or doesn\'t"}],"overall":"one sentence about the script\'s comic structure"}\n\n'+
+    'Sentence indices are 0-based. Script:\n'+numbered;
+
+  try{
+    var resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1500,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+
+    if(!resp.ok){
+      var err=await resp.json().catch(function(){return{};});
+      var msg=(err.error&&err.error.message)||('Error '+resp.status);
+      if(resp.status===401) msg='Invalid API key \u2014 check it in the key card below.';
+      if(resp.status===429) msg='Rate limited \u2014 wait a moment and try again.';
+      setAiStatus(msg); setAiBtn(false); return;
+    }
+
+    var data=await resp.json();
+    var raw=data.content&&data.content[0]&&data.content[0].text||'';
+    raw=raw.replace(/```json|```/g,'').trim();
+    var result=JSON.parse(raw);
+
+    // Validate
+    if(!Array.isArray(result.roles)||result.roles.length!==sents.length){
+      setAiStatus('Unexpected response \u2014 try again.'); setAiBtn(false); return;
+    }
+
+    // Cache roles for chart
+    aiRolesCache=result.roles;
+    aiLastText=text;
+
+    // Render results
+    renderAiResults(result, sents);
+    setAiStatus('\u2714 AI analysis complete');
+    setAiBtn(false);
+
+    // Re-render chart pips with AI roles
+    renderAiPips(result.roles);
+
+  }catch(e){
+    console.error(e);
+    setAiStatus('Error: '+e.message);
+    setAiBtn(false);
+  }
+}
+
+function renderAiResults(result, sents){
+  var el=document.getElementById('ai-results');
+  if(!el) return;
+  var h='';
+
+  if(result.groups&&result.groups.length>0){
+    for(var i=0;i<result.groups.length;i++){
+      var g=result.groups[i];
+      h+='<div class="ai-group">';
+      h+='<div class="ai-group-head">Joke '+(i+1)+(g.tags&&g.tags.length?' S\u2192P\u2192T':' S\u2192P')+'</div>';
+
+      // Setups
+      var setupIdxs=Array.isArray(g.setups)?g.setups:[g.setup];
+      for(var j=0;j<setupIdxs.length;j++){
+        var idx=setupIdxs[j];
+        if(idx>=0&&idx<sents.length){
+          h+='<div class="ai-sent"><span class="ai-role-badge air-S">S</span><span class="ai-sent-text">'+esc(sents[idx].substring(0,80))+(sents[idx].length>80?'\u2026':'')+'</span></div>';
+        }
+      }
+      // Punchline
+      if(g.punch>=0&&g.punch<sents.length){
+        h+='<div class="ai-sent"><span class="ai-role-badge air-P">P</span><span class="ai-sent-text">'+esc(sents[g.punch].substring(0,80))+(sents[g.punch].length>80?'\u2026':'')+'</span></div>';
+      }
+      // Tags
+      if(g.tags&&g.tags.length){
+        for(var k=0;k<g.tags.length;k++){
+          var ti=g.tags[k];
+          if(ti>=0&&ti<sents.length){
+            h+='<div class="ai-sent"><span class="ai-role-badge air-T">T</span><span class="ai-sent-text">'+esc(sents[ti].substring(0,80))+(sents[ti].length>80?'\u2026':'')+'</span></div>';
+          }
+        }
+      }
+      if(g.note) h+='<div class="ai-note">\u2192 '+esc(g.note)+'</div>';
+      h+='</div>';
+    }
+  } else {
+    h+='<div style="font-size:12px;color:var(--text3);padding:6px 0;">No clear S\u2192P sequences detected. Consider whether each bit has a clear setup and payoff.</div>';
+  }
+
+  if(result.overall){
+    h+='<div class="ai-overall">'+esc(result.overall)+'</div>';
+  }
+  el.innerHTML=h;
+}
+
+function renderAiPips(roles){
+  var rolesEl=document.getElementById('cs-roles');
+  if(!rolesEl) return;
+  var chart=document.getElementById('a-chart');
+  if(!chart) return;
+  var bars=chart.querySelectorAll('.len-bar');
+  if(!bars.length) return;
+  var bw=parseInt(bars[0].style.width)||8;
+  var h='';
+  for(var i=0;i<roles.length;i++){
+    var r=roles[i];
+    var pc=r==='S'?'var(--blue)':r==='P'?'var(--red)':r==='T'?'var(--amber)':'transparent';
+    h+='<div class="role-pip" style="width:'+bw+'px;flex-shrink:0;background:'+pc+';" title="'+r+'"></div>';
+  }
+  rolesEl.innerHTML=h;
+}
+
+
+/* ======================================================
+   RECORD TAB — WHISPER
+   ====================================================== */
+var OAI_KEY='cadence_openai_key';
+var recStream=null,recMediaRecorder=null,recChunks=[],recBlob=null;
+var recInterval=null,recSecs=0,recIsRecording=false;
+var FILLERS=['um','uh','like','you know','sort of','kind of','basically','literally','right','i mean'];
+
+function getOaiKey(){try{return localStorage.getItem(OAI_KEY)||'';}catch(e){return '';}}
+function saveOpenAiKey(){
+  var v=document.getElementById('openai-key-input').value.trim();
+  if(!v){setOaiSt('Enter a key first.',false);return;}
+  if(!v.startsWith('sk-')){setOaiSt('Keys start with sk-',false);return;}
+  try{localStorage.setItem(OAI_KEY,v);document.getElementById('openai-key-input').value='';setOaiSt('Saved \u2714',true);updateOaiCard();}
+  catch(e){setOaiSt('Could not save.',false);}
+}
+function setOaiSt(m,good){var el=document.getElementById('openai-key-status');if(el){el.textContent=m;el.style.color=good?'var(--green)':'var(--red)';}}
+function updateOaiCard(){var c=document.getElementById('openai-key-card');if(c)c.style.display=getOaiKey()?'none':'';}
+function setRecSt(m){var el=document.getElementById('rec-status');if(el)el.textContent=m;}
+function fmtRecTime(s){var m=Math.floor(s/60);s=s%60;return m+':'+(s<10?'0':'')+s;}
+
+async function toggleRecord(){
+  if(recIsRecording){stopRecord();}else{await startRecord();}
+}
+
+async function startRecord(){
+  var preview=document.getElementById('rec-preview');
+  var ph=document.getElementById('rec-placeholder');
+  var playback=document.getElementById('rec-playback');
+  try{
+    recStream=await navigator.mediaDevices.getUserMedia({audio:true,video:true});
+    preview.srcObject=recStream;
+    preview.classList.remove('hidden');
+    ph.style.display='none';
+  }catch(e){
+    try{
+      recStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+      ph.querySelector('.rec-ph-text').textContent='Audio only';
+    }catch(e2){setRecSt('Mic access denied \u2014 check browser permissions.');return;}
+  }
+  playback.classList.add('hidden');
+  var empty=document.getElementById('rec-empty');
+  if(empty) empty.style.display='none';
+  recChunks=[];
+  if(typeof MediaRecorder==='undefined'){setRecSt('Recording not supported in this browser.');return;}
+  var mime='audio/webm';
+  if(!MediaRecorder.isTypeSupported('audio/webm')) mime=MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':'';
+  try{recMediaRecorder=new MediaRecorder(recStream,mime?{mimeType:mime}:{});}
+  catch(e){recMediaRecorder=new MediaRecorder(recStream);}
+  recMediaRecorder.ondataavailable=function(e){if(e.data&&e.data.size>0)recChunks.push(e.data);};
+  recMediaRecorder.onstop=function(){
+    recBlob=new Blob(recChunks,{type:recMediaRecorder.mimeType||'audio/webm'});
+    var url=URL.createObjectURL(recBlob);
+    playback.src=url;playback.classList.remove('hidden');preview.classList.add('hidden');
+    document.getElementById('rec-transcribe-btn').disabled=false;
+    setRecSt('Take recorded ('+fmtRecTime(recSecs)+'). Tap Transcribe to analyze.');
+  };
+  recMediaRecorder.start(500);
+  recIsRecording=true; recSecs=0;
+  document.getElementById('rec-timer').classList.add('on');
+  recInterval=setInterval(function(){recSecs++;document.getElementById('rec-timer-val').textContent=fmtRecTime(recSecs);},1000);
+  document.getElementById('rec-btn').classList.add('recording');
+  setRecSt('Recording\u2026');
+}
+
+function stopRecord(){
+  if(recMediaRecorder&&recMediaRecorder.state!=='inactive') recMediaRecorder.stop();
+  if(recStream) recStream.getTracks().forEach(function(t){t.stop();});
+  clearInterval(recInterval);
+  document.getElementById('rec-timer').classList.remove('on');
+  document.getElementById('rec-btn').classList.remove('recording');
+  recIsRecording=false;
+}
+
+async function transcribeRecording(){
+  if(!recBlob){setRecSt('Nothing recorded yet.');return;}
+  var key=getOaiKey();
+  if(!key){
+    var c=document.getElementById('openai-key-card');
+    if(c){c.style.display='';c.scrollIntoView({behavior:'smooth'});}
+    setRecSt('Add your OpenAI API key to transcribe.');return;
+  }
+  var btn=document.getElementById('rec-transcribe-btn');
+  btn.disabled=true; btn.textContent='Transcribing\u2026';
+  setRecSt('Sending to Whisper\u2026');
+  try{
+    var ext=recBlob.type.includes('mp4')?'take.mp4':'take.webm';
+    var fd=new FormData();
+    fd.append('file',recBlob,ext);
+    fd.append('model','whisper-1');
+    fd.append('response_format','verbose_json');
+    fd.append('timestamp_granularities[]','segment');
+    var resp=await fetch('https://api.openai.com/v1/audio/transcriptions',{
+      method:'POST',headers:{'Authorization':'Bearer '+key},body:fd
+    });
+    if(!resp.ok){
+      var err=await resp.json().catch(function(){return{};});
+      var msg=(err.error&&err.error.message)||('Error '+resp.status);
+      if(resp.status===401) msg='Invalid OpenAI key.';
+      if(resp.status===429) msg='Rate limited \u2014 wait a moment.';
+      setRecSt(msg);btn.disabled=false;btn.textContent='Transcribe \u2728';return;
+    }
+    var data=await resp.json();
+    setRecSt('Analysis complete \u2714');
+    btn.textContent='Transcribe \u2728';
+    renderRecAnalysis(data);
+  }catch(e){
+    setRecSt('Error: '+e.message);
+    btn.disabled=false;btn.textContent='Transcribe \u2728';
+  }
+}
+
+function renderRecAnalysis(whisper){
+  var text=whisper.text||'';
+  var segs=whisper.segments||[];
+  var duration=segs.length>0?segs[segs.length-1].end:(recSecs||1);
+  var results=document.getElementById('rec-results');
+  var old=results.querySelectorAll('.rec-a-block');
+  for(var i=0;i<old.length;i++) old[i].parentNode.removeChild(old[i]);
+  var blocks='';
+
+  /* Transcript */
+  blocks+='<div class="card rec-a-block"><span class="card-label">Transcript</span><div style="font-size:12px;color:var(--text2);line-height:1.75;margin-top:4px;font-family:var(--mono);">'+esc(text)+'</div></div>';
+
+  /* Pace */
+  var words=text.trim().split(/\s+/).filter(function(w){return w.length>0;});
+  var wpm=duration>0?Math.round(words.length/(duration/60)):0;
+  var paceCol=wpm<100?'var(--blue)':wpm<140?'var(--green)':wpm<170?'var(--amber)':'var(--red)';
+  var paceDesc=wpm<100?'Very slow':wpm<130?'Measured delivery':wpm<155?'Conversational \u2014 good':wpm<175?'Fast \u2014 slow before punches':'Very fast \u2014 setups will blur';
+  var pacePct=Math.min(100,Math.round(wpm/220*100));
+  blocks+='<div class="card rec-a-block"><span class="card-label">Pace</span>';
+  blocks+='<div class="pace-gauge"><div class="pace-track"><div class="pace-fill" style="width:'+pacePct+'%;background:'+paceCol+'"></div></div><span class="pace-num">'+wpm+'<span style="font-size:11px;font-weight:400;color:var(--text3)"> wpm</span></span></div>';
+  blocks+='<div style="font-size:11px;color:var(--text2);margin-top:4px;">'+paceDesc+'</div>';
+  if(segs.length>1){
+    var fw=0,ft='';
+    for(var i=0;i<segs.length;i++){var sd=segs[i].end-segs[i].start,sw=segs[i].text.trim().split(/\s+/).length,sw2=sd>0?Math.round(sw/(sd/60)):0;if(sw2>fw){fw=sw2;ft=segs[i].text.trim();}}
+    blocks+='<div style="font-size:10px;color:var(--text3);margin-top:5px;">Fastest segment: <em>\u201c'+esc(ft.substring(0,50))+(ft.length>50?'\u2026':'')+'\u201d</em> at '+fw+' wpm</div>';
+  }
+  blocks+='</div>';
+
+  /* Fillers */
+  var fillerF={};
+  for(var i=0;i<FILLERS.length;i++){var m=text.match(new RegExp('\\b'+FILLERS[i]+'\\b','gi'));if(m&&m.length)fillerF[FILLERS[i]]=m.length;}
+  var totalF=0;for(var k in fillerF)totalF+=fillerF[k];
+  blocks+='<div class="card rec-a-block"><span class="card-label">Filler words</span>';
+  if(!totalF){blocks+='<div style="font-size:12px;color:var(--hgood);margin-top:4px;">None detected. Clean delivery.</div>';}
+  else{
+    blocks+='<div style="font-size:12px;color:var(--text2);margin-top:4px;">'+totalF+' filler'+(totalF!==1?'s':'')+' detected</div><div class="chip-list" style="margin-top:6px;">';
+    for(var k in fillerF) blocks+='<span class="chip w">'+esc(k)+' \u00d7'+fillerF[k]+'</span>';
+    blocks+='</div>';
+  }
+  blocks+='</div>';
+
+  /* Pauses */
+  var pauses=[];
+  for(var i=1;i<segs.length;i++){var g=segs[i].start-segs[i-1].end;if(g>0.35)pauses.push({dur:g,before:segs[i].text.trim()});}
+  blocks+='<div class="card rec-a-block"><span class="card-label">Pauses</span>';
+  if(!pauses.length){
+    blocks+='<div style="font-size:12px;color:var(--hwarn);margin-top:4px;">No significant pauses. Try pausing before punchlines \u2014 the silence creates the expectation.</div>';
+  }else{
+    var avgP=pauses.reduce(function(a,b){return a+b.dur;},0)/pauses.length;
+    var longP=pauses.filter(function(p){return p.dur>0.8;}).length;
+    blocks+='<div style="font-size:12px;color:var(--text2);margin-top:4px;">'+pauses.length+' pause'+(pauses.length!==1?'s':'')+'  \u2022  avg '+avgP.toFixed(1)+'s  \u2022  '+longP+' long (&gt;0.8s)</div>';
+    blocks+='<div class="pause-map">';
+    if(duration>0){
+      var mw=270;
+      for(var i=0;i<segs.length;i++){
+        var sw3=Math.max(3,Math.round((segs[i].end-segs[i].start)/duration*mw));
+        blocks+='<div class="pm-speech" style="width:'+sw3+'px;height:26px;" title="'+esc(segs[i].text.trim().substring(0,50))+'"></div>';
+        if(i<segs.length-1){
+          var gw2=segs[i+1].start-segs[i].end;
+          if(gw2>0.1){var gpx=Math.max(2,Math.round(gw2/duration*mw)),gh=Math.min(36,Math.max(5,Math.round(gw2*10)));blocks+='<div class="pm-gap" style="width:'+gpx+'px;height:'+gh+'px;" title="'+gw2.toFixed(1)+'s pause"></div>';}
+        }
+      }
+    }
+    blocks+='</div><div style="font-size:10px;color:var(--text3);margin-top:4px;">Blue=speech &nbsp;\u25cf&nbsp; Red=pause. Taller red = longer silence.</div>';
+  }
+  blocks+='</div>';
+
+  /* Cadence analysis of spoken words */
+  var spSents=parseSents(text),spSt=0,spLe=0;
+  for(var i=0;i<spSents.length;i++){if(isStaccato(spSents[i]))spSt++;else spLe++;}
+  var spW=findWeasels(text),spV=findVague(text),spP=findPassive(text);
+  blocks+='<div class="card rec-a-block"><span class="card-label">Cadence analysis of speech</span>';
+  blocks+='<div class="struct-row"><span class="struct-row-label">Staccato endings</span><span class="struct-row-val">'+spSt+'</span></div>';
+  blocks+='<div class="struct-row"><span class="struct-row-label">Legato endings</span><span class="struct-row-val">'+spLe+'</span></div>';
+  if(spW.length) blocks+='<div class="struct-row"><span class="struct-row-label">Weasel words spoken</span><span class="struct-row-val warn">'+spW.join(', ')+'</span></div>';
+  if(spV.length) blocks+='<div class="struct-row"><span class="struct-row-label">Vague words spoken</span><span class="struct-row-val warn">'+spV.join(', ')+'</span></div>';
+  if(spP.length) blocks+='<div class="struct-row"><span class="struct-row-label">Passive voice spoken</span><span class="struct-row-val bad">'+spP.join(', ')+'</span></div>';
+  if(!spW.length&&!spV.length&&!spP.length) blocks+='<div style="font-size:12px;color:var(--hgood);margin-top:4px;">No weasels, vague language, or passive voice detected.</div>';
+  blocks+='</div>';
+
+  /* Script deviation */
+  var sceneText=getCurrentScene().text||'';
+  if(sceneText.trim()){
+    var sW=sceneText.toLowerCase().replace(/[^a-z\s]/g,'').split(/\s+/).filter(function(w){return w.length>2;});
+    var spW2=text.toLowerCase().replace(/[^a-z\s]/g,'').split(/\s+/).filter(function(w){return w.length>2;});
+    var sMap={};for(var i=0;i<sW.length;i++) sMap[sW[i]]=(sMap[sW[i]]||0)+1;
+    var uMap={},matched=0;
+    for(var i=0;i<spW2.length;i++){var w=spW2[i];if(sMap[w]&&(uMap[w]||0)<sMap[w]){matched++;uMap[w]=(uMap[w]||0)+1;}}
+    var devPct=sW.length>0?Math.round(matched/sW.length*100):0;
+    var devCls=devPct>=85?'good':devPct>=65?'warn':'bad';
+    var devDesc=devPct>=85?'Very close to script':devPct>=70?'Some improv \u2014 note what changed':devPct>=50?'Significant deviation':'Very different from script \u2014 was it better?';
+    blocks+='<div class="card rec-a-block"><span class="card-label">Script deviation</span>';
+    blocks+='<div class="struct-row"><span class="struct-row-label">Words matched to script</span><span class="struct-row-val '+devCls+'">'+devPct+'%</span></div>';
+    blocks+='<div style="font-size:11px;color:var(--text2);margin-top:4px;">'+devDesc+'</div>';
+    blocks+='<div style="font-size:10px;color:var(--text3);margin-top:4px;">If the improv was funnier, update your script with the new version.</div></div>';
+  }
+
+  var frag=document.createElement('div');
+  frag.innerHTML=blocks;
+  while(frag.firstChild) results.appendChild(frag.firstChild);
+  document.getElementById('rec-transcribe-btn').disabled=false;
+}
+
+/* ======================================================
+   AI COMEDY TUTOR
+   ====================================================== */
+async function askTutor(){
+  var question=document.getElementById('tutor-input').value.trim();
+  if(!question){return;}
+  var key=getApiKey();
+  if(!key){
+    document.getElementById('tutor-ctx').textContent='Add your Anthropic API key in the Analysis tab first.';
+    return;
+  }
+  var btn=document.getElementById('tutor-btn');
+  var respEl=document.getElementById('tutor-response');
+  var respText=document.getElementById('tutor-response-text');
+  btn.disabled=true; btn.textContent='Thinking\u2026';
+  respEl.className='tutor-response visible';
+  respText.textContent='';
+  document.getElementById('tutor-ctx').textContent='Asking Claude\u2026';
+
+  var sceneText=getCurrentScene().text||'';
+  var context=sceneText.trim()
+    ? 'The user\'s current scene script:\n"""\n'+sceneText.substring(0,1200)+'\n"""\n\n'
+    : '';
+
+  var systemPrompt='You are a comedy writing coach and expert in comedy craft, structure, and performance. '+
+    'You have deep knowledge of Carlin, Pryor, Seinfeld, Chappelle, Larry David, Lenny Bruce, Norm Macdonald, Steve Martin, Maria Bamford, and the craft of YouTube comedy. '+
+    'The user is building a YouTube comedy show called JD Warren Versus \u2014 a scripted comedy album review show where they experience records on vinyl for the first time on camera. '+
+    'Give specific, actionable advice. Reference the actual script text when relevant. Be direct and concise. No more than 200 words. No bullet points unless listing specific examples from their script.';
+
+  var userMessage=context+'Question: '+question;
+
+  try{
+    var resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:400,
+        system:systemPrompt,
+        messages:[{role:'user',content:userMessage}]
+      })
+    });
+    if(!resp.ok){
+      var err=await resp.json().catch(function(){return{};});
+      var msg=(err.error&&err.error.message)||('Error '+resp.status);
+      if(resp.status===401) msg='Invalid API key.';
+      respText.textContent=msg;
+      btn.disabled=false; btn.textContent='Ask Claude';
+      document.getElementById('tutor-ctx').textContent='Uses your Anthropic API key';
+      return;
+    }
+    var data=await resp.json();
+    var answer=(data.content&&data.content[0]&&data.content[0].text)||'No response.';
+    respText.textContent=answer;
+    document.getElementById('tutor-ctx').textContent='Uses your Anthropic API key';
+  }catch(e){
+    respText.textContent='Error: '+e.message;
+  }
+  btn.disabled=false; btn.textContent='Ask Claude';
+}
+
+
+var SCENE_CUR = 'cadence_current_scene';
+
+var SCENE_TYPES = ['Prologue','Intro','Part','Review','Outro','Voiceover','B-Roll'];
+var SCENE_LOCS  = ['Desk','Couch','Record Player','Voiceover','B-Roll','Other'];
+
+function genId(){ return 'sc_'+Math.random().toString(36).slice(2,9); }
+
+function loadScenes(){
+  try{
+    var s=localStorage.getItem(SCENE_KEY);
+    if(s){var d=JSON.parse(s);if(Array.isArray(d)&&d.length>0)return d;}
+  }catch(e){}
+  var def={id:genId(),name:'Intro',type:'Intro',location:'Desk',text:'',order:0};
+  saveScenes([def]);
+  return [def];
+}
+
+function saveScenes(scenes){
+  try{localStorage.setItem(SCENE_KEY,JSON.stringify(scenes));}catch(e){}
+}
+
+function getCurrentSceneId(){
+  try{return localStorage.getItem(SCENE_CUR)||null;}catch(e){return null;}
+}
+
+function setCurrentSceneId(id){
+  try{localStorage.setItem(SCENE_CUR,id);}catch(e){}
+}
+
+function getScenes(){ return loadScenes().sort(function(a,b){return a.order-b.order;}); }
+
+function getCurrentScene(){
+  var scenes=getScenes();
+  var id=getCurrentSceneId();
+  var found=null;
+  for(var i=0;i<scenes.length;i++)if(scenes[i].id===id){found=scenes[i];break;}
+  return found||scenes[0];
+}
+
+/* Save current editor text into current scene */
+function saveCurrentSceneText(){
+  var cur=getCurrentScene();
+  if(!cur)return;
+  var scenes=loadScenes();
+  for(var i=0;i<scenes.length;i++){
+    if(scenes[i].id===cur.id){
+      scenes[i].text=document.getElementById('editor').value;
+      break;
+    }
+  }
+  saveScenes(scenes);
+}
+
+/* Switch to a scene */
+function switchScene(id){
+  saveCurrentSceneText();
+  setCurrentSceneId(id);
+  var scenes=getScenes();
+  var scene=null;
+  for(var i=0;i<scenes.length;i++)if(scenes[i].id===id){scene=scenes[i];break;}
+  if(!scene)return;
+  document.getElementById('editor').value=scene.text||'';
+  renderSceneStrip();
+  render();
+}
+
+/* Add a new scene */
+function addScene(){
+  saveCurrentSceneText();
+  var scenes=loadScenes();
+  var maxOrder=0;
+  for(var i=0;i<scenes.length;i++)if(scenes[i].order>maxOrder)maxOrder=scenes[i].order;
+  var id=genId();
+  var num=scenes.length+1;
+  var newScene={id:id,name:'Part '+num,type:'Part',location:'Desk',text:'',order:maxOrder+1};
+  scenes.push(newScene);
+  saveScenes(scenes);
+  switchScene(id);
+}
+
+/* Render the scene strip */
+function renderSceneStrip(){
+  var strip=document.getElementById('scene-strip');
+  if(!strip)return;
+  var scenes=getScenes();
+  var curId=getCurrentScene().id;
+  var h='';
+  for(var i=0;i<scenes.length;i++){
+    var s=scenes[i];
+    var active=s.id===curId?'active':'';
+    h+='<div class="scene-tab-wrap '+(active?'active':'')+'">';
+    h+='<button class="scene-tab '+active+'" onclick="switchScene(\''+s.id+'\')">';
+    h+='<span class="scene-tab-type">'+esc(s.type)+'</span>';
+    h+='<span>'+esc(s.name)+'</span>';
+    h+='</button>';
+    h+='<button class="scene-edit-btn" onclick="openSheet(\''+s.id+'\')" title="Edit scene">&#x270E;</button>';
+    h+='</div>';
+  }
+  h+='<button class="scene-add-btn" onclick="addScene()" title="Add scene">+</button>';
+  strip.innerHTML=h;
+
+  /* Long press support for touch */
+  var tabs=strip.querySelectorAll('.scene-tab');
+  for(var i=0;i<scenes.length;i++){
+    (function(sceneId){
+      var el=tabs[i];
+      var t;
+      el.addEventListener('touchstart',function(){t=setTimeout(function(){openSheet(sceneId);},500);},{passive:true});
+      el.addEventListener('touchend',function(){clearTimeout(t);},{passive:true});
+      el.addEventListener('touchmove',function(){clearTimeout(t);},{passive:true});
+    })(scenes[i].id);
+  }
+}
+
+/* Render full script pane */
+function renderScript(){
+  var inner=document.getElementById('script-inner');
+  if(!inner)return;
+  saveCurrentSceneText();
+  var scenes=getScenes();
+  if(!scenes.length){inner.innerHTML='<div style="font-size:12px;color:var(--text3);text-align:center;padding:40px 20px;">No scenes yet.</div>';return;}
+  var h='<button class="script-export-btn" onclick="exportScript()">Export full script .txt</button>';
+  for(var i=0;i<scenes.length;i++){
+    var s=scenes[i];
+    h+='<div class="script-scene">';
+    h+='<div class="script-scene-hdr">';
+    h+='<span class="script-scene-num">'+String(i+1).padStart(2,'0')+'</span>';
+    h+='<span class="script-scene-name">'+esc(s.name)+'</span>';
+    h+='<span class="script-scene-loc">'+esc(s.location)+'</span>';
+    h+='</div>';
+    h+='<div class="script-scene-body">'+(s.text?esc(s.text):'<span style="color:var(--text3);font-style:italic;">Empty</span>')+'</div>';
+    h+='</div>';
+  }
+  inner.innerHTML=h;
+}
+
+function exportScript(){
+  saveCurrentSceneText();
+  var scenes=getScenes();
+  var out='';
+  for(var i=0;i<scenes.length;i++){
+    var s=scenes[i];
+    out+='=== '+String(i+1)+'. '+s.name+' ['+s.type+' / '+s.location+'] ===\n\n';
+    out+=(s.text||'(empty)')+'\n\n\n';
+  }
+  var a=document.createElement('a');
+  a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(out);
+  a.download='cadence-script.txt';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+
+/* ── Sheet ── */
+var sheetSceneId=null;
+var sheetType='Part', sheetLoc='Desk';
+
+function openSheet(id){
+  sheetSceneId=id;
+  var scenes=loadScenes();
+  var scene=null;
+  for(var i=0;i<scenes.length;i++)if(scenes[i].id===id){scene=scenes[i];break;}
+  if(!scene)return;
+  document.getElementById('sheet-name').value=scene.name;
+  sheetType=scene.type;
+  sheetLoc=scene.location;
+  renderSheetChips();
+  document.getElementById('sheet-overlay').classList.add('active');
+  document.getElementById('scene-sheet').classList.add('active');
+}
+
+function closeSheet(){
+  document.getElementById('sheet-overlay').classList.remove('active');
+  document.getElementById('scene-sheet').classList.remove('active');
+  sheetSceneId=null;
+}
+
+function renderSheetChips(){
+  var tc=document.getElementById('sheet-type-chips');
+  var lc=document.getElementById('sheet-loc-chips');
+  if(tc){
+    var h='';
+    for(var i=0;i<SCENE_TYPES.length;i++){
+      var active=SCENE_TYPES[i]===sheetType?'active':'';
+      h+='<button class="sheet-chip '+active+'" onclick="selectType(\''+SCENE_TYPES[i]+'\')">'+SCENE_TYPES[i]+'</button>';
+    }
+    tc.innerHTML=h;
+  }
+  if(lc){
+    var h='';
+    for(var i=0;i<SCENE_LOCS.length;i++){
+      var active=SCENE_LOCS[i]===sheetLoc?'active':'';
+      h+='<button class="sheet-chip '+active+'" onclick="selectLoc(\''+SCENE_LOCS[i]+'\')">'+SCENE_LOCS[i]+'</button>';
+    }
+    lc.innerHTML=h;
+  }
+}
+
+function selectType(t){sheetType=t;renderSheetChips();}
+function selectLoc(l){sheetLoc=l;renderSheetChips();}
+
+function saveSheet(){
+  if(!sheetSceneId)return;
+  var name=document.getElementById('sheet-name').value.trim()||'Scene';
+  var scenes=loadScenes();
+  for(var i=0;i<scenes.length;i++){
+    if(scenes[i].id===sheetSceneId){
+      scenes[i].name=name;
+      scenes[i].type=sheetType;
+      scenes[i].location=sheetLoc;
+      break;
+    }
+  }
+  saveScenes(scenes);
+  renderSceneStrip();
+  closeSheet();
+}
+
+function deleteScene(){
+  if(!sheetSceneId)return;
+  var scenes=loadScenes();
+  if(scenes.length<=1){alert('You need at least one scene.');return;}
+  var remaining=scenes.filter(function(s){return s.id!==sheetSceneId;});
+  saveScenes(remaining);
+  closeSheet();
+  switchScene(remaining[0].id);
+}
+
+function moveScene(dir){
+  if(!sheetSceneId)return;
+  var scenes=getScenes();
+  var idx=-1;
+  for(var i=0;i<scenes.length;i++)if(scenes[i].id===sheetSceneId){idx=i;break;}
+  if(idx<0)return;
+  var newIdx=idx+dir;
+  if(newIdx<0||newIdx>=scenes.length)return;
+  var tmp=scenes[idx].order;
+  scenes[idx].order=scenes[newIdx].order;
+  scenes[newIdx].order=tmp;
+  saveScenes(scenes);
+  renderSceneStrip();
+}
+
 function switchPane(name,btn){
   var items=document.querySelectorAll('.tab-item');
   for(var i=0;i<items.length;i++)items[i].classList.remove('active');
@@ -901,6 +2605,9 @@ function switchPane(name,btn){
   document.getElementById('pane-'+name).classList.remove('hidden');
   var toolbar=document.getElementById('write-toolbar');
   if(name==='write'){toolbar.classList.remove('hidden');}else{toolbar.classList.add('hidden');}
+  if(name==='practice'){renderLog();}
+  if(name==='script'){renderScript();}
+  if(name==='record'){updateOaiCard();}
 }
 
 /* ======================================================
@@ -912,7 +2619,11 @@ function copyText(){
 }
 function clearText(){
   if(!document.getElementById('editor').value)return;
-  if(window.confirm('Clear all text?')){document.getElementById('editor').value='';render();}
+  if(window.confirm('Clear this scene?')){
+    document.getElementById('editor').value='';
+    saveCurrentSceneText();
+    render();
+  }
 }
 function dlText(){
   var t=document.getElementById('editor').value;
@@ -937,8 +2648,38 @@ function dlSession(){
 /* ======================================================
    INIT
    ====================================================== */
-document.getElementById('editor').addEventListener('input',render);
+var SAVE_KEY='cadence_draft';
+
+// Scene-aware save on input
+document.getElementById('editor').addEventListener('input',function(){
+  saveCurrentSceneText();
+  // Clear AI status if text changed since last analysis
+  if(aiLastText && document.getElementById('editor').value !== aiLastText){
+    setAiStatus('Text changed \u2014 re-analyze when ready.');
+  }
+  render();
+});
+
+// Page hide — save scene text
+window.addEventListener('pagehide', function(){ saveCurrentSceneText(); });
+window.addEventListener('visibilitychange', function(){ if(document.visibilityState==='hidden') saveCurrentSceneText(); });
+
+// Restore saved mode
+try{var sm=localStorage.getItem('cadence_mode');if(sm==='standup')setMode('standup');}catch(e){}
+
 buildLearn();
+buildDrills();
+buildChecklist();
+updateRhythmGuide();
+updateLegend();
+updateKeyCardVisibility();
+updateOaiCard();
+
+// Init scenes
+var _initScene=getCurrentScene();
+setCurrentSceneId(_initScene.id);
+document.getElementById('editor').value=_initScene.text||'';
+renderSceneStrip();
 render();
 </script>
 </body>
