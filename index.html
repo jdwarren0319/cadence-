@@ -357,7 +357,7 @@ body {
 .script-scene-body { padding: 10px 12px; font-size: 12px; font-family: var(--mono); color: var(--text2); line-height: 1.8; white-space: pre-wrap; }
 .script-export-btn { width: 100%; padding: 13px; background: var(--text1); color: var(--bg1); border: none; border-radius: var(--rl); font-size: 14px; font-weight: 700; font-family: var(--sans); cursor: pointer; touch-action: manipulation; }
 /* ── Comic structure ── */
-.lpm-row { display: flex; align-items: baseline; gap: 8px; margin: 4px 0 10px; }
+.lpm-row { display: flex; align-items: baseline; gap: 8px; margin: 4px 0 8px; }
 .lpm-big { font-size: 28px; font-weight: 700; color: var(--text1); font-variant-numeric: tabular-nums; line-height: 1; }
 .lpm-label { font-size: 11px; color: var(--text2); }
 .struct-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--bdr); }
@@ -367,6 +367,30 @@ body {
 .struct-row-val.good { color: var(--green); }
 .struct-row-val.warn { color: var(--amber); }
 .struct-row-val.bad  { color: var(--red); }
+/* Bit cards */
+.bit-card { border: 1px solid var(--bdr); border-radius: var(--r); padding: 9px 10px; margin-bottom: 6px; background: var(--bg3); }
+.bit-card:last-child { margin-bottom: 0; }
+.bit-header { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+.bit-num { font-size: 9px; font-weight: 700; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; }
+.bit-verdict { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+.bv-strong { background: var(--gobg); color: var(--gofg); }
+.bv-warn   { background: var(--wabg); color: var(--wafg); }
+.bv-weak   { background: var(--rebg); color: var(--refg); }
+.bit-preview { font-size: 11px; color: var(--text2); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 5px; font-style: italic; }
+.bit-ratio-wrap { display: flex; align-items: center; gap: 6px; }
+.bit-ratio-bar { flex: 1; height: 5px; border-radius: 3px; overflow: hidden; background: var(--bg2); display: flex; }
+.bit-ratio-fr { height: 100%; background: var(--blue); }
+.bit-ratio-sp { height: 100%; background: var(--red); }
+.bit-ratio-label { font-size: 10px; color: var(--text3); flex-shrink: 0; min-width: 60px; text-align: right; }
+.bit-sents { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 6px; }
+.bit-sent-pill { font-size: 9px; padding: 2px 7px; border-radius: 20px; cursor: default; }
+.bsp-fact     { background: var(--lebg);  color: var(--lefg); }
+.bsp-reaction { background: var(--nebg);  color: var(--nefg); }
+.bsp-setup    { background: var(--gbg);   color: var(--gfg); }
+.bsp-punch    { background: var(--stbg);  color: var(--stfg); }
+.bsp-tag      { background: var(--wabg);  color: var(--wafg); }
+.bsp-neutral  { background: var(--bg3);   color: var(--text3); }
+.bit-gap-warn { font-size: 10px; color: var(--red); margin-top: 5px; }
 .chart-roles { display: flex; gap: 2px; margin-top: 4px; overflow: hidden; }
 .role-pip { height: 3px; border-radius: 1px; flex-shrink: 0; }
 /* ── AI analysis ── */
@@ -536,13 +560,29 @@ body {
       </div>
 
       <div class="card" style="margin:0 12px">
-        <span class="card-label">Comic structure</span>
-        <div class="card-desc">Pattern detection based on real comedy scripts. S&#x2192;P = Setup&#x2192;Punchline. S&#x2192;P&#x2192;T adds a Tag. Dead zones are 5+ sentences with no punch. The AI version reads your actual meaning.</div>
-        <div class="lpm-row">
+        <span class="card-label">Bit analysis</span>
+        <div class="card-desc">Your script is split into bits by blank lines. Each bit is scored for comedy balance — how much is information vs how much is comedy. Aim for roughly 60% Fact/Reaction and 40% Setup/Punchline across your episode.</div>
+
+        <div class="lpm-row" style="margin-bottom:8px;">
           <span class="lpm-big" id="cs-lpm">&#x2014;</span>
-          <span class="lpm-label" id="cs-lpm-label">LPM &mdash; laughs per minute</span>
+          <span class="lpm-label" id="cs-lpm-label">estimated laughs per minute</span>
         </div>
-        <div id="cs-rows"></div>
+
+        <!-- Episode ratio bar -->
+        <div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:4px;">
+            <span>Fact / Reaction</span><span>Setup / Punchline</span>
+          </div>
+          <div style="height:8px;border-radius:4px;overflow:hidden;background:var(--bg3);display:flex;">
+            <div id="cs-fr-bar" style="height:100%;background:var(--blue);transition:width 0.3s;width:0%;"></div>
+            <div id="cs-sp-bar" style="height:100%;background:var(--red);transition:width 0.3s;width:0%;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-top:3px;">
+            <span id="cs-fr-pct">—</span><span id="cs-sp-pct">—</span>
+          </div>
+        </div>
+
+        <div id="cs-bits"></div>
         <div class="chart-roles" id="cs-roles" style="margin-top:8px;"></div>
         <div style="margin-top:10px;display:flex;gap:8px;align-items:center;">
           <button class="ai-btn" id="ai-analyze-btn" onclick="aiAnalyze()">&#x2728; Analyze with AI</button>
@@ -1028,40 +1068,55 @@ function render(){
 }
 
 /* ======================================================
-   COMIC STRUCTURE DETECTION
+   BIT & COMIC STRUCTURE DETECTION
    ====================================================== */
-function detectComicPatterns(data){
-  var PUNCH_MAX = MODE==='video' ? 7 : 6;
-  var SETUP_MIN = MODE==='video' ? 12 : 10;
-  var sp=0, spt=0;
-  var deadZones=[], dzStart=-1, dzLen=0;
-  var roles=[];
+function parseBits(text){
+  var paragraphs=text.split(/\n\s*\n/);
+  var bits=[];
+  for(var i=0;i<paragraphs.length;i++){var p=paragraphs[i].trim();if(p)bits.push(p);}
+  return bits;
+}
 
-  for(var i=0;i<data.length;i++) roles.push('n'); // n=neutral
-
-  for(var i=0;i<data.length;i++){
-    var isPunch = data[i].wn <= PUNCH_MAX && data[i].wn > 0;
-    var isSetup  = data[i].wn >= SETUP_MIN;
-
-    // Dead zone tracking
-    if(!isPunch){ dzLen++; if(dzLen===1) dzStart=i; }
-    else{
-      if(dzLen>=5) deadZones.push({start:dzStart,end:i-1});
-      dzLen=0; dzStart=-1;
-    }
-
-    // S→P detection
-    if(isPunch && i>0 && data[i-1].wn>=SETUP_MIN){
-      roles[i-1]='S'; roles[i]='P';
-      // S→P→T: next sentence is also short
-      if(i<data.length-1 && data[i+1].wn<=PUNCH_MAX+2 && data[i+1].wn>0){
-        roles[i+1]='T'; spt++;
-      } else { sp++; }
-    }
+function classifySentence(s,prev,next){
+  var lower=s.toLowerCase().trim();
+  var wn=wc(s);
+  var isPunch=wn<=6&&wn>0;
+  var isLong=wn>=12;
+  var REV=['but ','however','except','yet ','though','although','turns out','only to','instead'];
+  var hasReversal=false;
+  var secondHalf=lower.slice(Math.floor(lower.length/2));
+  for(var i=0;i<REV.length;i++)if(secondHalf.indexOf(REV[i])>=0){hasReversal=true;break;}
+  var FACT=[/\d+/,/billion|million|thousand/i,/percent|%/,/born|released|founded|studied|attended|dropped out|signed|debuted|according to/i];
+  var isFact=false;
+  for(var i=0;i<FACT.length;i++)if(FACT[i].test(s)){isFact=true;break;}
+  var REACT=[/^(i |i')/i,/^(wait|what|no |yes |wow|holy|oh |so )/i];
+  var isReact=false;
+  for(var i=0;i<REACT.length;i++)if(REACT[i].test(lower)){isReact=true;break;}
+  if(isPunch){
+    if(prev&&wc(prev)<=6) return 'tag';
+    return 'punchline';
   }
-  if(dzLen>=5) deadZones.push({start:dzStart,end:data.length-1});
+  if(isFact&&!isReact) return 'fact';
+  if(isReact&&!isFact) return 'reaction';
+  if(isLong) return 'setup';
+  if(hasReversal) return 'punchline';
+  return 'neutral';
+}
 
-  return {sp:sp, spt:spt, deadZones:deadZones, roles:roles};
+function scoreBit(roles){
+  var fr=0,sp=0;
+  for(var i=0;i<roles.length;i++){
+    if(roles[i]==='fact'||roles[i]==='reaction') fr++;
+    else if(roles[i]==='setup'||roles[i]==='punchline'||roles[i]==='tag') sp++;
+  }
+  var hasPunch=roles.indexOf('punchline')>=0||roles.indexOf('tag')>=0;
+  var verdict,cls;
+  if(roles.length<=1){verdict='Too short to score';cls='bv-warn';}
+  else if(!hasPunch){verdict='No punchline \u2014 add one';cls='bv-weak';}
+  else if(sp===0){verdict='All information \u2014 add a reaction';cls='bv-warn';}
+  else if(fr===0){verdict='All jokes \u2014 add some facts';cls='bv-warn';}
+  else{verdict='Good balance';cls='bv-strong';}
+  return{fr:fr,sp:sp,total:roles.length,verdict:verdict,cls:cls};
 }
 
 function findReversals(sents){
@@ -1070,32 +1125,19 @@ function findReversals(sents){
   for(var i=0;i<sents.length;i++){
     var s=sents[i].toLowerCase();
     var words=s.split(/\s+/);
-    if(words.length<4) continue;
+    if(words.length<4)continue;
     var secondHalf=words.slice(Math.floor(words.length/2)).join(' ');
-    for(var j=0;j<REV.length;j++){
-      if(secondHalf.indexOf(REV[j])>=0){count++;break;}
-    }
+    for(var j=0;j<REV.length;j++)if(secondHalf.indexOf(REV[j])>=0){count++;break;}
   }
   return count;
 }
 
-function calcLPM(data, wcTotal){
-  var PUNCH_MAX = MODE==='video' ? 7 : 6;
-  var punches=0;
-  for(var i=0;i<data.length;i++) if(data[i].wn<=PUNCH_MAX&&data[i].wn>0) punches++;
-  var mins=wcTotal/130;
-  if(mins<0.1) return null;
-  return Math.round(punches/mins*10)/10;
-}
-
 function operativeCheck(s){
-  // Is the most syllabic word in the last 25% of the sentence?
   var words=s.trim().replace(/[.!?]+$/,'').split(/\s+/).filter(function(w){return w.length>0;});
-  if(words.length<4) return true; // too short to flag
+  if(words.length<4)return true;
   var maxSyl=0,maxIdx=0;
   for(var i=0;i<words.length;i++){var sy=syl(words[i]);if(sy>maxSyl){maxSyl=sy;maxIdx=i;}}
-  var cutoff=Math.floor(words.length*0.75);
-  return maxIdx>=cutoff; // true = good, operative near end
+  return maxIdx>=Math.floor(words.length*0.75);
 }
 
 function renderAnalysis(data,sents,text){
@@ -1110,34 +1152,83 @@ function renderAnalysis(data,sents,text){
     vd.textContent=desc;
   }
 
-  /* Comic structure detection */
-  var patterns=detectComicPatterns(data);
-  var reversals=findReversals(sents);
+  /* Bit analysis */
+  var bits=parseBits(text);
+  var allRoles=[];
+  var totalFR=0,totalSP=0;
+  var bitsData=[];
+  for(var bi=0;bi<bits.length;bi++){
+    var bSents=parseSents(bits[bi]);
+    var roles=[];
+    for(var si=0;si<bSents.length;si++){
+      roles.push(classifySentence(bSents[si],si>0?bSents[si-1]:null,si<bSents.length-1?bSents[si+1]:null));
+    }
+    var score=scoreBit(roles);
+    totalFR+=score.fr; totalSP+=score.sp;
+    for(var ri=0;ri<roles.length;ri++) allRoles.push(roles[ri]);
+    bitsData.push({sents:bSents,roles:roles,score:score,preview:bSents[0]||''});
+  }
+
+  /* LPM */
   var wcArr2=text.trim().split(/\s+/).filter(function(w){return w.length>0;});
   var wcTotal2=text.trim()?wcArr2.length:0;
-  var lpm=calcLPM(data,wcTotal2);
+  var punches=0;
+  for(var i=0;i<allRoles.length;i++)if(allRoles[i]==='punchline'||allRoles[i]==='tag')punches++;
+  var mins=wcTotal2/130;
+  var lpm=mins>0.1?Math.round(punches/mins*10)/10:null;
+
   var lpmEl=document.getElementById('cs-lpm');
   var lpmLbl=document.getElementById('cs-lpm-label');
   if(lpmEl){
-    if(lpm===null){lpmEl.textContent='\u2014';lpmLbl.textContent='LPM \u2014 write more to calculate';}
+    if(lpm===null){lpmEl.textContent='\u2014';lpmLbl.textContent='estimated laughs per minute \u2014 write more';}
     else{
       lpmEl.textContent=lpm.toFixed(1);
-      var lpmDesc=lpm<1?'Low \u2014 needs more punches':lpm<2?'Building':lpm<3?'Good rhythm':lpm<=4?'Carlin territory':'Very dense';
-      lpmLbl.textContent='LPM \u2014 '+lpmDesc+' (target: 3+)';
+      var lpmDesc=lpm<1?'Low \u2014 add more punchlines':lpm<2?'Building':lpm<3?'Good rhythm':lpm<=4?'Carlin territory':'Very dense';
+      lpmLbl.textContent='estimated laughs per minute \u2014 '+lpmDesc;
     }
   }
-  var csRows=document.getElementById('cs-rows');
-  if(csRows){
-    var totalPats=patterns.sp+patterns.spt;
-    var opFails=0;
-    for(var oi=0;oi<sents.length;oi++) if(!operativeCheck(sents[oi])) opFails++;
-    var h='';
-    h+='<div class="struct-row"><span class="struct-row-label">S\u2192P sequences detected</span><span class="struct-row-val '+(totalPats>0?'good':'warn')+'">'+totalPats+'</span></div>';
-    h+='<div class="struct-row"><span class="struct-row-label">S\u2192P\u2192T (with tag) detected</span><span class="struct-row-val '+(patterns.spt>0?'good':'')+'">'+patterns.spt+'</span></div>';
-    h+='<div class="struct-row"><span class="struct-row-label">Dead zones (5+ sentences, no punch)</span><span class="struct-row-val '+(patterns.deadZones.length>0?'bad':'good')+'">'+patterns.deadZones.length+'</span></div>';
-    h+='<div class="struct-row"><span class="struct-row-label">Reversals (contrast word in 2nd half)</span><span class="struct-row-val '+(reversals>0?'good':'')+'">'+reversals+'</span></div>';
-    h+='<div class="struct-row"><span class="struct-row-label">Strong word buried, not near end</span><span class="struct-row-val '+(opFails>2?'warn':opFails>0?'':'good')+'">'+opFails+'</span></div>';
-    csRows.innerHTML=h;
+
+  /* Episode ratio bar */
+  var totalBitSents=totalFR+totalSP;
+  var frPct=totalBitSents>0?Math.round(totalFR/totalBitSents*100):0;
+  var spPct=totalBitSents>0?Math.round(totalSP/totalBitSents*100):0;
+  var frBar=document.getElementById('cs-fr-bar');
+  var spBar=document.getElementById('cs-sp-bar');
+  var frPctEl=document.getElementById('cs-fr-pct');
+  var spPctEl=document.getElementById('cs-sp-pct');
+  if(frBar) frBar.style.width=frPct+'%';
+  if(spBar) spBar.style.width=spPct+'%';
+  if(frPctEl) frPctEl.textContent=totalBitSents>0?frPct+'% fact/reaction':'—';
+  if(spPctEl) spPctEl.textContent=totalBitSents>0?spPct+'% setup/punchline':'—';
+
+  /* Per-bit cards */
+  var bitsEl=document.getElementById('cs-bits');
+  if(bitsEl){
+    if(!bitsData.length){
+      bitsEl.innerHTML='<div style="font-size:12px;color:var(--text3);padding:6px 0;">Write and separate bits with a blank line to see per-bit analysis.</div>';
+    } else {
+      var h='';
+      for(var bi=0;bi<bitsData.length;bi++){
+        var bd=bitsData[bi];
+        var frW=bd.score.total>0?Math.round(bd.score.fr/bd.score.total*100):0;
+        var spW=bd.score.total>0?Math.round(bd.score.sp/bd.score.total*100):0;
+        h+='<div class="bit-card">';
+        h+='<div class="bit-header"><span class="bit-num">Bit '+(bi+1)+'</span><span class="bit-verdict '+bd.score.cls+'">'+bd.score.verdict+'</span></div>';
+        if(bd.preview) h+='<div class="bit-preview">'+esc(bd.preview.trim().substring(0,70))+(bd.preview.trim().length>70?'\u2026':'')+'</div>';
+        h+='<div class="bit-ratio-wrap">';
+        h+='<div class="bit-ratio-bar"><div class="bit-ratio-fr" style="width:'+frW+'%"></div><div class="bit-ratio-sp" style="width:'+spW+'%"></div></div>';
+        h+='<span class="bit-ratio-label">'+frW+'% / '+spW+'%</span>';
+        h+='</div>';
+        h+='<div class="bit-sents">';
+        for(var si=0;si<bd.roles.length;si++){
+          var r=bd.roles[si];
+          var label=r==='fact'?'Fact':r==='reaction'?'Reaction':r==='setup'?'Setup':r==='punchline'?'Punchline':r==='tag'?'Tag':'';
+          if(label) h+='<span class="bit-sent-pill bsp-'+r+'" title="'+esc((bd.sents[si]||'').trim().substring(0,60))+'">'+label+'</span>';
+        }
+        h+='</div></div>';
+      }
+      bitsEl.innerHTML=h;
+    }
   }
 
   /* Chart with role pips */
@@ -1148,10 +1239,6 @@ function renderAnalysis(data,sents,text){
   if(data.length>0){
     var maxL=0;for(var i=0;i<lens.length;i++)if(lens[i]>maxL)maxL=lens[i];
     var bw=Math.max(6,Math.min(18,Math.floor(280/Math.max(data.length,1))));
-    var deadSet={};
-    for(var di=0;di<patterns.deadZones.length;di++){
-      for(var k=patterns.deadZones[di].start;k<=patterns.deadZones[di].end;k++) deadSet[k]=1;
-    }
     var pipH='';
     for(var i=0;i<data.length;i++){
       var b=document.createElement('div');
@@ -1159,20 +1246,13 @@ function renderAnalysis(data,sents,text){
       b.style.height=(maxL>0?Math.max(4,Math.round(data[i].wn/maxL*52)):4)+'px';
       b.style.width=bw+'px';
       var punchMax=MODE==='video'?4:5;
-      var col;
-      if(deadSet[i]){col='var(--red)';b.style.opacity='0.4';}
-      else if(data[i].wn<=punchMax) col='var(--red)';
-      else if(data[i].wn<=(MODE==='video'?20:12)) col='var(--green)';
-      else if(data[i].wn<=(MODE==='video'?30:20)) col='var(--blue)';
-      else if(data[i].wn<=40) col='var(--amber)';
-      else col='var(--gray)';
+      var col=data[i].wn<=punchMax?'var(--red)':data[i].wn<=(MODE==='video'?20:12)?'var(--green)':data[i].wn<=(MODE==='video'?30:20)?'var(--blue)':data[i].wn<=40?'var(--amber)':'var(--gray)';
       b.style.background=col;
-      var r=patterns.roles[i];
-      b.title=data[i].wn+'w'+(r!=='n'?' ['+r+']':'')+(deadSet[i]?' DEAD ZONE':'');
+      var r=allRoles[i]||'neutral';
+      b.title=data[i].wn+'w \u2014 '+(r.charAt(0).toUpperCase()+r.slice(1));
       chart.appendChild(b);
-      // pip
-      var pc=r==='S'?'var(--blue)':r==='P'?'var(--red)':r==='T'?'var(--amber)':'transparent';
-      pipH+='<div class="role-pip" style="width:'+bw+'px;flex-shrink:0;background:'+pc+';"></div>';
+      var pc=r==='setup'?'var(--blue)':r==='punchline'?'var(--red)':r==='tag'?'var(--amber)':r==='fact'?'var(--blue)':r==='reaction'?'var(--purple)':'transparent';
+      pipH+='<div class="role-pip" style="width:'+bw+'px;flex-shrink:0;background:'+pc+';" title="'+r+'"></div>';
     }
     if(rolesEl) rolesEl.innerHTML=pipH;
   }
@@ -1991,21 +2071,25 @@ async function aiAnalyze(){
   var numbered='';
   for(var i=0;i<sents.length;i++) numbered+=(i+1)+'. "'+sents[i]+'"\n';
 
-  var prompt='You are a comedy writing analyst. Analyze this script for joke structure.\n\n'+
-    'Classify each numbered sentence as:\n'+
-    'S = Setup: establishes a premise or expectation in the audience\'s mind\n'+
-    'P = Punchline: subverts the setup\'s expectation, delivers the laugh or surprise\n'+
-    'T = Tag: additional short punchline riding the first laugh, no new setup needed\n'+
-    'N = Neutral: transitional, informational, connective, or not part of a joke\n\n'+
+  var prompt='You are a comedy writing analyst. Analyze this script for joke and narrative structure.\n\n'+
+    'Classify each numbered sentence as one of these roles:\n'+
+    'Fact: informational, sets up context, presents data or a real detail about the subject\n'+
+    'Reaction: the writer\'s personal emotional response to a fact or situation (short, first-person feel)\n'+
+    'Setup: builds an expectation or premise in the audience\'s mind that will be subverted\n'+
+    'Punchline: subverts the setup\'s expectation, delivers the laugh or surprise — usually short\n'+
+    'Tag: additional short punchline riding the first laugh, no new setup needed\n'+
+    'Neutral: transitional, connective, or doesn\'t fit another role\n\n'+
     'Rules:\n'+
-    '- A P must follow an S (directly or after multiple S sentences)\n'+
-    '- A T must follow a P or another T\n'+
-    '- Multiple S sentences before one P is valid (S S P is fine)\n'+
+    '- A Punchline must follow a Setup (directly or after multiple Setups)\n'+
+    '- A Tag must follow a Punchline or another Tag\n'+
+    '- Fact→Reaction is the documentary comedy pattern — information followed by personal response\n'+
+    '- Setup→Punchline is the pure comedy pattern — expectation followed by subversion\n'+
+    '- Both patterns can exist in the same script\n'+
     '- Classify by MEANING not length\n'+
-    '- A sentence can only have ONE role\n\n'+
-    'Also identify joke groups: each complete S\u2192P sequence with optional tags.\n\n'+
-    'Return ONLY valid JSON with no other text, no markdown, no explanation:\n'+
-    '{"roles":["N","S","P","T",...],"groups":[{"setups":[0],"punch":1,"tags":[2],"note":"why this works or doesn\'t"}],"overall":"one sentence about the script\'s comic structure"}\n\n'+
+    '- One role per sentence\n\n'+
+    'Also identify joke/bit groups: each complete sequence with its payoff.\n\n'+
+    'Return ONLY valid JSON, no markdown, no explanation:\n'+
+    '{"roles":["Fact","Reaction","Setup","Punchline","Tag","Neutral",...],"groups":[{"type":"Setup→Punchline or Fact→Reaction","sentences":[0,1,2],"note":"why this works or what to fix"}],"overall":"one sentence about the script\'s comic and narrative structure","ratio":"e.g. 60% Fact/Reaction, 40% Setup/Punchline"}\n\n'+
     'Sentence indices are 0-based. Script:\n'+numbered;
 
   try{
@@ -2059,45 +2143,33 @@ async function aiAnalyze(){
 function renderAiResults(result, sents){
   var el=document.getElementById('ai-results');
   if(!el) return;
+  var ROLE_CLS={'Fact':'air-S','Reaction':'air-N','Setup':'air-S','Punchline':'air-P','Tag':'air-T','Neutral':'air-N'};
   var h='';
 
   if(result.groups&&result.groups.length>0){
     for(var i=0;i<result.groups.length;i++){
       var g=result.groups[i];
+      var idxs=g.sentences||[];
       h+='<div class="ai-group">';
-      h+='<div class="ai-group-head">Joke '+(i+1)+(g.tags&&g.tags.length?' S\u2192P\u2192T':' S\u2192P')+'</div>';
-
-      // Setups
-      var setupIdxs=Array.isArray(g.setups)?g.setups:[g.setup];
-      for(var j=0;j<setupIdxs.length;j++){
-        var idx=setupIdxs[j];
+      h+='<div class="ai-group-head">'+(g.type||'Sequence '+(i+1))+'</div>';
+      for(var j=0;j<idxs.length;j++){
+        var idx=idxs[j];
         if(idx>=0&&idx<sents.length){
-          h+='<div class="ai-sent"><span class="ai-role-badge air-S">S</span><span class="ai-sent-text">'+esc(sents[idx].substring(0,80))+(sents[idx].length>80?'\u2026':'')+'</span></div>';
-        }
-      }
-      // Punchline
-      if(g.punch>=0&&g.punch<sents.length){
-        h+='<div class="ai-sent"><span class="ai-role-badge air-P">P</span><span class="ai-sent-text">'+esc(sents[g.punch].substring(0,80))+(sents[g.punch].length>80?'\u2026':'')+'</span></div>';
-      }
-      // Tags
-      if(g.tags&&g.tags.length){
-        for(var k=0;k<g.tags.length;k++){
-          var ti=g.tags[k];
-          if(ti>=0&&ti<sents.length){
-            h+='<div class="ai-sent"><span class="ai-role-badge air-T">T</span><span class="ai-sent-text">'+esc(sents[ti].substring(0,80))+(sents[ti].length>80?'\u2026':'')+'</span></div>';
-          }
+          var role=result.roles&&result.roles[idx]?result.roles[idx]:'';
+          var cls=ROLE_CLS[role]||'air-N';
+          h+='<div class="ai-sent"><span class="ai-role-badge '+cls+'">'+esc(role||'?')+'</span>';
+          h+='<span class="ai-sent-text">'+esc(sents[idx].substring(0,80))+(sents[idx].length>80?'\u2026':'')+'</span></div>';
         }
       }
       if(g.note) h+='<div class="ai-note">\u2192 '+esc(g.note)+'</div>';
       h+='</div>';
     }
   } else {
-    h+='<div style="font-size:12px;color:var(--text3);padding:6px 0;">No clear S\u2192P sequences detected. Consider whether each bit has a clear setup and payoff.</div>';
+    h+='<div style="font-size:12px;color:var(--text3);padding:6px 0;">No clear sequences detected. Separate your bits with blank lines and try again.</div>';
   }
 
-  if(result.overall){
-    h+='<div class="ai-overall">'+esc(result.overall)+'</div>';
-  }
+  if(result.ratio) h+='<div style="font-size:11px;color:var(--purple);margin-top:6px;font-weight:600;">Balance: '+esc(result.ratio)+'</div>';
+  if(result.overall) h+='<div class="ai-overall">'+esc(result.overall)+'</div>';
   el.innerHTML=h;
 }
 
@@ -2112,8 +2184,8 @@ function renderAiPips(roles){
   var h='';
   for(var i=0;i<roles.length;i++){
     var r=roles[i];
-    var pc=r==='S'?'var(--blue)':r==='P'?'var(--red)':r==='T'?'var(--amber)':'transparent';
-    h+='<div class="role-pip" style="width:'+bw+'px;flex-shrink:0;background:'+pc+';" title="'+r+'"></div>';
+    var pc=r==='Setup'?'var(--blue)':r==='Punchline'?'var(--red)':r==='Tag'?'var(--amber)':r==='Fact'?'var(--blue)':r==='Reaction'?'var(--purple)':'transparent';
+    h+='<div class="role-pip" style="width:'+bw+'px;flex-shrink:0;background:'+pc+';" title="'+esc(r)+'"></div>';
   }
   rolesEl.innerHTML=h;
 }
