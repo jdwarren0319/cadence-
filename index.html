@@ -457,7 +457,15 @@ body {
   .scene-notes-bar { background: var(--wabg); }
   .scene-notes-text { color: var(--wafg); }
 }
-.rec-script-wrap { flex-shrink: 0; border-bottom: 1px solid var(--bdr); background: var(--bg1); }
+/* ── Stage directions ── */
+.stage-strip { flex-shrink: 0; overflow-x: auto; scrollbar-width: none; border-top: 1px solid var(--bdr); background: var(--bg1); }
+.stage-strip::-webkit-scrollbar { display: none; }
+.stage-strip.empty { display: none; }
+.stage-inner { display: flex; gap: 6px; padding: 5px 16px; align-items: center; flex-wrap: wrap; min-height: 30px; }
+.stage-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); flex-shrink: 0; margin-right: 2px; }
+.stage-pill { font-size: 10px; padding: 2px 9px; border-radius: 20px; background: var(--wabg); color: var(--wafg); font-family: var(--mono); cursor: default; white-space: nowrap; }
+.stage-pill.visual-punch { background: var(--stbg); color: var(--stfg); font-weight: 600; }
+/* ── Record script panel ── */
 .rec-script-header { display: flex; align-items: center; justify-content: space-between; padding: 7px 14px; border-bottom: 1px solid var(--bdr); }
 .rec-script-label { font-size: 11px; font-weight: 600; color: var(--text2); }
 .rec-script-toggle { font-size: 11px; color: var(--text3); border: none; background: transparent; cursor: pointer; font-family: var(--sans); padding: 2px 6px; }
@@ -530,6 +538,12 @@ body {
       <div class="rhythm-strip">
         <span class="rlabel">Rhythm</span>
         <div id="rblocks" style="display:flex;gap:3px;align-items:center;overflow-x:auto;scrollbar-width:none;"></div>
+      </div>
+      <div class="stage-strip empty" id="stage-strip-bar">
+        <div class="stage-inner">
+          <span class="stage-label">&#x1F3AC; Edits</span>
+          <div id="stage-pills" style="display:flex;gap:5px;flex-wrap:wrap;"></div>
+        </div>
       </div>
     </div>
 
@@ -1022,13 +1036,72 @@ function detectAnaphora(sents){
 }
 
 /* ======================================================
+   STAGE DIRECTIONS
+   ====================================================== */
+var STAGE_RE = /\[([^\]]+)\]/g;
+
+// Extract all stage directions from text
+function extractStageDirections(text){
+  var dirs=[], m;
+  STAGE_RE.lastIndex=0;
+  while((m=STAGE_RE.exec(text))!==null){
+    dirs.push({full:m[0], content:m[1].trim()});
+  }
+  return dirs;
+}
+
+// Strip stage directions from text for analysis
+function stripStageDirections(text){
+  return text.replace(/\[[^\]]+\]/g,'').replace(/\s+/g,' ').trim();
+}
+
+// Strip stage directions from a single line but keep position info
+function stripStageDirectionsKeepLines(text){
+  // Replace [brackets] with empty string but keep line breaks
+  return text.replace(/\[[^\]]+\]/g,'');
+}
+
+// Is this line purely a stage direction?
+function isStageLine(line){
+  return /^\s*\[[^\]]+\]\s*$/.test(line);
+}
+
+// Is this direction a visual punchline? (CUT TO, GRAPHIC, B-ROLL, PHOTO, IMAGE, VIDEO)
+function isVisualPunch(content){
+  var c=content.toUpperCase();
+  return /^(CUT TO|CUT|GRAPHIC|B-ROLL|BROLL|PHOTO|IMAGE|VIDEO|REACTION SHOT|SHOW|TITLE CARD|LOWER THIRD)/.test(c);
+}
+
+// Get clean script text for analysis (no stage directions)
+function getAnalysisText(text){
+  // Remove stage directions but keep sentence-ending punctuation context
+  return text.replace(/\[[^\]]+\]/g,' ').replace(/[ \t]+/g,' ').trim();
+}
+
+function renderStageStrip(dirs){
+  var bar=document.getElementById('stage-strip-bar');
+  var pills=document.getElementById('stage-pills');
+  if(!bar||!pills) return;
+  if(!dirs.length){bar.classList.add('empty');pills.innerHTML='';return;}
+  bar.classList.remove('empty');
+  var h='';
+  for(var i=0;i<dirs.length;i++){
+    var cls=isVisualPunch(dirs[i].content)?'stage-pill visual-punch':'stage-pill';
+    h+='<span class="'+cls+'">'+esc(dirs[i].content)+'</span>';
+  }
+  pills.innerHTML=h;
+}
+
+/* ======================================================
    RENDER
    ====================================================== */
 function render(){
   var text=document.getElementById('editor').value;
-  var sents=parseSents(text);
-  var wArr=text.trim().split(/\s+/).filter(function(w){return w.length>0;});
-  var wcTotal=text.trim()?wArr.length:0;
+  var dirs=extractStageDirections(text);
+  var cleanText=getAnalysisText(text);
+  var sents=parseSents(cleanText);
+  var wArr=cleanText.trim().split(/\s+/).filter(function(w){return w.length>0;});
+  var wcTotal=cleanText.trim()?wArr.length:0;
   var totalSyl=0,stN=0,leN=0;
   var data=[];
 
@@ -1063,7 +1136,8 @@ function render(){
     rb.appendChild(b);
   }
 
-  renderAnalysis(data,sents,text);
+  renderStageStrip(dirs);
+  renderAnalysis(data,sents,cleanText);
   renderSents(data,sents);
 }
 
@@ -1071,10 +1145,20 @@ function render(){
    BIT & COMIC STRUCTURE DETECTION
    ====================================================== */
 function parseBits(text){
-  var paragraphs=text.split(/\n\s*\n/);
+  // Strip stage directions for bit parsing but preserve paragraph breaks
+  var stripped=text.replace(/\[[^\]]+\]/g,'');
+  var paragraphs=stripped.split(/\n\s*\n/);
   var bits=[];
   for(var i=0;i<paragraphs.length;i++){var p=paragraphs[i].trim();if(p)bits.push(p);}
   return bits;
+}
+
+// Count visual punches in original text for a given paragraph's position
+function countVisualPunchesInText(text){
+  var dirs=extractStageDirections(text);
+  var count=0;
+  for(var i=0;i<dirs.length;i++) if(isVisualPunch(dirs[i].content)) count++;
+  return count;
 }
 
 function classifySentence(s,prev,next){
@@ -1103,20 +1187,22 @@ function classifySentence(s,prev,next){
   return 'neutral';
 }
 
-function scoreBit(roles){
+function scoreBit(roles, visualPunches){
   var fr=0,sp=0;
   for(var i=0;i<roles.length;i++){
     if(roles[i]==='fact'||roles[i]==='reaction') fr++;
     else if(roles[i]==='setup'||roles[i]==='punchline'||roles[i]==='tag') sp++;
   }
-  var hasPunch=roles.indexOf('punchline')>=0||roles.indexOf('tag')>=0;
+  var vp=visualPunches||0;
+  var hasPunch=roles.indexOf('punchline')>=0||roles.indexOf('tag')>=0||vp>0;
   var verdict,cls;
-  if(roles.length<=1){verdict='Too short to score';cls='bv-warn';}
+  if(roles.length<=1&&vp===0){verdict='Too short to score';cls='bv-warn';}
   else if(!hasPunch){verdict='No punchline \u2014 add one';cls='bv-weak';}
-  else if(sp===0){verdict='All information \u2014 add a reaction';cls='bv-warn';}
+  else if(vp>0&&roles.indexOf('punchline')<0){verdict='Visual punchline \u2014 edit does the work';cls='bv-strong';}
+  else if(sp===0&&vp===0){verdict='All information \u2014 add a reaction';cls='bv-warn';}
   else if(fr===0){verdict='All jokes \u2014 add some facts';cls='bv-warn';}
   else{verdict='Good balance';cls='bv-strong';}
-  return{fr:fr,sp:sp,total:roles.length,verdict:verdict,cls:cls};
+  return{fr:fr,sp:sp,vp:vp,total:roles.length,verdict:verdict,cls:cls};
 }
 
 function findReversals(sents){
@@ -1154,6 +1240,7 @@ function renderAnalysis(data,sents,text){
 
   /* Bit analysis */
   var bits=parseBits(text);
+  var rawBits=text.split(/\n\s*\n/).filter(function(p){return p.trim();});
   var allRoles=[];
   var totalFR=0,totalSP=0;
   var bitsData=[];
@@ -1163,10 +1250,12 @@ function renderAnalysis(data,sents,text){
     for(var si=0;si<bSents.length;si++){
       roles.push(classifySentence(bSents[si],si>0?bSents[si-1]:null,si<bSents.length-1?bSents[si+1]:null));
     }
-    var score=scoreBit(roles);
+    var rawBit=rawBits[bi]||'';
+    var vp=countVisualPunchesInText(rawBit);
+    var score=scoreBit(roles,vp);
     totalFR+=score.fr; totalSP+=score.sp;
     for(var ri=0;ri<roles.length;ri++) allRoles.push(roles[ri]);
-    bitsData.push({sents:bSents,roles:roles,score:score,preview:bSents[0]||''});
+    bitsData.push({sents:bSents,roles:roles,score:score,vp:vp,preview:bSents[0]||''});
   }
 
   /* LPM */
@@ -1224,6 +1313,9 @@ function renderAnalysis(data,sents,text){
           var r=bd.roles[si];
           var label=r==='fact'?'Fact':r==='reaction'?'Reaction':r==='setup'?'Setup':r==='punchline'?'Punchline':r==='tag'?'Tag':'';
           if(label) h+='<span class="bit-sent-pill bsp-'+r+'" title="'+esc((bd.sents[si]||'').trim().substring(0,60))+'">'+label+'</span>';
+        }
+        if(bd.vp>0){
+          for(var vi=0;vi<bd.vp;vi++) h+='<span class="bit-sent-pill bsp-punch" title="Visual punchline (edit)">&#x1F3AC; Visual punchline</span>';
         }
         h+='</div></div>';
       }
@@ -1970,7 +2062,7 @@ var mirrorSents=[], mirrorIdx=0;
 
 function startMirror(){
   var text=document.getElementById('editor').value;
-  mirrorSents=parseSents(text).map(function(s){return s.trim();}).filter(function(s){return s.length>0;});
+  mirrorSents=parseSents(text).map(function(s){return s.trim();}).filter(function(s){return s.length>0&&!isStageLine(s);});
   if(!mirrorSents.length){alert('Nothing to rehearse — write something first.');return;}
   mirrorIdx=0;
   updateMirror();
