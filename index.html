@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Cadence">
 <title>Cadence</title>
-<style>
+<style>a
 :root {
   --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
   --mono: 'Courier New', Courier, monospace;
@@ -232,6 +232,27 @@ body {
 .mode-toggle { display: flex; gap: 0; border: 1px solid var(--bdrm); border-radius: 20px; overflow: hidden; flex-shrink: 0; }
 .mode-btn { font-size: 10px; font-weight: 600; font-family: var(--sans); padding: 4px 10px; border: none; background: transparent; color: var(--text3); cursor: pointer; letter-spacing: 0.04em; touch-action: manipulation; }
 .mode-btn.active { background: var(--text1); color: var(--bg1); }
+/* ── Write mode toggle (Script / Rough Draft) ── */
+.write-mode-bar { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 6px 14px; border-bottom: 1px solid var(--bdr); background: var(--bg1); }
+.write-mode-toggle { display: flex; border: 1px solid var(--bdrm); border-radius: 20px; overflow: hidden; }
+.wm-btn { font-size: 11px; font-weight: 600; font-family: var(--sans); padding: 4px 12px; border: none; background: transparent; color: var(--text3); cursor: pointer; touch-action: manipulation; }
+.wm-btn.active { background: var(--text1); color: var(--bg1); }
+.intention-tag { font-size: 10px; color: var(--purple); font-style: italic; max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* ── Rough draft panel ── */
+.rough-panel { flex: 1; display: none; flex-direction: column; overflow: hidden; }
+.rough-panel.active { display: flex; }
+.intention-bar { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-bottom: 1px solid var(--bdr); background: var(--bg1); }
+.intention-label { font-size: 10px; font-weight: 700; color: var(--purple); flex-shrink: 0; letter-spacing: 0.04em; text-transform: uppercase; }
+.intention-input { flex: 1; border: none; outline: none; background: transparent; font-size: 12px; font-family: var(--sans); color: var(--text1); font-style: italic; }
+.intention-input::placeholder { color: var(--text3); font-style: italic; }
+.rough-textarea { flex: 1; border: none; outline: none; resize: none; padding: 20px; font-size: 15px; line-height: 1.9; font-family: var(--mono); background: var(--bg2); color: var(--text2); caret-color: var(--text1); overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.rough-textarea::placeholder { color: var(--text3); }
+.rough-footer { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 7px 14px; border-top: 1px solid var(--bdr); background: var(--bg1); }
+.rough-hint { font-size: 10px; color: var(--text3); line-height: 1.4; flex: 1; }
+.rough-distill { font-size: 11px; font-weight: 700; font-family: var(--sans); padding: 7px 12px; border-radius: var(--r); background: var(--purple); color: #fff; border: none; cursor: pointer; touch-action: manipulation; flex-shrink: 0; }
+/* Script panel wraps editor + strips */
+.script-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.script-panel.hidden { display: none; }
 /* ── Practice pane ── */
 #pane-practice { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
 /* Mirror mode overlay */
@@ -489,6 +510,40 @@ body {
 .tutor-response { margin-top: 10px; font-size: 12px; color: var(--text2); line-height: 1.7; white-space: pre-wrap; display: none; }
 .tutor-response.visible { display: block; }
 .tutor-response-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple); margin-bottom: 4px; }
+/* ── Shorts tab ── */
+#pane-shorts { padding: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+#pane-shorts::-webkit-scrollbar { width: 3px; }
+.shorts-inner { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.harvest-card { background: var(--bg2); border: 1px solid var(--bdr); border-radius: var(--rl); overflow: hidden; }
+.harvest-header { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-bottom: 1px solid var(--bdr); flex-wrap: wrap; }
+.harvest-scene { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); }
+.harvest-score { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+.hs-strong { background: var(--gobg); color: var(--gofg); }
+.hs-good   { background: var(--lebg); color: var(--lefg); }
+.hs-maybe  { background: var(--wabg); color: var(--wafg); }
+.harvest-dur { font-size: 10px; color: var(--text3); margin-left: auto; }
+.harvest-text { padding: 8px 12px; font-size: 11px; font-family: var(--mono); color: var(--text2); line-height: 1.65; }
+.harvest-actions { display: flex; gap: 6px; padding: 8px 12px; border-top: 1px solid var(--bdr); }
+.harvest-use-btn { font-size: 11px; font-weight: 700; font-family: var(--sans); padding: 6px 12px; border-radius: var(--r); background: var(--text1); color: var(--bg1); border: none; cursor: pointer; touch-action: manipulation; }
+.harvest-skip-btn { font-size: 11px; font-family: var(--sans); padding: 6px 12px; border-radius: var(--r); background: transparent; color: var(--text3); border: 1px solid var(--bdrm); cursor: pointer; touch-action: manipulation; }
+.short-composer { background: var(--bg2); border: 1px solid var(--bdr); border-radius: var(--rl); padding: 12px 14px; }
+.format-chips { display: flex; flex-wrap: wrap; gap: 5px; margin: 6px 0 10px; }
+.format-chip { font-size: 10px; font-weight: 600; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--bdrm); background: transparent; color: var(--text2); cursor: pointer; font-family: var(--sans); touch-action: manipulation; }
+.format-chip.active { background: var(--text1); color: var(--bg1); border-color: var(--text1); }
+.short-title-input { width: 100%; background: var(--bg3); border: 1px solid var(--bdrm); border-radius: var(--r); padding: 8px 10px; font-size: 13px; font-family: var(--sans); color: var(--text1); outline: none; margin-bottom: 8px; }
+.short-title-input::placeholder { color: var(--text3); }
+.short-textarea { width: 100%; background: var(--bg3); border: 1px solid var(--bdrm); border-radius: var(--r); padding: 10px; font-size: 13px; font-family: var(--mono); color: var(--text1); outline: none; resize: none; line-height: 1.7; }
+.short-textarea::placeholder { color: var(--text3); }
+.short-footer-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.short-dur-est { font-size: 11px; color: var(--text3); flex: 1; }
+.short-save-btn { font-size: 12px; font-weight: 700; font-family: var(--sans); padding: 8px 14px; border-radius: var(--r); background: var(--purple); color: #fff; border: none; cursor: pointer; touch-action: manipulation; }
+.saved-short { background: var(--bg2); border: 1px solid var(--bdr); border-radius: var(--rl); padding: 10px 12px; }
+.ss-header { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; flex-wrap: wrap; }
+.ss-format { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 20px; background: var(--gbg); color: var(--gfg); text-transform: uppercase; letter-spacing: 0.06em; }
+.ss-title { font-size: 12px; font-weight: 700; color: var(--text1); flex: 1; }
+.ss-dur { font-size: 10px; color: var(--text3); flex-shrink: 0; }
+.ss-preview { font-size: 11px; color: var(--text2); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.ss-del { font-size: 10px; color: var(--text3); border: none; background: transparent; font-family: var(--sans); cursor: pointer; padding: 2px 4px; }
 </style>
 <body>
 <div class="app">
@@ -530,21 +585,55 @@ body {
         <span class="scene-notes-icon">&#x1F4CC;</span>
         <span class="scene-notes-text" id="scene-notes-text"></span>
       </div>
-      <textarea id="editor"
-        placeholder="Start writing. End sentences with  .  !  or  ?  to see rhythm analysis in the Analysis tab."
-        spellcheck="true"
-        autocorrect="on"
-        autocapitalize="sentences"></textarea>
-      <div class="rhythm-strip">
-        <span class="rlabel">Rhythm</span>
-        <div id="rblocks" style="display:flex;gap:3px;align-items:center;overflow-x:auto;scrollbar-width:none;"></div>
+
+      <!-- Write mode toggle -->
+      <div class="write-mode-bar">
+        <div class="write-mode-toggle">
+          <button class="wm-btn active" id="wm-script" onclick="setWriteMode('script')">Script</button>
+          <button class="wm-btn" id="wm-rough" onclick="setWriteMode('rough')">Rough Draft</button>
+        </div>
+        <span class="intention-tag" id="intention-tag-preview"></span>
       </div>
-      <div class="stage-strip empty" id="stage-strip-bar">
-        <div class="stage-inner">
-          <span class="stage-label">&#x1F3AC; Edits</span>
-          <div id="stage-pills" style="display:flex;gap:5px;flex-wrap:wrap;"></div>
+
+      <!-- Script panel -->
+      <div class="script-panel" id="script-panel">
+        <textarea id="editor"
+          placeholder="Start writing. End sentences with  .  !  or  ?  to see rhythm analysis in the Analysis tab.  Use [brackets] for edit notes like [CUT TO: reaction shot]."
+          spellcheck="true"
+          autocorrect="on"
+          autocapitalize="sentences"></textarea>
+        <div class="rhythm-strip">
+          <span class="rlabel">Rhythm</span>
+          <div id="rblocks" style="display:flex;gap:3px;align-items:center;overflow-x:auto;scrollbar-width:none;"></div>
+        </div>
+        <div class="stage-strip empty" id="stage-strip-bar">
+          <div class="stage-inner">
+            <span class="stage-label">&#x1F3AC; Edits</span>
+            <div id="stage-pills" style="display:flex;gap:5px;flex-wrap:wrap;"></div>
+          </div>
         </div>
       </div>
+
+      <!-- Rough draft panel -->
+      <div class="rough-panel" id="rough-panel">
+        <div class="intention-bar">
+          <span class="intention-label">&#x2665; I want them to feel</span>
+          <input class="intention-input" id="intention-input" type="text"
+            placeholder="the specific embarrassment of knowing a teenager is richer than you..."
+            oninput="saveIntention()" maxlength="200">
+        </div>
+        <textarea class="rough-textarea" id="rough-editor"
+          placeholder="Write badly. Write toward the feeling. Don&#39;t try to be funny yet.&#10;&#10;What does this bit need to make the audience feel? Write that, in whatever form it comes. The jokes will be hiding inside it.&#10;&#10;This space is not analysed, not counted, not judged."
+          spellcheck="true"
+          autocorrect="on"
+          autocapitalize="sentences"
+          oninput="saveRoughDraft()"></textarea>
+        <div class="rough-footer">
+          <span class="rough-hint">Not analysed. Write freely toward the feeling.</span>
+          <button class="rough-distill" onclick="distillRoughDraft()">Distill &#x2192; Script</button>
+        </div>
+      </div>
+
     </div>
 
     <!-- ANALYSIS PANE -->
@@ -706,6 +795,58 @@ body {
       </div>
     </div>
 
+    <!-- SHORTS PANE -->
+    <div class="pane hidden" id="pane-shorts">
+      <div class="shorts-inner">
+
+        <!-- Harvester -->
+        <div class="card">
+          <span class="card-label">&#x26A1; Shorts Harvester</span>
+          <div class="card-desc">Scans all your scenes for self-contained bits under 60 seconds. These are your Episode Cut candidates — moments that land without context.</div>
+          <button onclick="runHarvester()" style="width:100%;margin-top:8px;padding:10px;background:var(--text1);color:var(--bg1);border:none;border-radius:var(--r);font-size:13px;font-weight:700;font-family:var(--sans);cursor:pointer;touch-action:manipulation;">Scan Episode for Shorts</button>
+        </div>
+        <div id="harvest-results"></div>
+
+        <!-- Divider -->
+        <div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+          <div style="flex:1;height:1px;background:var(--bdr);"></div>
+          <span style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;">Short Planner</span>
+          <div style="flex:1;height:1px;background:var(--bdr);"></div>
+        </div>
+
+        <!-- Composer -->
+        <div class="short-composer">
+          <span class="card-label">New Short</span>
+          <div class="card-desc">Draft a standalone Short. These live outside your episode — one song reactions, music news, fake commercials.</div>
+          <div class="format-chips" id="short-format-chips"></div>
+          <input class="short-title-input" id="short-title" type="text" placeholder="JD Warren Versus..." maxlength="80">
+          <textarea class="short-textarea" id="short-script" rows="5"
+            placeholder="Write the script. Under 130 words = under 60 seconds."
+            oninput="updateShortDur()"></textarea>
+          <div class="short-footer-row">
+            <span class="short-dur-est" id="short-dur-est">0 words &mdash; 0:00</span>
+            <button class="short-save-btn" onclick="saveShort()">Save Short</button>
+          </div>
+        </div>
+
+        <!-- Saved shorts -->
+        <div id="saved-shorts-list"></div>
+
+        <!-- Strategy reminder -->
+        <div class="card" style="border-color:var(--purple);">
+          <span class="card-label" style="color:var(--purple);">&#x1F4F1; Shorts Strategy</span>
+          <div style="font-size:11px;color:var(--text2);line-height:1.7;margin-top:4px;">
+            <b style="color:var(--text1);">Episode Cuts</b> — 2-3 per episode, posted in the week before the episode drops. Only clips that land without context.<br><br>
+            <b style="color:var(--text1);">One Song Reactions</b> — 3-4 per week. "JD Warren heard [song] today." No vinyl required. Builds audience between episodes.<br><br>
+            <b style="color:var(--text1);">Fake Commercials</b> — 1 per quarter when you have a genuinely funny idea. Brand-building, not audience-building.<br><br>
+            <b style="color:var(--text1);">Upload timing:</b> 3–6 PM local time. Reply to comments in the first 2 hours — this is documented to increase reach 15-20%.
+          </div>
+        </div>
+
+        <div style="height:8px;"></div>
+      </div>
+    </div>
+
     <!-- LEARN PANE -->
     <div class="pane hidden" id="pane-learn">
       <div class="tutor-card">
@@ -835,6 +976,10 @@ body {
     <button class="tab-item" onclick="switchPane('script',this)">
       <span class="tab-icon">&#x1F4CB;</span>
       <span class="tab-label">Script</span>
+    </button>
+    <button class="tab-item" onclick="switchPane('shorts',this)">
+      <span class="tab-icon">&#x26A1;</span>
+      <span class="tab-label">Shorts</span>
     </button>
     <button class="tab-item" onclick="switchPane('record',this)">
       <span class="tab-icon">&#x1F3A4;</span>
@@ -2614,6 +2759,286 @@ async function askTutor(){
 }
 
 
+/* ======================================================
+   SHORTS
+   ====================================================== */
+var SHORTS_KEY='cadence_shorts';
+var SHORT_FORMATS=['Episode Cut','One Song Reaction','Standalone Bit','Fake Commercial'];
+var currentShortFormat='Episode Cut';
+
+function initShortFormats(){
+  var el=document.getElementById('short-format-chips');
+  if(!el) return;
+  var h='';
+  for(var i=0;i<SHORT_FORMATS.length;i++){
+    var active=SHORT_FORMATS[i]===currentShortFormat?'active':'';
+    h+='<button class="format-chip '+active+'" onclick="selectShortFormat(\''+SHORT_FORMATS[i]+'\')">'+SHORT_FORMATS[i]+'</button>';
+  }
+  el.innerHTML=h;
+}
+
+function selectShortFormat(f){
+  currentShortFormat=f;
+  initShortFormats();
+  // Update placeholder based on format
+  var ta=document.getElementById('short-script');
+  var ti=document.getElementById('short-title');
+  if(!ta||!ti) return;
+  if(f==='Episode Cut'){
+    ti.placeholder='JD Warren Versus [episode title] — clip';
+    ta.placeholder='Paste or write the specific bit from your episode that stands alone. Under 130 words = under 60 seconds.';
+  } else if(f==='One Song Reaction'){
+    ti.placeholder='JD Warren heard [song name] today';
+    ta.placeholder='Write your reaction to one specific song. Personal, fast, honest. Under 130 words.\n\nStructure: name the song, first reaction, one specific detail, punchline or question.';
+  } else if(f==='Standalone Bit'){
+    ti.placeholder='JD Warren Versus [topic]';
+    ta.placeholder='A self-contained bit that doesn\'t need episode context. Could be a music observation, a music industry take, an absurd personal story that connects to music.';
+  } else if(f==='Fake Commercial'){
+    ti.placeholder='JD Warren Versus — [tagline or premise]';
+    ta.placeholder='Write it like a real ad but for a ridiculous premise. Commit fully to the bit. No winking at the camera.';
+  }
+}
+
+function updateShortDur(){
+  var ta=document.getElementById('short-script');
+  var est=document.getElementById('short-dur-est');
+  if(!ta||!est) return;
+  var words=ta.value.trim().split(/\s+/).filter(function(w){return w.length>0;}).length;
+  var secs=Math.round(words/130*60);
+  var m=Math.floor(secs/60),s=secs%60;
+  var col=words>130?'var(--red)':words>100?'var(--amber)':'var(--text3)';
+  est.innerHTML='<span style="color:'+col+'">'+words+' words &mdash; '+(words>0?m+':'+(s<10?'0':'')+s:'0:00')+'</span>'+(words>130?' <span style="color:var(--red)">over 60s</span>':'');
+}
+
+function loadShorts(){
+  try{var s=localStorage.getItem(SHORTS_KEY);return s?JSON.parse(s):[];}catch(e){return[];}
+}
+
+function saveShort(){
+  var title=document.getElementById('short-title').value.trim();
+  var script=document.getElementById('short-script').value.trim();
+  if(!title&&!script){alert('Add a title or script first.');return;}
+  var words=script.split(/\s+/).filter(function(w){return w.length>0;}).length;
+  var secs=Math.round(words/130*60);
+  var m=Math.floor(secs/60),s=secs%60;
+  var shorts=loadShorts();
+  shorts.unshift({
+    id:'sh_'+Date.now(),
+    format:currentShortFormat,
+    title:title||'Untitled Short',
+    script:script,
+    words:words,
+    dur:m+':'+(s<10?'0':'')+s,
+    created:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'})
+  });
+  try{localStorage.setItem(SHORTS_KEY,JSON.stringify(shorts));}catch(e){}
+  document.getElementById('short-title').value='';
+  document.getElementById('short-script').value='';
+  updateShortDur();
+  renderSavedShorts();
+}
+
+function deleteShort(id){
+  var shorts=loadShorts().filter(function(s){return s.id!==id;});
+  try{localStorage.setItem(SHORTS_KEY,JSON.stringify(shorts));}catch(e){}
+  renderSavedShorts();
+}
+
+function renderSavedShorts(){
+  var el=document.getElementById('saved-shorts-list');
+  if(!el) return;
+  var shorts=loadShorts();
+  if(!shorts.length){el.innerHTML='';return;}
+  var h='<div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">Saved Shorts ('+shorts.length+')</div>';
+  for(var i=0;i<shorts.length;i++){
+    var s=shorts[i];
+    h+='<div class="saved-short" style="margin-bottom:6px;">';
+    h+='<div class="ss-header">';
+    h+='<span class="ss-format">'+esc(s.format)+'</span>';
+    h+='<span class="ss-title">'+esc(s.title)+'</span>';
+    h+='<span class="ss-dur">'+s.dur+'</span>';
+    h+='<button class="ss-del" onclick="deleteShort(\''+s.id+'\')">&#x2715;</button>';
+    h+='</div>';
+    if(s.script) h+='<div class="ss-preview">'+esc(s.script.substring(0,120))+(s.script.length>120?'\u2026':'')+'</div>';
+    h+='</div>';
+  }
+  el.innerHTML=h;
+}
+
+/* ── Harvester ── */
+function scoreHarvestBit(bitText, sceneName){
+  var cleanBit=getAnalysisText(bitText);
+  var sents=parseSents(cleanBit);
+  var wn=0;
+  var ws=cleanBit.trim().split(/\s+/).filter(function(w){return w.length>0;});
+  wn=ws.length;
+  if(wn===0) return null;
+
+  var secs=Math.round(wn/130*60);
+  var m=Math.floor(secs/60),s=secs%60;
+  var dur=m+':'+(s<10?'0':'')+s;
+
+  // Score: self-contained (no setup from outside), has punchline, right length
+  var hasPunch=false;
+  var roles=[];
+  for(var i=0;i<sents.length;i++){
+    var r=classifySentence(sents[i],i>0?sents[i-1]:null,i<sents.length-1?sents[i+1]:null);
+    roles.push(r);
+    if(r==='punchline'||r==='tag') hasPunch=true;
+  }
+  var vp=countVisualPunchesInText(bitText);
+  if(vp>0) hasPunch=true;
+
+  // Check for context dependency (references to "this", "he", "she", "they" without introduction)
+  var hasContext=/(^|\s)(this|that|these|those|he|she|they|it|him|her|them)\s/i.test(cleanBit.substring(0,50));
+
+  var score, scoreLabel, scoreCls;
+  if(wn>150){score=0;scoreLabel='Too long';scoreCls='hs-maybe';}
+  else if(!hasPunch){score=1;scoreLabel='No punchline';scoreCls='hs-maybe';}
+  else if(hasContext&&wn>80){score=2;scoreLabel='Needs context';scoreCls='hs-maybe';}
+  else if(wn<=80&&hasPunch){score=4;scoreLabel='Strong candidate';scoreCls='hs-strong';}
+  else if(wn<=130&&hasPunch){score=3;scoreLabel='Good candidate';scoreCls='hs-good';}
+  else{score=2;scoreLabel='Possible';scoreCls='hs-maybe';}
+
+  if(score===0) return null; // skip
+  return{text:bitText.trim(),clean:cleanBit.trim(),scene:sceneName,wn:wn,dur:dur,score:score,label:scoreLabel,cls:scoreCls};
+}
+
+function runHarvester(){
+  var resultsEl=document.getElementById('harvest-results');
+  if(!resultsEl) return;
+
+  var scenes=getScenes();
+  var candidates=[];
+
+  for(var si=0;si<scenes.length;si++){
+    var scene=scenes[si];
+    var text=scene.text||'';
+    if(!text.trim()) continue;
+    var paragraphs=text.split(/\n\s*\n/).filter(function(p){return p.trim();});
+    for(var pi=0;pi<paragraphs.length;pi++){
+      var result=scoreHarvestBit(paragraphs[pi],scene.name);
+      if(result) candidates.push(result);
+    }
+  }
+
+  // Sort by score descending
+  candidates.sort(function(a,b){return b.score-a.score;});
+
+  if(!candidates.length){
+    resultsEl.innerHTML='<div class="card"><div style="font-size:12px;color:var(--text3);text-align:center;padding:20px;">No Short candidates found yet. Write more bits separated by blank lines, then scan again.</div></div>';
+    return;
+  }
+
+  var h='<div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;">'+candidates.length+' candidate'+(candidates.length!==1?'s':'')+' found</div>';
+  for(var i=0;i<candidates.length;i++){
+    var c=candidates[i];
+    h+='<div class="harvest-card">';
+    h+='<div class="harvest-header">';
+    h+='<span class="harvest-scene">'+esc(c.scene)+'</span>';
+    h+='<span class="harvest-score '+c.cls+'">'+c.label+'</span>';
+    h+='<span class="harvest-dur">'+c.wn+'w &nbsp;'+c.dur+'</span>';
+    h+='</div>';
+    h+='<div class="harvest-text">'+esc(c.clean.substring(0,300))+(c.clean.length>300?'\u2026':'')+'</div>';
+    h+='<div class="harvest-actions">';
+    h+='<button class="harvest-use-btn" onclick="useHarvestCandidate('+i+')">Use as Short</button>';
+    h+='<button class="harvest-skip-btn" onclick="this.closest(\'.harvest-card\').style.display=\'none\'">Skip</button>';
+    h+='</div></div>';
+  }
+  resultsEl.innerHTML=h;
+  resultsEl._candidates=candidates;
+}
+
+function useHarvestCandidate(idx){
+  var resultsEl=document.getElementById('harvest-results');
+  if(!resultsEl||!resultsEl._candidates) return;
+  var c=resultsEl._candidates[idx];
+  document.getElementById('short-title').value='JD Warren Versus \u2014 '+c.scene+' clip';
+  document.getElementById('short-script').value=c.clean;
+  currentShortFormat='Episode Cut';
+  initShortFormats();
+  updateShortDur();
+  // Scroll to composer
+  var composer=document.querySelector('.short-composer');
+  if(composer) composer.scrollIntoView({behavior:'smooth'});
+}
+
+
+var WRITE_MODE='script'; // 'script' or 'rough'
+
+function setWriteMode(mode){
+  WRITE_MODE=mode;
+  document.getElementById('wm-script').classList.toggle('active',mode==='script');
+  document.getElementById('wm-rough').classList.toggle('active',mode==='rough');
+  document.getElementById('script-panel').classList.toggle('hidden',mode==='rough');
+  document.getElementById('rough-panel').classList.toggle('active',mode==='rough');
+  if(mode==='rough') loadRoughDraft();
+  try{localStorage.setItem('cadence_write_mode',mode);}catch(e){}
+}
+
+function saveRoughDraft(){
+  var scene=getCurrentScene();
+  if(!scene) return;
+  var text=document.getElementById('rough-editor').value;
+  var scenes=loadScenes();
+  for(var i=0;i<scenes.length;i++){
+    if(scenes[i].id===scene.id){
+      scenes[i].rough=text;
+      break;
+    }
+  }
+  saveScenes(scenes);
+}
+
+function saveIntention(){
+  var scene=getCurrentScene();
+  if(!scene) return;
+  var val=document.getElementById('intention-input').value;
+  var scenes=loadScenes();
+  for(var i=0;i<scenes.length;i++){
+    if(scenes[i].id===scene.id){
+      scenes[i].intention=val;
+      break;
+    }
+  }
+  saveScenes(scenes);
+  updateIntentionPreview();
+}
+
+function loadRoughDraft(){
+  var scene=getCurrentScene();
+  if(!scene) return;
+  var roughEl=document.getElementById('rough-editor');
+  var intentEl=document.getElementById('intention-input');
+  if(roughEl) roughEl.value=scene.rough||'';
+  if(intentEl) intentEl.value=scene.intention||'';
+  updateIntentionPreview();
+}
+
+function updateIntentionPreview(){
+  var scene=getCurrentScene();
+  var el=document.getElementById('intention-tag-preview');
+  if(!el) return;
+  var intention=scene&&scene.intention?scene.intention:'';
+  el.textContent=intention?'\u2665 '+intention:'';
+}
+
+function distillRoughDraft(){
+  var roughText=document.getElementById('rough-editor').value.trim();
+  if(!roughText){alert('Nothing in the rough draft yet.');return;}
+  var editor=document.getElementById('editor');
+  var existing=editor.value.trim();
+  if(existing){
+    if(!window.confirm('This will append your rough draft to the script. Continue?')) return;
+    editor.value=existing+'\n\n'+roughText;
+  } else {
+    editor.value=roughText;
+  }
+  saveCurrentSceneText();
+  setWriteMode('script');
+  render();
+}
+
 var SCENE_KEY = 'cadence_scenes';
 var SCENE_CUR = 'cadence_current_scene';
 
@@ -2689,6 +3114,8 @@ function switchScene(id){
   for(var i=0;i<scenes.length;i++)if(scenes[i].id===id){scene=scenes[i];break;}
   if(!scene)return;
   document.getElementById('editor').value=scene.text||'';
+  if(WRITE_MODE==='rough') loadRoughDraft();
+  else updateIntentionPreview();
   renderSceneStrip();
   renderSceneNotes();
   render();
@@ -2759,6 +3186,9 @@ function renderScript(){
     h+='<span class="script-scene-name">'+esc(s.name)+'</span>';
     h+='<span class="script-scene-loc">'+esc(s.location)+'</span>';
     h+='</div>';
+    if(s.intention){
+      h+='<div style="padding:5px 12px 0;font-size:10px;color:var(--purple);font-style:italic;">\u2665 '+esc(s.intention)+'</div>';
+    }
     h+='<div class="script-scene-body">'+(s.text?esc(s.text):'<span style="color:var(--text3);font-style:italic;">Empty</span>')+'</div>';
     h+='</div>';
   }
@@ -2771,8 +3201,10 @@ function exportScript(){
   var out='';
   for(var i=0;i<scenes.length;i++){
     var s=scenes[i];
-    out+='=== '+String(i+1)+'. '+s.name+' ['+s.type+' / '+s.location+'] ===\n\n';
-    out+=(s.text||'(empty)')+'\n\n\n';
+    out+='=== '+String(i+1)+'. '+s.name+' ['+s.type+' / '+s.location+'] ===\n';
+    if(s.intention) out+='Intention: '+s.intention+'\n';
+    if(s.notes) out+='Notes: '+s.notes+'\n';
+    out+='\n'+(s.text||'(empty)')+'\n\n\n';
   }
   var a=document.createElement('a');
   a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(out);
@@ -2887,6 +3319,7 @@ function switchPane(name,btn){
   if(name==='practice'){renderLog();}
   if(name==='script'){renderScript();}
   if(name==='record'){updateOaiCard();renderRecScript();}
+  if(name==='shorts'){renderSavedShorts();}
 }
 
 /* ======================================================
@@ -2948,6 +3381,8 @@ window.addEventListener('beforeunload', function(){ saveCurrentSceneText(); });
 
 // Restore saved mode
 try{var sm=localStorage.getItem('cadence_mode');if(sm==='standup')setMode('standup');}catch(e){}
+// Restore write mode
+try{var wm=localStorage.getItem('cadence_write_mode');if(wm==='rough')setWriteMode('rough');}catch(e){}
 
 buildLearn();
 buildDrills();
@@ -2956,11 +3391,14 @@ updateRhythmGuide();
 updateLegend();
 updateKeyCardVisibility();
 updateOaiCard();
+initShortFormats();
+renderSavedShorts();
 
 // Init scenes
 var _initScene=getCurrentScene();
 setCurrentSceneId(_initScene.id);
 document.getElementById('editor').value=_initScene.text||'';
+loadRoughDraft();
 renderSceneStrip();
 renderSceneNotes();
 render();
