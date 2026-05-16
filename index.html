@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Cadence">
 <title>Cadence</title>
-<style>a
+<style>
 :root {
   --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
   --mono: 'Courier New', Courier, monospace;
@@ -242,7 +242,8 @@ body {
 .rough-panel { flex: 1; display: none; flex-direction: column; overflow: hidden; }
 .rough-panel.active { display: flex; }
 .intention-bar { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-bottom: 1px solid var(--bdr); background: var(--bg1); }
-.intention-label { font-size: 10px; font-weight: 700; color: var(--purple); flex-shrink: 0; letter-spacing: 0.04em; text-transform: uppercase; }
+.intention-label-input { font-size: 11px; font-weight: 700; color: var(--purple); flex-shrink: 0; letter-spacing: 0.04em; border: none; outline: none; background: transparent; font-family: var(--sans); width: 180px; cursor: text; padding: 0; }
+.intention-label-input::placeholder { color: var(--purple); opacity: 0.5; }
 .intention-input { flex: 1; border: none; outline: none; background: transparent; font-size: 12px; font-family: var(--sans); color: var(--text1); font-style: italic; }
 .intention-input::placeholder { color: var(--text3); font-style: italic; }
 .rough-textarea { flex: 1; border: none; outline: none; resize: none; padding: 20px; font-size: 15px; line-height: 1.9; font-family: var(--mono); background: var(--bg2); color: var(--text2); caret-color: var(--text1); overflow-y: auto; -webkit-overflow-scrolling: touch; }
@@ -617,7 +618,10 @@ body {
       <!-- Rough draft panel -->
       <div class="rough-panel" id="rough-panel">
         <div class="intention-bar">
-          <span class="intention-label">&#x2665; I want them to feel</span>
+          <input class="intention-label-input" id="intention-label-input" type="text"
+            placeholder="&#x2665; I want them to feel..."
+            oninput="saveIntentionLabel()" maxlength="60"
+            value="&#x2665; I want them to feel">
           <input class="intention-input" id="intention-input" type="text"
             placeholder="the specific embarrassment of knowing a teenager is richer than you..."
             oninput="saveIntention()" maxlength="200">
@@ -2990,6 +2994,20 @@ function saveRoughDraft(){
   saveScenes(scenes);
 }
 
+function saveIntentionLabel(){
+  var scene=getCurrentScene();
+  if(!scene) return;
+  var val=document.getElementById('intention-label-input').value;
+  var scenes=loadScenes();
+  for(var i=0;i<scenes.length;i++){
+    if(scenes[i].id===scene.id){
+      scenes[i].intentionLabel=val;
+      break;
+    }
+  }
+  saveScenes(scenes);
+}
+
 function saveIntention(){
   var scene=getCurrentScene();
   if(!scene) return;
@@ -3010,8 +3028,10 @@ function loadRoughDraft(){
   if(!scene) return;
   var roughEl=document.getElementById('rough-editor');
   var intentEl=document.getElementById('intention-input');
+  var labelEl=document.getElementById('intention-label-input');
   if(roughEl) roughEl.value=scene.rough||'';
   if(intentEl) intentEl.value=scene.intention||'';
+  if(labelEl) labelEl.value=scene.intentionLabel||'\u2665 I want them to feel';
   updateIntentionPreview();
 }
 
@@ -3148,7 +3168,6 @@ function renderSceneStrip(){
     var active=s.id===curId?'active':'';
     h+='<div class="scene-tab-wrap '+(active?'active':'')+'">';
     h+='<button class="scene-tab '+active+'" onclick="switchScene(\''+s.id+'\')">';
-    h+='<span class="scene-tab-type">'+esc(s.type)+'</span>';
     h+='<span>'+esc(s.name)+'</span>';
     h+='</button>';
     h+='<button class="scene-edit-btn" onclick="openSheet(\''+s.id+'\')" title="Edit scene">&#x270E;</button>';
