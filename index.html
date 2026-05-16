@@ -2986,40 +2986,100 @@ async function startRecord(){
   var preview=document.getElementById('rec-preview');
   var ph=document.getElementById('rec-placeholder');
   var playback=document.getElementById('rec-playback');
+
+  // Get media stream — try video+audio, fall back to audio only
   try{
-    recStream=await navigator.mediaDevices.getUserMedia({audio:true,video:true});
+    recStream=await navigator.mediaDevices.getUserMedia({audio:true,video:{facingMode:'user'}});
     preview.srcObject=recStream;
     preview.classList.remove('hidden');
     ph.style.display='none';
   }catch(e){
     try{
       recStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
-      ph.querySelector('.rec-ph-text').textContent='Audio only';
-    }catch(e2){setRecSt('Mic access denied \u2014 check browser permissions.');return;}
+      ph.querySelector('.rec-ph-text').textContent='Audio only \u2014 no camera access';
+      ph.style.display='flex';
+      preview.classList.add('hidden');
+    }catch(e2){
+      setRecSt('Microphone access denied. Check browser permissions in System Settings \u2192 Privacy \u2192 Microphone.');
+      return;
+    }
   }
+
   playback.classList.add('hidden');
   var empty=document.getElementById('rec-empty');
   if(empty) empty.style.display='none';
   recChunks=[];
-  if(typeof MediaRecorder==='undefined'){setRecSt('Recording not supported in this browser.');return;}
-  var mime='audio/webm';
-  if(!MediaRecorder.isTypeSupported('audio/webm')) mime=MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':'';
-  try{recMediaRecorder=new MediaRecorder(recStream,mime?{mimeType:mime}:{});}
-  catch(e){recMediaRecorder=new MediaRecorder(recStream);}
-  recMediaRecorder.ondataavailable=function(e){if(e.data&&e.data.size>0)recChunks.push(e.data);};
+
+  if(typeof MediaRecorder==='undefined'){
+    setRecSt('Recording not supported in this browser. Try Chrome.');
+    return;
+  }
+
+  // Find best supported mime type — try in order of preference
+  var mimeTypes=[
+    'video/webm;codecs=vp8,opus',
+    'video/webm;codecs=vp9,opus',
+    'video/webm',
+    'audio/webm;codecs=opus',
+    'audio/webm',
+    'video/mp4',
+    'audio/mp4',
+    'audio/ogg;codecs=opus',
+    ''
+  ];
+  var chosenMime='';
+  for(var i=0;i<mimeTypes.length;i++){
+    if(!mimeTypes[i]||MediaRecorder.isTypeSupported(mimeTypes[i])){
+      chosenMime=mimeTypes[i];
+      break;
+    }
+  }
+
+  try{
+    recMediaRecorder=chosenMime
+      ? new MediaRecorder(recStream,{mimeType:chosenMime})
+      : new MediaRecorder(recStream);
+  }catch(e){
+    try{recMediaRecorder=new MediaRecorder(recStream);}
+    catch(e2){setRecSt('Could not start recorder: '+e2.message);return;}
+  }
+
+  recMediaRecorder.onerror=function(e){
+    setRecSt('Recorder error: '+(e.error?e.error.message:e.message||'unknown'));
+    stopRecord();
+  };
+
+  recMediaRecorder.ondataavailable=function(e){
+    if(e.data&&e.data.size>0) recChunks.push(e.data);
+  };
+
   recMediaRecorder.onstop=function(){
-    recBlob=new Blob(recChunks,{type:recMediaRecorder.mimeType||'audio/webm'});
+    if(!recChunks.length){setRecSt('No audio captured. Try again.');return;}
+    var mimeOut=recMediaRecorder.mimeType||chosenMime||'audio/webm';
+    recBlob=new Blob(recChunks,{type:mimeOut});
     var url=URL.createObjectURL(recBlob);
-    playback.src=url;playback.classList.remove('hidden');preview.classList.add('hidden');
+    playback.src=url;
+    playback.classList.remove('hidden');
+    preview.classList.add('hidden');
     document.getElementById('rec-transcribe-btn').disabled=false;
     setRecSt('Take recorded ('+fmtRecTime(recSecs)+'). Tap Transcribe to analyze.');
   };
-  recMediaRecorder.start(500);
+
+  try{
+    recMediaRecorder.start(500);
+  }catch(e){
+    setRecSt('Failed to start: '+e.message);
+    return;
+  }
+
   recIsRecording=true; recSecs=0;
   document.getElementById('rec-timer').classList.add('on');
-  recInterval=setInterval(function(){recSecs++;document.getElementById('rec-timer-val').textContent=fmtRecTime(recSecs);},1000);
+  recInterval=setInterval(function(){
+    recSecs++;
+    document.getElementById('rec-timer-val').textContent=fmtRecTime(recSecs);
+  },1000);
   document.getElementById('rec-btn').classList.add('recording');
-  setRecSt('Recording\u2026');
+  setRecSt('Recording\u2026 ('+(chosenMime||'default format')+')');
 }
 
 function stopRecord(){
