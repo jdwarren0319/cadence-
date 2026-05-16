@@ -511,7 +511,30 @@ body {
 .tutor-response { margin-top: 10px; font-size: 12px; color: var(--text2); line-height: 1.7; white-space: pre-wrap; display: none; }
 .tutor-response.visible { display: block; }
 .tutor-response-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple); margin-bottom: 4px; }
-/* ── Shorts tab ── */
+/* ── Research rich text editor ── */
+.research-toolbar { flex-shrink: 0; display: flex; align-items: center; gap: 2px; padding: 5px 10px; border-bottom: 1px solid var(--bdr); background: var(--bg1); }
+.research-tool-btn { font-size: 13px; font-family: var(--sans); width: 30px; height: 28px; border: none; background: transparent; color: var(--text2); cursor: pointer; border-radius: var(--r); touch-action: manipulation; display: flex; align-items: center; justify-content: center; }
+.research-tool-btn:hover { background: var(--bg3); }
+.research-tool-btn:active { background: var(--bg3); }
+.research-editor {
+  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  padding: 20px; font-size: 14px; font-family: var(--sans);
+  color: var(--text1); line-height: 1.75; background: var(--bg2);
+  outline: none; min-height: 0;
+}
+.research-editor:empty::before {
+  content: attr(data-placeholder);
+  color: var(--text3); white-space: pre-line; pointer-events: none;
+  display: block;
+}
+.research-editor h1,.research-editor h2,.research-editor h3 { font-size: 13px; font-weight: 700; color: var(--text1); letter-spacing: 0.08em; text-transform: uppercase; margin: 16px 0 6px; }
+.research-editor b,.research-editor strong { color: var(--text1); font-weight: 700; }
+.research-editor i,.research-editor em { color: var(--text2); font-style: italic; }
+.research-editor a { color: var(--blue); text-decoration: underline; }
+.research-editor ul,.research-editor ol { padding-left: 20px; margin: 4px 0; }
+.research-editor li { margin: 2px 0; color: var(--text2); }
+.research-editor p { margin: 4px 0; }
+.research-editor blockquote { border-left: 3px solid var(--purple); padding-left: 12px; color: var(--text2); font-style: italic; margin: 8px 0; }
 #pane-shorts { padding: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 #pane-shorts::-webkit-scrollbar { width: 3px; }
 .shorts-inner { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
@@ -641,15 +664,23 @@ body {
 
       <!-- Research panel -->
       <div class="rough-panel" id="research-panel">
-        <textarea class="rough-textarea" id="research-editor"
-          placeholder="Paste research here. Artist bio, facts, quotes, links, track notes, anything.&#10;&#10;Not analysed. Saves per scene.&#10;&#10;ARTIST&#10;&#10;ALBUM&#10;&#10;TOO WEIRD TO IGNORE&#10;&#10;LINKS"
+        <div class="research-toolbar">
+          <button class="research-tool-btn" onclick="researchFormat('bold')" title="Bold"><b>B</b></button>
+          <button class="research-tool-btn" onclick="researchFormat('italic')" title="Italic"><i>I</i></button>
+          <button class="research-tool-btn" onclick="researchFormat('insertUnorderedList')" title="Bullet list">&#x2022;</button>
+          <button class="research-tool-btn" onclick="researchFormat('insertOrderedList')" title="Numbered list">1.</button>
+          <button class="research-tool-btn" onclick="researchHeading()" title="Heading">H</button>
+          <div style="flex:1"></div>
+          <button class="research-tool-btn" onclick="researchClear()" title="Clear all" style="color:var(--red);">&#x2715;</button>
+        </div>
+        <div class="research-editor" id="research-editor"
+          contenteditable="true"
           spellcheck="false"
-          autocorrect="off"
-          autocapitalize="off"
-          oninput="saveResearch()"></textarea>
+          oninput="saveResearch()"
+          data-placeholder="Paste research here. Bold, bullet points, links and formatting are preserved.&#10;&#10;Try sections like ARTIST, ALBUM, TOO WEIRD TO IGNORE, LINKS"></div>
         <div class="rough-footer">
-          <span class="rough-hint">Not analysed. Paste freely. Saves per scene.</span>
-          <button class="rough-distill" onclick="distillResearch()">Pull fact &#x2192; Script</button>
+          <span class="rough-hint">Rich text. Paste from anywhere. Saves per scene.</span>
+          <button class="rough-distill" onclick="distillResearch()">Pull to Script &#x2192;</button>
         </div>
       </div>
 
@@ -3013,10 +3044,11 @@ function saveRoughDraft(){
 function saveResearch(){
   var scene=getCurrentScene();
   if(!scene) return;
-  var text=document.getElementById('research-editor').value;
+  var el=document.getElementById('research-editor');
+  var html=el?el.innerHTML:'';
   var scenes=loadScenes();
   for(var i=0;i<scenes.length;i++){
-    if(scenes[i].id===scene.id){scenes[i].research=text;break;}
+    if(scenes[i].id===scene.id){scenes[i].research=html;break;}
   }
   saveScenes(scenes);
 }
@@ -3025,23 +3057,55 @@ function loadResearch(){
   var scene=getCurrentScene();
   if(!scene) return;
   var el=document.getElementById('research-editor');
-  if(el) el.value=scene.research||'';
+  if(!el) return;
+  el.innerHTML=scene.research||'';
 }
 
 function distillResearch(){
-  var sel=window.getSelection&&window.getSelection().toString().trim();
-  var text=sel||'';
-  if(!text){
+  var sel=window.getSelection&&window.getSelection();
+  var text='';
+  if(sel&&sel.rangeCount>0&&sel.toString().trim()){
+    text=sel.toString().trim();
+  } else {
     var el=document.getElementById('research-editor');
-    text=el?el.value.trim():'';
+    // Get plain text from innerHTML
+    var tmp=document.createElement('div');
+    tmp.innerHTML=el?el.innerHTML:'';
+    text=tmp.innerText||tmp.textContent||'';
+    text=text.trim();
   }
-  if(!text){alert('Select the text you want to pull, or write something in Research first.');return;}
+  if(!text){alert('Select the text you want to pull, or add research first.');return;}
   var editor=document.getElementById('editor');
   var existing=editor.value.trim();
   editor.value=existing?(existing+'\n\n'+text):text;
   saveCurrentSceneText();
   setWriteMode('script');
   render();
+}
+
+function researchFormat(cmd){
+  document.getElementById('research-editor').focus();
+  document.execCommand(cmd,false,null);
+  saveResearch();
+}
+
+function researchHeading(){
+  document.getElementById('research-editor').focus();
+  var sel=window.getSelection();
+  if(!sel||!sel.rangeCount) return;
+  var range=sel.getRangeAt(0);
+  var h=document.createElement('h2');
+  h.textContent=sel.toString()||'SECTION';
+  range.deleteContents();
+  range.insertNode(h);
+  saveResearch();
+}
+
+function researchClear(){
+  if(!window.confirm('Clear all research for this scene?')) return;
+  var el=document.getElementById('research-editor');
+  if(el) el.innerHTML='';
+  saveResearch();
 }
 
 function saveIntentionLabel(){
@@ -3275,7 +3339,12 @@ function exportScript(){
     if(s.intention) out+='Intention: '+s.intention+'\n';
     if(s.notes) out+='Notes: '+s.notes+'\n';
     out+='\n'+(s.text||'(empty)')+'\n';
-    if(s.research) out+='\n--- RESEARCH ---\n'+s.research+'\n';
+    if(s.research){
+      var tmp=document.createElement('div');
+      tmp.innerHTML=s.research;
+      var rt=tmp.innerText||tmp.textContent||'';
+      if(rt.trim()) out+='\n--- RESEARCH ---\n'+rt.trim()+'\n';
+    }
     out+='\n\n';
   }
   var a=document.createElement('a');
