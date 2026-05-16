@@ -459,29 +459,20 @@ body {
 .ai-overall { font-size: 11px; color: var(--text2); line-height: 1.5; padding: 8px 0 2px; border-top: 1px solid var(--bdr); margin-top: 6px; }
 /* ── Record tab ── */
 #pane-record { display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
-.rec-preview-wrap { position: relative; background: #000; flex-shrink: 0; width: 100%; }
-.rec-video { width: 100%; max-height: 300px; object-fit: cover; display: block; }
-.rec-video.hidden { display: none; }
-.rec-placeholder { width: 100%; height: 200px; background: var(--bg3); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
-.rec-ph-icon { font-size: 36px; }
-.rec-ph-text { font-size: 12px; color: var(--text3); }
-.rec-timer { position: absolute; top: 10px; right: 12px; font-size: 13px; font-weight: 700; color: #fff; background: rgba(0,0,0,0.55); padding: 3px 10px; border-radius: 20px; font-variant-numeric: tabular-nums; display: none; }
-.rec-timer.on { display: block; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 .rec-dot-live { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--red); margin-right: 4px; animation: blink 1s infinite; vertical-align: middle; }
-.rec-controls { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--bdr); flex-shrink: 0; }
-.rec-btn { width: 52px; height: 52px; border-radius: 50%; border: 3px solid var(--text1); background: transparent; cursor: pointer; touch-action: manipulation; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color 0.15s; }
-.rec-btn-dot { width: 26px; height: 26px; border-radius: 50%; background: var(--red); transition: all 0.2s; }
-.rec-btn.recording .rec-btn-dot { width: 14px; height: 14px; border-radius: 3px; }
-.rec-btn:disabled { opacity: 0.4; }
+.rec-controls { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-top: 1px solid var(--bdr); flex-shrink: 0; background: var(--bg1); }
+.rec-btn { width: 48px; height: 48px; border-radius: 50%; border: 3px solid var(--text1); background: transparent; cursor: pointer; touch-action: manipulation; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rec-btn-dot { width: 22px; height: 22px; border-radius: 50%; background: var(--red); transition: all 0.2s; }
+.rec-btn.recording .rec-btn-dot { width: 12px; height: 12px; border-radius: 3px; }
 .rec-status { flex: 1; font-size: 11px; color: var(--text3); line-height: 1.5; }
-.rec-transcribe { font-size: 12px; font-weight: 700; font-family: var(--sans); padding: 10px 14px; border-radius: var(--r); background: var(--purple); color: #fff; border: none; cursor: pointer; touch-action: manipulation; flex-shrink: 0; }
+.rec-transcribe { font-size: 12px; font-weight: 700; font-family: var(--sans); padding: 9px 14px; border-radius: var(--r); background: var(--purple); color: #fff; border: none; cursor: pointer; touch-action: manipulation; flex-shrink: 0; }
 .rec-transcribe:disabled { opacity: 0.4; cursor: default; }
-.rec-results { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.rec-results { overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 12px; display: flex; flex-direction: column; gap: 10px; max-height: 280px; }
 .rec-results::-webkit-scrollbar { width: 3px; }
 .pace-gauge { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
 .pace-track { flex: 1; height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; }
-.pace-fill { height: 100%; border-radius: 4px; transition: width 0.4s; }
+.pace-fill { height: 100%; border-radius: 4px; transition: width 0.4f; }
 .pace-num { font-size: 20px; font-weight: 700; color: var(--text1); font-variant-numeric: tabular-nums; flex-shrink: 0; }
 .pause-map { display: flex; gap: 2px; align-items: flex-end; height: 48px; margin-top: 8px; overflow-x: auto; scrollbar-width: none; }
 .pause-map::-webkit-scrollbar { display: none; }
@@ -501,16 +492,18 @@ body {
 }
 
 /* ── Record script panel ── */
-.rec-script-header { display: flex; align-items: center; justify-content: space-between; padding: 7px 14px; border-bottom: 1px solid var(--bdr); }
+.rec-script-wrap { flex: 1; background: #f5f3f0; display: flex; flex-direction: column; overflow: hidden; }
+.rec-script-header { display: flex; align-items: center; justify-content: space-between; padding: 7px 14px; border-bottom: 1px solid #e0ddd9; background: #ebe8e4; flex-shrink: 0; }
 .rec-script-label { font-size: 11px; font-weight: 600; color: var(--text2); }
 .rec-script-toggle { font-size: 11px; color: var(--text3); border: none; background: transparent; cursor: pointer; font-family: var(--sans); padding: 2px 6px; }
-.rec-script-body { padding: 12px 16px; max-height: 180px; overflow-y: auto; font-size: 14px; font-family: var(--mono); color: var(--text2); line-height: 2; white-space: pre-wrap; -webkit-overflow-scrolling: touch; }
+.rec-script-body { padding: 20px; font-size: 17px; font-family: var(--mono); color: #555; line-height: 2.2; overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; }
 .rec-script-body::-webkit-scrollbar { width: 3px; }
 .rec-script-body::-webkit-scrollbar-thumb { background: var(--bdrm); border-radius: 2px; }
 .rec-script-body.hidden { display: none; }
-.rec-script-sentence { display: inline; }
-.rec-script-sentence.punch { color: var(--red); font-weight: 600; }
-.rec-script-sentence.ideal { color: var(--text1); }
+.rec-script-sentence { display: block; margin-bottom: 4px; padding: 2px 0; }
+.rec-script-sentence.punch { color: var(--red); font-weight: 700; font-size: 18px; }
+.rec-script-sentence.setup { color: #1a1612; font-weight: 500; }
+.rec-script-sentence.neutral { color: #666; }
 /* ── AI Tutor ── */
 .tutor-card { background: var(--bg2); border: 1px solid var(--purple); border-radius: var(--rl); padding: 12px 14px; margin: 12px 12px 0; }
 .tutor-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--purple); display: block; margin-bottom: 4px; }
@@ -937,31 +930,29 @@ body {
 
     <!-- RECORD PANE -->
     <div class="pane hidden" id="pane-record">
-      <div class="rec-preview-wrap">
-        <video class="rec-video hidden" id="rec-preview" autoplay muted playsinline></video>
-        <video class="rec-video hidden" id="rec-playback" controls playsinline></video>
-        <div class="rec-placeholder" id="rec-placeholder">
-          <span class="rec-ph-icon">&#x1F3A4;</span>
-          <span class="rec-ph-text">Tap record to begin</span>
-        </div>
-        <div class="rec-timer" id="rec-timer"><span class="rec-dot-live"></span><span id="rec-timer-val">0:00</span></div>
-      </div>
-      <div class="rec-controls">
-        <button class="rec-btn" id="rec-btn" onclick="toggleRecord()">
-          <div class="rec-btn-dot"></div>
-        </button>
-        <span class="rec-status" id="rec-status">Ready to record</span>
-        <button class="rec-transcribe" id="rec-transcribe-btn" onclick="transcribeRecording()" disabled>Transcribe &#x2728;</button>
-      </div>
 
-      <!-- Script panel -->
-      <div class="rec-script-wrap" id="rec-script-wrap">
+      <!-- Script display - main area -->
+      <div class="rec-script-wrap" id="rec-script-wrap" style="flex:1;overflow-y:auto;">
         <div class="rec-script-header">
           <span class="rec-script-label">&#x1F4C4; <span id="rec-script-scene-name">Current scene</span></span>
           <button class="rec-script-toggle" onclick="toggleRecScript()" id="rec-script-toggle-btn">Hide</button>
         </div>
         <div class="rec-script-body" id="rec-script-body"></div>
       </div>
+
+      <!-- Audio playback (hidden until recording done) -->
+      <audio id="rec-playback" controls style="width:100%;display:none;padding:8px 16px;box-sizing:border-box;"></audio>
+
+      <!-- Controls -->
+      <div class="rec-controls">
+        <button class="rec-btn" id="rec-btn" onclick="toggleRecord()">
+          <div class="rec-btn-dot"></div>
+        </button>
+        <span class="rec-status" id="rec-status">Ready to record</span>
+        <div class="rec-timer" id="rec-timer" style="position:static;background:transparent;color:var(--red);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;padding:0;"><span class="rec-dot-live" style="display:none;" id="rec-dot"></span><span id="rec-timer-val">0:00</span></div>
+        <button class="rec-transcribe" id="rec-transcribe-btn" onclick="transcribeRecording()" disabled>Transcribe &#x2728;</button>
+      </div>
+
       <div class="rec-results" id="rec-results">
         <div style="text-align:center;padding:28px 20px;font-size:12px;color:var(--text3);line-height:1.8;" id="rec-empty">Record a take, then tap <b>Transcribe</b> to analyze pace, pauses, filler words, and script deviation.</div>
         <div class="card" id="openai-key-card">
@@ -2846,8 +2837,8 @@ function renderRecScript(){
   for(var i=0;i<sents.length;i++){
     var s=sents[i];
     var wn=wc(s);
-    var cls=wn<=5?'punch':wn<=20?'ideal':'';
-    html+='<span class="rec-script-sentence '+cls+'">'+esc(s.trim())+'</span> ';
+    var cls=wn<=6?'punch':wn<=20?'setup':'neutral';
+    html+='<span class="rec-script-sentence '+cls+'">'+esc(s.trim())+'</span>';
   }
   bodyEl.innerHTML=html;
 }
@@ -2870,29 +2861,16 @@ async function toggleRecord(){
 }
 
 async function startRecord(){
-  var preview=document.getElementById('rec-preview');
-  var ph=document.getElementById('rec-placeholder');
-  var playback=document.getElementById('rec-playback');
-
-  // Get media stream — try video+audio, fall back to audio only
+  // Audio only — no camera
   try{
-    recStream=await navigator.mediaDevices.getUserMedia({audio:true,video:{facingMode:'user'}});
-    preview.srcObject=recStream;
-    preview.classList.remove('hidden');
-    ph.style.display='none';
+    recStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
   }catch(e){
-    try{
-      recStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
-      ph.querySelector('.rec-ph-text').textContent='Audio only \u2014 no camera access';
-      ph.style.display='flex';
-      preview.classList.add('hidden');
-    }catch(e2){
-      setRecSt('Microphone access denied. Check browser permissions in System Settings \u2192 Privacy \u2192 Microphone.');
-      return;
-    }
+    setRecSt('Microphone access denied. Check browser permissions.');
+    return;
   }
 
-  playback.classList.add('hidden');
+  var playback=document.getElementById('rec-playback');
+  if(playback) playback.style.display='none';
   var empty=document.getElementById('rec-empty');
   if(empty) empty.style.display='none';
   recChunks=[];
@@ -2902,23 +2880,11 @@ async function startRecord(){
     return;
   }
 
-  // Find best supported mime type — try in order of preference
-  var mimeTypes=[
-    'video/webm;codecs=vp8,opus',
-    'video/webm;codecs=vp9,opus',
-    'video/webm',
-    'audio/webm;codecs=opus',
-    'audio/webm',
-    'video/mp4',
-    'audio/mp4',
-    'audio/ogg;codecs=opus',
-    ''
-  ];
+  var mimeTypes=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus',''];
   var chosenMime='';
   for(var i=0;i<mimeTypes.length;i++){
     if(!mimeTypes[i]||MediaRecorder.isTypeSupported(mimeTypes[i])){
-      chosenMime=mimeTypes[i];
-      break;
+      chosenMime=mimeTypes[i]; break;
     }
   }
 
@@ -2932,7 +2898,7 @@ async function startRecord(){
   }
 
   recMediaRecorder.onerror=function(e){
-    setRecSt('Recorder error: '+(e.error?e.error.message:e.message||'unknown'));
+    setRecSt('Recorder error: '+(e.error?e.error.message:'unknown'));
     stopRecord();
   };
 
@@ -2942,38 +2908,37 @@ async function startRecord(){
 
   recMediaRecorder.onstop=function(){
     if(!recChunks.length){setRecSt('No audio captured. Try again.');return;}
-    var mimeOut=recMediaRecorder.mimeType||chosenMime||'audio/webm';
-    recBlob=new Blob(recChunks,{type:mimeOut});
+    recBlob=new Blob(recChunks,{type:recMediaRecorder.mimeType||'audio/webm'});
     var url=URL.createObjectURL(recBlob);
-    playback.src=url;
-    playback.classList.remove('hidden');
-    preview.classList.add('hidden');
+    if(playback){
+      playback.src=url;
+      playback.style.display='block';
+    }
     document.getElementById('rec-transcribe-btn').disabled=false;
     setRecSt('Take recorded ('+fmtRecTime(recSecs)+'). Tap Transcribe to analyze.');
   };
 
-  try{
-    recMediaRecorder.start(500);
-  }catch(e){
-    setRecSt('Failed to start: '+e.message);
-    return;
-  }
+  try{recMediaRecorder.start(500);}
+  catch(e){setRecSt('Failed to start: '+e.message);return;}
 
   recIsRecording=true; recSecs=0;
-  document.getElementById('rec-timer').classList.add('on');
+  // Show dot
+  var dot=document.getElementById('rec-dot');
+  if(dot) dot.style.display='inline-block';
   recInterval=setInterval(function(){
     recSecs++;
     document.getElementById('rec-timer-val').textContent=fmtRecTime(recSecs);
   },1000);
   document.getElementById('rec-btn').classList.add('recording');
-  setRecSt('Recording\u2026 ('+(chosenMime||'default format')+')');
+  setRecSt('Recording\u2026');
 }
 
 function stopRecord(){
   if(recMediaRecorder&&recMediaRecorder.state!=='inactive') recMediaRecorder.stop();
   if(recStream) recStream.getTracks().forEach(function(t){t.stop();});
   clearInterval(recInterval);
-  document.getElementById('rec-timer').classList.remove('on');
+  var dot=document.getElementById('rec-dot');
+  if(dot) dot.style.display='none';
   document.getElementById('rec-btn').classList.remove('recording');
   recIsRecording=false;
 }
