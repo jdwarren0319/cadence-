@@ -1562,9 +1562,25 @@ function render(){
    BIT & COMIC STRUCTURE DETECTION
    ====================================================== */
 function parseBits(text){
-  // Strip stage directions for bit parsing but preserve paragraph breaks
-  var stripped=text.replace(/\[[^\]]+\]/g,'');
-  var paragraphs=stripped.split(/\n\s*\n/);
+  // First remove stage directions entirely, then collapse any blank lines
+  // that were created by removing a stage-direction-only line
+  var lines=text.split('\n');
+  var cleaned=[];
+  for(var i=0;i<lines.length;i++){
+    var line=lines[i];
+    // If line is ONLY a stage direction (nothing else), skip it entirely
+    var stripped=line.replace(/\[[^\]]+\]/g,'').trim();
+    if(stripped.length===0 && /\[[^\]]+\]/.test(line)){
+      // Stage-direction-only line — skip, don't add blank line
+      continue;
+    }
+    // Otherwise strip inline stage directions from the line and keep it
+    cleaned.push(line.replace(/\[[^\]]+\]/g,''));
+  }
+  var cleanedText=cleaned.join('\n');
+  // Collapse multiple consecutive blank lines into one
+  cleanedText=cleanedText.replace(/\n{3,}/g,'\n\n');
+  var paragraphs=cleanedText.split(/\n\s*\n/);
   var bits=[];
   for(var i=0;i<paragraphs.length;i++){var p=paragraphs[i].trim();if(p)bits.push(p);}
   return bits;
