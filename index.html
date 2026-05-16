@@ -119,7 +119,9 @@ body {
 .rblock.st { background: var(--red); }
 .rblock.le { background: var(--blue); }
 /* ── Analysis pane ── */
-#pane-analysis { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+#pane-analysis { padding: 0; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+#pane-analysis::-webkit-scrollbar { width: 3px; }
+#pane-analysis::-webkit-scrollbar-thumb { background: var(--bdrm); border-radius: 2px; }
 /* ── Cards ── */
 .card { background: var(--bg2); border: 1px solid var(--bdr); border-radius: var(--rl); padding: 12px 14px; }
 .card-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text3); display: block; margin-bottom: 4px; }
@@ -254,6 +256,17 @@ body {
 /* Script panel wraps editor + strips */
 .script-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 .script-panel.hidden { display: none; }
+/* ── Line number gutter ── */
+.editor-wrap { flex: 1; display: flex; overflow: hidden; position: relative; }
+.line-gutter { flex-shrink: 0; width: 32px; background: var(--bg1); border-right: 1px solid var(--bdr); overflow: hidden; padding-top: 20px; font-size: 11px; font-family: var(--mono); color: var(--text3); line-height: 1.9; text-align: right; padding-right: 6px; user-select: none; pointer-events: none; }
+.line-gutter.highlighted span { color: var(--amber); font-weight: 700; }
+#pane-write textarea { flex: 1; min-width: 0; padding-left: 10px; color: var(--text1); }
+/* ── Analysis source toggle ── */
+.analysis-source-bar { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 7px 12px; border-bottom: 1px solid var(--bdr); background: var(--bg1); }
+.analysis-source-label { font-size: 10px; font-weight: 700; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; }
+.analysis-source-toggle { display: flex; border: 1px solid var(--bdrm); border-radius: 20px; overflow: hidden; }
+.as-btn { font-size: 11px; font-weight: 600; font-family: var(--sans); padding: 3px 10px; border: none; background: transparent; color: var(--text3); cursor: pointer; touch-action: manipulation; }
+.as-btn.active { background: var(--text1); color: var(--bg1); }
 /* ── Practice pane ── */
 #pane-practice { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
 /* Mirror mode overlay */
@@ -688,11 +701,14 @@ body {
 
       <!-- Script panel -->
       <div class="script-panel" id="script-panel">
-        <textarea id="editor"
-          placeholder="Start writing. End sentences with  .  !  or  ?  to see rhythm analysis in the Analysis tab.  Use [brackets] for edit notes like [CUT TO: reaction shot]."
-          spellcheck="true"
-          autocorrect="on"
-          autocapitalize="sentences"></textarea>
+        <div class="editor-wrap">
+          <div class="line-gutter" id="line-gutter"></div>
+          <textarea id="editor"
+            placeholder="Start writing. End sentences with  .  !  or  ?  to see rhythm analysis in the Analysis tab.  Use [brackets] for edit notes like [CUT TO: reaction shot]."
+            spellcheck="true"
+            autocorrect="on"
+            autocapitalize="sentences"></textarea>
+        </div>
         <div class="rhythm-strip">
           <span class="rlabel">Rhythm</span>
           <div id="rblocks" style="display:flex;gap:3px;align-items:center;overflow-x:auto;scrollbar-width:none;"></div>
@@ -755,6 +771,15 @@ body {
 
     </div>
     <div class="pane hidden" id="pane-analysis">
+      <!-- Analysis source toggle -->
+      <div class="analysis-source-bar">
+        <span class="analysis-source-label">Analyzing</span>
+        <div class="analysis-source-toggle">
+          <button class="as-btn active" id="as-script" onclick="setAnalysisSource('script')">Script</button>
+          <button class="as-btn" id="as-rough" onclick="setAnalysisSource('rough')">Rough Draft</button>
+        </div>
+        <span style="font-size:10px;color:var(--text3);flex:1;text-align:right;" id="analysis-source-hint">Current scene</span>
+      </div>
       <!-- Doc-level blocks -->
       <div class="card" style="margin:12px 12px 0">
         <span class="card-label">Video time</span>
@@ -1348,8 +1373,61 @@ function detectAnaphora(sents){
 }
 
 /* ======================================================
-   STAGE DIRECTIONS
+   LINE GUTTER
    ====================================================== */
+function renderLineGutter(){
+  var gutter=document.getElementById('line-gutter');
+  var editor=document.getElementById('editor');
+  if(!gutter||!editor) return;
+  var text=editor.value;
+  var lines=text.split('\n');
+  var h='';
+  for(var i=0;i<lines.length;i++){
+    h+='<span style="display:block;height:1.9em;">'+( i+1)+'</span>';
+  }
+  if(!lines.length) h='<span style="display:block;height:1.9em;">1</span>';
+  gutter.innerHTML=h;
+  // Sync scroll
+  gutter.scrollTop=editor.scrollTop;
+}
+
+/* ======================================================
+   ANALYSIS SOURCE
+   ====================================================== */
+var ANALYSIS_SOURCE='script'; // 'script' or 'rough'
+
+function setAnalysisSource(src){
+  ANALYSIS_SOURCE=src;
+  document.getElementById('as-script').classList.toggle('active',src==='script');
+  document.getElementById('as-rough').classList.toggle('active',src==='rough');
+  var hint=document.getElementById('analysis-source-hint');
+  if(hint) hint.textContent=src==='rough'?'Rough Draft \u2014 '+getCurrentScene().name:'Script \u2014 '+getCurrentScene().name;
+  render();
+}
+
+function getAnalysisSourceText(){
+  if(ANALYSIS_SOURCE==='rough'){
+    var scene=getCurrentScene();
+    return scene&&scene.rough?scene.rough:'';
+  }
+  return document.getElementById('editor').value;
+}
+
+
+function getSentLineNumbers(rawText, sents){
+  var lineMap=[];
+  var pos=0;
+  for(var si=0;si<sents.length;si++){
+    var s=sents[si].trim();
+    var idx=rawText.indexOf(s,pos);
+    if(idx<0){lineMap.push(si+1);continue;}
+    var lineNum=rawText.slice(0,idx).split('\n').length;
+    lineMap.push(lineNum);
+    pos=idx+s.length;
+  }
+  return lineMap;
+}
+
 var STAGE_RE = /\[([^\]]+)\]/g;
 
 // Extract all stage directions from text
@@ -1409,8 +1487,12 @@ function renderStageStrip(dirs){
    ====================================================== */
 function render(){
   var text=document.getElementById('editor').value;
-  var dirs=extractStageDirections(text);
-  var cleanText=getAnalysisText(text);
+  // Line gutter
+  renderLineGutter();
+  // Use analysis source (script or rough draft)
+  var analysisText=getAnalysisSourceText();
+  var dirs=extractStageDirections(analysisText);
+  var cleanText=getAnalysisText(analysisText);
   var sents=parseSents(cleanText);
   var wArr=cleanText.trim().split(/\s+/).filter(function(w){return w.length>0;});
   var wcTotal=cleanText.trim()?wArr.length:0;
@@ -1448,7 +1530,17 @@ function render(){
     rb.appendChild(b);
   }
 
-  renderStageStrip(dirs);
+  // Only show stage strip for script mode
+  if(ANALYSIS_SOURCE==='script') renderStageStrip(dirs);
+  else renderStageStrip([]);
+
+  // Update analysis source hint
+  var hint=document.getElementById('analysis-source-hint');
+  if(hint){
+    var scene=getCurrentScene();
+    hint.textContent=(ANALYSIS_SOURCE==='rough'?'Rough Draft':'Script')+' \u2014 '+(scene?scene.name:'');
+  }
+
   renderAnalysis(data,sents,cleanText);
   renderSents(data,sents);
 }
@@ -1890,7 +1982,7 @@ function renderEpisodeSummary(){
   }
 }
 
-function renderSents(data){
+function renderSents(data, sents){
   var list=document.getElementById('sent-list');
   var empty=document.getElementById('sent-empty');
   var old=list.querySelectorAll('.s-card');
@@ -1899,19 +1991,27 @@ function renderSents(data){
   if(!data.length){empty.style.display='';return;}
   empty.style.display='none';
 
+  // Get line numbers for each sentence
+  var rawText=getAnalysisSourceText();
+  var sentList=sents||[];
+  var lineMap=getSentLineNumbers(rawText,sentList);
+
   for(var i=0;i<data.length;i++){
     var d=data[i];
     var card=document.createElement('div');
     card.className='s-card';
 
-    var badges='<span class="badge '+(d.st?'st':'le')+'">'+(d.st?'Staccato':'Legato')+'</span>';
+    var lineNum=lineMap[i]||i+1;
+    var lineTag='<span style="font-size:9px;font-weight:700;color:var(--text3);background:var(--bg3);padding:1px 5px;border-radius:3px;margin-right:4px;font-family:var(--mono);">L'+lineNum+'</span>';
+
+    var badges=lineTag+'<span class="badge '+(d.st?'st':'le')+'">'+(d.st?'Staccato':'Legato')+'</span>';
     badges+=' <span class="badge '+d.lb2.c+'">'+d.lb2.l+'</span>';
     if(d.isQ)badges+=' <span class="badge neu">?</span>';
     for(var j=0;j<d.li.length;j++){
       var n=d.li[j];
       if(n===3)badges+=' <span class="badge good">3 &#x2713;</span>';
-      else if(n===2)badges+=' <span class="badge warn">2&#x2014;short</span>';
-      else badges+=' <span class="badge warn">'+n+'&#x2014;trim</span>';
+      else if(n===2)badges+=' <span class="badge warn">2\u2014short</span>';
+      else badges+=' <span class="badge warn">'+n+'\u2014trim</span>';
     }
 
     var hints='';
@@ -1929,7 +2029,7 @@ function renderSents(data){
     /* Performance cues */
     if(d.st) hints+='<div class="hint p">&#x23F8; Pause after this \u2014 staccato ending, let it land</div>';
     if(d.ao) hints+='<div class="hint p">&#x25B6; Act-out possible: "'+esc(d.ao)+'" \u2014 show it, don\'t just say it</div>';
-    if(d.wn<=5&&d.wn>0&&i>0&&data[i-1].wn>10) hints+='<div class="hint p">&#x21AF; Setup&#x2192;Punch sequence \u2014 slow down in the setup, land the punch hard</div>';
+    if(d.wn<=5&&d.wn>0&&i>0&&data[i-1].wn>10) hints+='<div class="hint p">&#x21AF; Setup\u2192Punch sequence \u2014 slow down in the setup, land the punch hard</div>';
 
     var preview=esc(d.s.trim().substring(0,100))+(d.s.trim().length>100?'&#x2026;':'');
     card.innerHTML='<div class="s-header">'+badges+'<span class="syl-tag">'+d.sy+' syl</span></div>'+
@@ -3946,10 +4046,17 @@ var SAVE_KEY='cadence_draft';
 // Scene-aware save on input
 document.getElementById('editor').addEventListener('input',function(){
   saveCurrentSceneText();
+  renderLineGutter();
   if(aiLastText && document.getElementById('editor').value !== aiLastText){
     setAiStatus('Text changed \u2014 re-analyze when ready.');
   }
   render();
+});
+
+// Sync gutter scroll with editor scroll
+document.getElementById('editor').addEventListener('scroll',function(){
+  var gutter=document.getElementById('line-gutter');
+  if(gutter) gutter.scrollTop=this.scrollTop;
 });
 
 // Belt-and-suspenders: save every 2 seconds automatically
