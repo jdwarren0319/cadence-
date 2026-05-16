@@ -1562,24 +1562,31 @@ function render(){
    BIT & COMIC STRUCTURE DETECTION
    ====================================================== */
 function parseBits(text){
-  // First remove stage directions entirely, then collapse any blank lines
-  // that were created by removing a stage-direction-only line
   var lines=text.split('\n');
-  var cleaned=[];
+  // Mark which lines are stage-direction-only
+  var stageLines=[];
   for(var i=0;i<lines.length;i++){
-    var line=lines[i];
-    // If line is ONLY a stage direction (nothing else), skip it entirely
-    var stripped=line.replace(/\[[^\]]+\]/g,'').trim();
-    if(stripped.length===0 && /\[[^\]]+\]/.test(line)){
-      // Stage-direction-only line — skip, don't add blank line
-      continue;
-    }
-    // Otherwise strip inline stage directions from the line and keep it
-    cleaned.push(line.replace(/\[[^\]]+\]/g,''));
+    stageLines.push(/^\s*\[[^\]]+\]\s*$/.test(lines[i]));
   }
-  var cleanedText=cleaned.join('\n');
-  // Collapse multiple consecutive blank lines into one
-  cleanedText=cleanedText.replace(/\n{3,}/g,'\n\n');
+  // Build cleaned lines:
+  // - Skip stage-direction-only lines
+  // - Skip blank lines that are immediately before or after a stage direction
+  //   (they're just visual spacing in the editor, not bit separators)
+  var result=[];
+  for(var i=0;i<lines.length;i++){
+    if(stageLines[i]) continue; // skip stage direction lines
+    var isBlank=lines[i].trim().length===0;
+    if(isBlank){
+      // Check neighbors for stage directions
+      var prevStage=false,nextStage=false;
+      for(var j=i-1;j>=0;j--){if(lines[j].trim().length>0){prevStage=stageLines[j];break;}}
+      for(var j=i+1;j<lines.length;j++){if(lines[j].trim().length>0){nextStage=stageLines[j];break;}}
+      if(prevStage||nextStage) continue; // skip visual-spacing blank
+    }
+    // Strip inline stage directions from content lines
+    result.push(lines[i].replace(/\[[^\]]+\]/g,''));
+  }
+  var cleanedText=result.join('\n').replace(/\n{3,}/g,'\n\n');
   var paragraphs=cleanedText.split(/\n\s*\n/);
   var bits=[];
   for(var i=0;i<paragraphs.length;i++){var p=paragraphs[i].trim();if(p)bits.push(p);}
