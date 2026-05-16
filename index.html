@@ -101,9 +101,16 @@ body {
 #pane-write textarea {
   flex: 1; border: none; outline: none; resize: none;
   padding: 20px 20px; font-size: 16px; line-height: 1.85;
-  font-family: var(--mono); background: transparent;
-  color: var(--text1); caret-color: var(--text1);
+  font-family: var(--mono); background: #f0eeeb;
+  color: #111111; caret-color: #111111;
   overflow-y: auto; -webkit-overflow-scrolling: touch;
+}
+@media (prefers-color-scheme: dark){
+  #pane-write textarea { color: #f2efe9; background: #2a2825; caret-color: #f2efe9; }
+}
+.rough-textarea { flex: 1; border: none; outline: none; resize: none; padding: 20px; font-size: 15px; line-height: 1.9; font-family: var(--mono); background: var(--bg2); color: #7a776f; caret-color: var(--text1); overflow-y: auto; -webkit-overflow-scrolling: touch; }
+@media (prefers-color-scheme: dark){
+  .rough-textarea { color: #6a6860; background: var(--bg2); }
 }
 #pane-write textarea::placeholder { color: var(--text3); }
 .rhythm-strip {
@@ -258,7 +265,7 @@ body {
 .script-panel.hidden { display: none; }
 /* ── Line number gutter ── */
 .editor-wrap { flex: 1; display: flex; overflow: hidden; position: relative; }
-.line-gutter { flex-shrink: 0; width: 32px; background: var(--bg1); border-right: 1px solid var(--bdr); overflow: hidden; padding-top: 20px; font-size: 11px; font-family: var(--mono); color: var(--text3); line-height: 1.9; text-align: right; padding-right: 6px; user-select: none; pointer-events: none; }
+.line-gutter { flex-shrink: 0; width: 32px; background: #e8e5e1; border-right: 1px solid #d8d5d0; overflow: hidden; padding-top: 20px; font-size: 11px; font-family: var(--mono); color: #b0ada8; line-height: 1.85; text-align: right; padding-right: 6px; user-select: none; pointer-events: none; }
 .line-gutter.highlighted span { color: var(--amber); font-weight: 700; }
 #pane-write textarea { flex: 1; min-width: 0; padding-left: 10px; color: var(--text1); }
 /* ── Analysis source toggle ── */
@@ -737,6 +744,9 @@ body {
           spellcheck="true"
           autocorrect="on"
           autocapitalize="sentences"
+          onmouseup="captureRoughSelection()"
+          ontouchend="captureRoughSelection()"
+          onkeyup="captureRoughSelection()"
           oninput="saveRoughDraft()"></textarea>
         <div class="rough-footer">
           <span class="rough-hint">Not analysed. Write freely toward the feeling.</span>
@@ -3556,17 +3566,30 @@ function updateIntentionPreview(){
   el.textContent=intention?'\u2665 '+intention:'';
 }
 
+var _roughSel='';
+
+function captureRoughSelection(){
+  var sel=window.getSelection&&window.getSelection();
+  if(sel&&sel.toString().trim()) _roughSel=sel.toString().trim();
+}
+
 function distillRoughDraft(){
-  var roughText=document.getElementById('rough-editor').value.trim();
-  if(!roughText){alert('Nothing in the rough draft yet.');return;}
+  // Use cached selection first, otherwise full rough draft
+  var text=_roughSel||'';
+  _roughSel='';
+  if(!text){
+    var sel=window.getSelection&&window.getSelection();
+    if(sel&&sel.toString().trim()) text=sel.toString().trim();
+  }
+  if(!text){
+    var roughText=document.getElementById('rough-editor').value.trim();
+    if(!roughText){alert('Nothing in the rough draft yet.');return;}
+    if(!window.confirm('Pull entire rough draft to script?')) return;
+    text=roughText;
+  }
   var editor=document.getElementById('editor');
   var existing=editor.value.trim();
-  if(existing){
-    if(!window.confirm('This will append your rough draft to the script. Continue?')) return;
-    editor.value=existing+'\n\n'+roughText;
-  } else {
-    editor.value=roughText;
-  }
+  editor.value=existing?(existing+'\n\n'+text):text;
   saveCurrentSceneText();
   setWriteMode('script');
   render();
