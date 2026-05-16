@@ -592,6 +592,7 @@ body {
         <div class="write-mode-toggle">
           <button class="wm-btn active" id="wm-script" onclick="setWriteMode('script')">Script</button>
           <button class="wm-btn" id="wm-rough" onclick="setWriteMode('rough')">Rough Draft</button>
+          <button class="wm-btn" id="wm-research" onclick="setWriteMode('research')">Research</button>
         </div>
         <span class="intention-tag" id="intention-tag-preview"></span>
       </div>
@@ -638,9 +639,21 @@ body {
         </div>
       </div>
 
-    </div>
+      <!-- Research panel -->
+      <div class="rough-panel" id="research-panel">
+        <textarea class="rough-textarea" id="research-editor"
+          placeholder="Paste research here. Artist bio, facts, quotes, links, track notes, anything.&#10;&#10;Not analysed. Saves per scene.&#10;&#10;ARTIST&#10;&#10;ALBUM&#10;&#10;TOO WEIRD TO IGNORE&#10;&#10;LINKS"
+          spellcheck="false"
+          autocorrect="off"
+          autocapitalize="off"
+          oninput="saveResearch()"></textarea>
+        <div class="rough-footer">
+          <span class="rough-hint">Not analysed. Paste freely. Saves per scene.</span>
+          <button class="rough-distill" onclick="distillResearch()">Pull fact &#x2192; Script</button>
+        </div>
+      </div>
 
-    <!-- ANALYSIS PANE -->
+    </div>
     <div class="pane hidden" id="pane-analysis">
       <!-- Doc-level blocks -->
       <div class="card" style="margin:12px 12px 0">
@@ -2974,9 +2987,12 @@ function setWriteMode(mode){
   WRITE_MODE=mode;
   document.getElementById('wm-script').classList.toggle('active',mode==='script');
   document.getElementById('wm-rough').classList.toggle('active',mode==='rough');
-  document.getElementById('script-panel').classList.toggle('hidden',mode==='rough');
+  document.getElementById('wm-research').classList.toggle('active',mode==='research');
+  document.getElementById('script-panel').classList.toggle('hidden',mode!=='script');
   document.getElementById('rough-panel').classList.toggle('active',mode==='rough');
+  document.getElementById('research-panel').classList.toggle('active',mode==='research');
   if(mode==='rough') loadRoughDraft();
+  if(mode==='research') loadResearch();
   try{localStorage.setItem('cadence_write_mode',mode);}catch(e){}
 }
 
@@ -2992,6 +3008,40 @@ function saveRoughDraft(){
     }
   }
   saveScenes(scenes);
+}
+
+function saveResearch(){
+  var scene=getCurrentScene();
+  if(!scene) return;
+  var text=document.getElementById('research-editor').value;
+  var scenes=loadScenes();
+  for(var i=0;i<scenes.length;i++){
+    if(scenes[i].id===scene.id){scenes[i].research=text;break;}
+  }
+  saveScenes(scenes);
+}
+
+function loadResearch(){
+  var scene=getCurrentScene();
+  if(!scene) return;
+  var el=document.getElementById('research-editor');
+  if(el) el.value=scene.research||'';
+}
+
+function distillResearch(){
+  var sel=window.getSelection&&window.getSelection().toString().trim();
+  var text=sel||'';
+  if(!text){
+    var el=document.getElementById('research-editor');
+    text=el?el.value.trim():'';
+  }
+  if(!text){alert('Select the text you want to pull, or write something in Research first.');return;}
+  var editor=document.getElementById('editor');
+  var existing=editor.value.trim();
+  editor.value=existing?(existing+'\n\n'+text):text;
+  saveCurrentSceneText();
+  setWriteMode('script');
+  render();
 }
 
 function saveIntentionLabel(){
@@ -3135,6 +3185,7 @@ function switchScene(id){
   if(!scene)return;
   document.getElementById('editor').value=scene.text||'';
   if(WRITE_MODE==='rough') loadRoughDraft();
+  else if(WRITE_MODE==='research') loadResearch();
   else updateIntentionPreview();
   renderSceneStrip();
   renderSceneNotes();
@@ -3223,7 +3274,9 @@ function exportScript(){
     out+='=== '+String(i+1)+'. '+s.name+' ['+s.type+' / '+s.location+'] ===\n';
     if(s.intention) out+='Intention: '+s.intention+'\n';
     if(s.notes) out+='Notes: '+s.notes+'\n';
-    out+='\n'+(s.text||'(empty)')+'\n\n\n';
+    out+='\n'+(s.text||'(empty)')+'\n';
+    if(s.research) out+='\n--- RESEARCH ---\n'+s.research+'\n';
+    out+='\n\n';
   }
   var a=document.createElement('a');
   a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(out);
@@ -3401,7 +3454,7 @@ window.addEventListener('beforeunload', function(){ saveCurrentSceneText(); });
 // Restore saved mode
 try{var sm=localStorage.getItem('cadence_mode');if(sm==='standup')setMode('standup');}catch(e){}
 // Restore write mode
-try{var wm=localStorage.getItem('cadence_write_mode');if(wm==='rough')setWriteMode('rough');}catch(e){}
+try{var wm=localStorage.getItem('cadence_write_mode');if(wm==='rough')setWriteMode('rough');else if(wm==='research')setWriteMode('research');}catch(e){}
 
 buildLearn();
 buildDrills();
@@ -3418,6 +3471,7 @@ var _initScene=getCurrentScene();
 setCurrentSceneId(_initScene.id);
 document.getElementById('editor').value=_initScene.text||'';
 loadRoughDraft();
+loadResearch();
 renderSceneStrip();
 renderSceneNotes();
 render();
