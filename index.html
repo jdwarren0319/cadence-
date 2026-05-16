@@ -568,6 +568,51 @@ body {
 .ss-dur { font-size: 10px; color: var(--text3); flex-shrink: 0; }
 .ss-preview { font-size: 11px; color: var(--text2); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .ss-del { font-size: 10px; color: var(--text3); border: none; background: transparent; font-family: var(--sans); cursor: pointer; padding: 2px 4px; }
+/* ── Episode management ── */
+.episode-bar { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 5px 14px; border-bottom: 1px solid var(--bdr); background: var(--bg1); }
+.episode-label { font-size: 9px; font-weight: 700; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; flex-shrink: 0; }
+.episode-name { font-size: 12px; font-weight: 600; color: var(--text1); flex: 1; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.episode-manage-btn { font-size: 11px; color: var(--purple); border: none; background: transparent; cursor: pointer; font-family: var(--sans); padding: 2px 6px; flex-shrink: 0; touch-action: manipulation; font-weight: 600; }
+.ep-sheet-overlay { display: none; position: fixed; inset: 0; z-index: 299; background: rgba(0,0,0,0.4); }
+.ep-sheet-overlay.active { display: block; }
+.ep-sheet { position: fixed; bottom: 0; left: 0; right: 0; z-index: 300; background: var(--bg1); border-radius: 16px 16px 0 0; padding: 0 0 max(20px,env(safe-area-inset-bottom)); transform: translateY(100%); transition: transform 0.25s ease; max-height: 82vh; display: flex; flex-direction: column; }
+.ep-sheet.active { transform: translateY(0); }
+.ep-sheet-handle { width: 36px; height: 4px; background: var(--bdrm); border-radius: 2px; margin: 12px auto 0; flex-shrink: 0; }
+.ep-sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px 8px; flex-shrink: 0; border-bottom: 1px solid var(--bdr); }
+.ep-sheet-title { font-size: 14px; font-weight: 700; color: var(--text1); }
+.ep-list { flex: 1; overflow-y: auto; padding: 10px 16px; display: flex; flex-direction: column; gap: 6px; }
+.ep-list::-webkit-scrollbar { width: 3px; }
+.ep-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--bg2); border: 1px solid var(--bdr); border-radius: var(--rl); cursor: pointer; touch-action: manipulation; }
+.ep-item.active-ep { border-color: var(--text1); background: var(--bg3); }
+.ep-item-info { flex: 1; min-width: 0; }
+.ep-item-title { font-size: 13px; font-weight: 600; color: var(--text1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ep-item-meta { font-size: 10px; color: var(--text3); margin-top: 2px; }
+.ep-item-del { font-size: 11px; color: var(--text3); border: none; background: transparent; font-family: var(--sans); cursor: pointer; padding: 4px; flex-shrink: 0; }
+.ep-new-form { padding: 10px 16px; border-top: 1px solid var(--bdr); flex-shrink: 0; display: flex; gap: 8px; }
+.ep-new-input { flex: 1; background: var(--bg2); border: 1px solid var(--bdrm); border-radius: var(--r); padding: 8px 10px; font-size: 13px; font-family: var(--sans); color: var(--text1); outline: none; }
+.ep-new-input::placeholder { color: var(--text3); }
+.ep-create-btn { font-size: 12px; font-weight: 700; font-family: var(--sans); padding: 8px 14px; border-radius: var(--r); background: var(--purple); color: #fff; border: none; cursor: pointer; touch-action: manipulation; flex-shrink: 0; }
+/* ── Analysis enhancements ── */
+.analysis-example { font-size: 11px; color: var(--purple); line-height: 1.55; margin-top: 5px; font-style: italic; border-left: 2px solid var(--purple); padding-left: 8px; }
+/* ── Summary cards ── */
+.summary-card { background: var(--bg2); border: 1.5px solid var(--text1); border-radius: var(--rl); padding: 14px; }
+.summary-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text1); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.summary-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--bdr); font-size: 12px; }
+.summary-row:last-child { border-bottom: none; }
+.summary-label { color: var(--text2); }
+.summary-val { font-weight: 600; color: var(--text1); }
+.summary-val.good { color: var(--green); }
+.summary-val.warn { color: var(--amber); }
+.summary-val.bad  { color: var(--red); }
+.summary-verdict { font-size: 12px; line-height: 1.65; color: var(--text2); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--bdr); }
+/* ── Retention map ── */
+.retention-bar { height: 10px; border-radius: 5px; background: var(--bg3); overflow: hidden; display: flex; margin-top: 8px; position: relative; }
+.ret-zone { height: 100%; }
+.retention-markers { display: flex; justify-content: space-between; margin-top: 3px; }
+.retention-marker { font-size: 9px; color: var(--text3); }
+.retention-items { margin-top: 10px; display: flex; flex-direction: column; gap: 5px; }
+.ret-item { display: flex; align-items: flex-start; gap: 6px; font-size: 11px; color: var(--text2); line-height: 1.45; }
+.ret-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 2px; }
 </style>
 <body>
 <div class="app">
@@ -584,6 +629,27 @@ body {
       <span class="vpill" id="vtime">0:00</span>
     </div>
   </header>
+
+  <!-- Episode bar -->
+  <div class="episode-bar">
+    <span class="episode-label">Episode</span>
+    <span class="episode-name" id="episode-name" onclick="openEpisodeSheet()">Loading...</span>
+    <button class="episode-manage-btn" onclick="openEpisodeSheet()">&#x2630; Manage</button>
+  </div>
+
+  <!-- Episode sheet overlay + sheet -->
+  <div class="ep-sheet-overlay" id="ep-overlay" onclick="closeEpisodeSheet()"></div>
+  <div class="ep-sheet" id="ep-sheet">
+    <div class="ep-sheet-handle"></div>
+    <div class="ep-sheet-head">
+      <span class="ep-sheet-title">Episodes</span>
+    </div>
+    <div class="ep-list" id="ep-list"></div>
+    <div class="ep-new-form">
+      <input class="ep-new-input" id="ep-new-input" type="text" placeholder="JD Warren Versus Sombr — I Barely Know Her" maxlength="80">
+      <button class="ep-create-btn" onclick="createEpisode()">Create</button>
+    </div>
+  </div>
 
   <!-- Write toolbar -->
   <div class="toolbar" id="write-toolbar">
@@ -758,42 +824,79 @@ body {
 
       <div class="card" style="margin:0 12px">
         <span class="card-label">Rhetorical questions</span>
-        <div class="card-desc">Questions asked with no expected answer. They pull the audience into your POV. Carlin sweet spot: 15&#x2013;30% of sentences.</div>
+        <div class="card-desc">A rhetorical question is one you ask without expecting an answer. It pulls the audience into your point of view by making them mentally agree before you say anything.</div>
+        <div class="analysis-example">Example: Carlin — "Have you ever noticed that anybody driving slower than you is an idiot, and anyone going faster than you is a maniac?" He never answers it. The audience answers it themselves, and in doing so they agree with him.</div>
         <div class="q-bg"><div class="q-fill" id="q-fill" style="width:0%"></div></div>
         <div class="q-row"><span id="q-count">0 questions</span><span id="q-pct">0%</span></div>
+        <div style="font-size:10px;color:var(--text3);margin-top:5px;">Carlin sweet spot: 15&#x2013;30% of sentences. Under 15% and you&#x2019;re lecturing. Over 30% and you&#x2019;re interrogating.</div>
       </div>
 
       <div class="card" style="margin:0 12px">
         <span class="card-label">Rule of threes</span>
-        <div class="card-desc">Lists of 3 create setup-setup-payoff. Two feels incomplete. Four dilutes the punch.</div>
-        <div id="a-lists" style="font-size:12px;line-height:1.7;"><span style="color:var(--text3)">No comma lists yet.</span></div>
+        <div class="card-desc">When you list three things, the first two set up a pattern and the third breaks it. That break is the laugh. Two items feel incomplete. Four items dilute the punch because you&#x2019;ve already broken the pattern and kept going.</div>
+        <div class="analysis-example">Example: "I need three things to be happy — good coffee, good music, and someone else to blame." The first two are reasonable. The third breaks the pattern. That&#x2019;s the joke. If there were four items, the fourth would land flat because the surprise already happened on three.</div>
+        <div id="a-lists" style="font-size:12px;line-height:1.7;margin-top:8px;"><span style="color:var(--text3)">No comma lists yet.</span></div>
       </div>
 
       <div class="card" style="margin:0 12px">
         <span class="card-label">Anaphora</span>
-        <div class="card-desc">Sentences starting with the same word. Like a drum roll before a crash &mdash; it builds pressure then releases. &ldquo;Have you ever&hellip; Have you ever&hellip; Have you ever&hellip;&rdquo;</div>
-        <div id="a-anaphora"><span style="font-size:12px;color:var(--text3)">No repeated openers yet.</span></div>
+        <div class="card-desc">Anaphora means starting multiple sentences with the same word or phrase. It works like a drumroll — each repetition builds tension, and the audience leans forward waiting for the pattern to break. When it finally does, the release is bigger because of the buildup.</div>
+        <div class="analysis-example">Example: Carlin — "The planet is fine. The people are fucked." He could have just said "people are fine and the planet is fine" but the repetition of "the _____ is fine" creates a rhythm that makes the break land harder. Your script uses "not for a car, not a bike, not for food" — same principle, no conjunction, just repetition and rhythm.</div>
+        <div id="a-anaphora" style="margin-top:8px;"><span style="font-size:12px;color:var(--text3)">No repeated openers yet.</span></div>
+      </div>
+
+      <div class="card" style="margin:0 12px">
+        <span class="card-label">Reversals</span>
+        <div class="card-desc">A reversal is when the second half of a sentence contradicts or undercuts the first half. You set up an expectation, then flip it. The bigger the gap between what they expected and what you said, the bigger the laugh. The key word is usually "but," "however," "except," or "turns out."</div>
+        <div class="analysis-example">Example: "She was the kindest person I ever met — but she made me genuinely afraid." The first half points you toward warmth. The second half lands somewhere completely different. Your Sombr script does this: "Sombr has 500 times the money I have — but have you seen his Spotify picture?" Success sets up the reversal to absurdity.</div>
+        <div class="score-row" style="margin-top:8px;"><span style="font-size:12px;color:var(--text2);">Reversals detected:</span><span class="score-n" id="reversal-n" style="color:var(--text1);font-weight:700;">0</span></div>
+      </div>
+
+      <div class="card" style="margin:0 12px">
+        <span class="card-label">Pattern interrupts</span>
+        <div class="card-desc">YouTube data shows that viewers drift every 2&#x2013;3 minutes if the energy stays the same. A pattern interrupt is anything that breaks the rhythm and re-engages attention — a change of pace, a physical bit, a hard pivot, a sudden short sentence after many long ones, or a question directed at the audience. You need to script these deliberately, not hope they happen.</div>
+        <div class="analysis-example">Example: MrBeast documents this obsessively — "crazy progression" means never letting 3 minutes pass at the same energy. For your show, the needle drop IS a pattern interrupt. So is a sudden close-up, cutting to a different camera angle, or a single short sentence like "Named sombr." after a long setup. The app flags comedy gaps — stretches with no punchline — as potential interrupt zones.</div>
+        <div id="a-pattern-interrupts" style="margin-top:8px;font-size:12px;color:var(--text3);">Write more to detect pattern interrupt opportunities.</div>
       </div>
 
       <div class="card" style="margin:0 12px">
         <span class="card-label">Weasel words</span>
-        <div class="card-desc">Hedging that kills conviction. Comedy needs certainty. Cut these or harden them.</div>
+        <div class="card-desc">Weasel words are phrases that hedge, soften, or qualify your statement. They kill conviction. Comedy requires certainty — even if what you&#x2019;re certain about is absurd. When you say "kind of" or "sort of" or "basically," you&#x2019;re signalling to the audience that you don&#x2019;t fully believe what you&#x2019;re saying. They feel that and it weakens the joke.</div>
+        <div class="analysis-example">Example: "I kind of think he might be spreading his butt cheeks" lands nothing. "Is he spreading his butt cheeks?" lands the joke. The certainty of the question form is funnier than the hedged statement. Cut the weasels or replace them with commitment.</div>
         <div class="score-row"><div class="score-bg"><div class="score-fill" id="weasel-fill" style="width:0%;background:var(--amber)"></div></div><span class="score-n" id="weasel-n">0</span></div>
         <div class="chip-list" id="weasel-chips"><span style="font-size:11px;color:var(--text3)">None found. Good.</span></div>
       </div>
 
       <div class="card" style="margin:0 12px">
         <span class="card-label">Passive voice</span>
-        <div class="card-desc">Active voice hits harder. &ldquo;I wanted money&rdquo; not &ldquo;money was wanted.&rdquo;</div>
+        <div class="card-desc">Active voice puts the subject first and the action second: "I wanted money." Passive voice buries the action: "Money was something I needed." Active voice hits harder because it&#x2019;s direct — the subject does the verb, there&#x2019;s no distance between the person and the action. Passive voice sounds evasive, which works against comedy&#x2019;s need for conviction.</div>
+        <div class="analysis-example">Example: Active — "Sombr dropped out of school." Passive — "School was something Sombr was caused to leave." The active version is faster, cleaner, and funnier because it doesn&#x2019;t hedge. Carlin almost never used passive voice.</div>
         <div class="score-row"><div class="score-bg"><div class="score-fill" id="passive-fill" style="width:0%;background:var(--red)"></div></div><span class="score-n" id="passive-n">0</span></div>
         <div class="chip-list" id="passive-chips"><span style="font-size:11px;color:var(--text3)">None found. Good.</span></div>
       </div>
 
       <div class="card" style="margin:0 12px">
         <span class="card-label">Vague language</span>
-        <div class="card-desc">Specific details are funnier. &ldquo;The Doors&rsquo; Greatest Hits&rdquo; beats &ldquo;some music.&rdquo;</div>
+        <div class="card-desc">Specific details are funnier than general ones. This is because specificity signals truth — the audience trusts you more when you know exactly what you&#x2019;re talking about. And the specific detail itself is often funnier than any joke you could add around it.</div>
+        <div class="analysis-example">Example: "a car" is information. "A 1974 Buick Riviera with a broken AC and a pine tree air freshener that smells like regret" is a joke. "Some music" tells us nothing. "The Doors&#x2019; Greatest Hits" tells us everything about who this person is and why they want it. The specificity IS the joke. Flag: "thing," "stuff," "someone," "somewhere," "people," "various."</div>
         <div class="score-row"><div class="score-bg"><div class="score-fill" id="vague-fill" style="width:0%;background:var(--gray)"></div></div><span class="score-n" id="vague-n">0</span></div>
         <div class="chip-list" id="vague-chips"><span style="font-size:11px;color:var(--text3)">None found. Good.</span></div>
+      </div>
+
+      <!-- Retention Map -->
+      <div class="card" style="margin:0 12px">
+        <span class="card-label">&#x23F1; Retention map</span>
+        <div class="card-desc">Based on YouTube data, viewers drift at predictable points. This map shows your script against those danger zones so you can plan deliberately rather than hope.</div>
+        <div class="retention-bar" id="retention-bar"></div>
+        <div class="retention-markers" id="retention-markers"></div>
+        <div class="retention-items" id="retention-items"><span style="font-size:11px;color:var(--text3);">Write more to see retention analysis.</span></div>
+      </div>
+
+      <!-- Scene summary -->
+      <div class="card summary-card" style="margin:0 12px" id="scene-summary-card">
+        <div class="summary-title">&#x25C8; Scene summary</div>
+        <div id="scene-summary-rows"></div>
+        <div class="summary-verdict" id="scene-summary-verdict">Write to generate scene summary.</div>
       </div>
 
       <div style="padding:0 12px">
@@ -804,6 +907,11 @@ body {
       </div>
       <div style="height:12px"></div>
     </div>
+
+    <!-- Episode summary pane (accessed from Script tab) -->
+
+
+    <!-- Episode summary pane (accessed from Script tab) -->
 
     <!-- RECORD PANE -->
     <div class="pane hidden" id="pane-record">
@@ -965,6 +1073,14 @@ body {
 
     <!-- SCRIPT PANE -->
     <div class="pane hidden" id="pane-script">
+      <!-- Episode summary -->
+      <div style="padding:12px 12px 0;">
+        <div class="summary-card" id="episode-summary-card">
+          <div class="summary-title">&#x1F4FA; Episode summary</div>
+          <div id="episode-summary-rows"><span style="font-size:12px;color:var(--text3);">Write scenes to generate episode summary.</span></div>
+          <div class="summary-verdict" id="episode-summary-verdict"></div>
+        </div>
+      </div>
       <div class="script-inner" id="script-inner">
         <div style="font-size:12px;color:var(--text3);text-align:center;padding:40px 20px;">Add scenes in the Write tab to build your script.</div>
       </div>
@@ -1483,8 +1599,8 @@ function renderAnalysis(data,sents,text){
   var spPctEl=document.getElementById('cs-sp-pct');
   if(frBar) frBar.style.width=frPct+'%';
   if(spBar) spBar.style.width=spPct+'%';
-  if(frPctEl) frPctEl.textContent=totalBitSents>0?frPct+'% fact/reaction':'—';
-  if(spPctEl) spPctEl.textContent=totalBitSents>0?spPct+'% setup/punchline':'—';
+  if(frPctEl) frPctEl.textContent=totalBitSents>0?frPct+'% fact/reaction':'\u2014';
+  if(spPctEl) spPctEl.textContent=totalBitSents>0?spPct+'% setup/punchline':'\u2014';
 
   /* Per-bit cards */
   var bitsEl=document.getElementById('cs-bits');
@@ -1600,6 +1716,178 @@ function renderAnalysis(data,sents,text){
   document.getElementById('vague-fill').style.width=Math.min(100,vagues.length*8)+'%';
   var vEl=document.getElementById('vague-chips');
   vEl.innerHTML=vagues.length?vagues.map(function(w){return '<span class="chip v">'+esc(w)+'</span>';}).join(''):'<span style="font-size:11px;color:var(--text3)">None. Good.</span>';
+
+  /* Reversals */
+  var reversals=findReversals(sents);
+  var revEl=document.getElementById('reversal-n');
+  if(revEl) revEl.textContent=reversals;
+
+  /* Pattern interrupts \u2014 flag dead zones */
+  var piEl=document.getElementById('a-pattern-interrupts');
+  if(piEl){
+    if(data.length<5){piEl.innerHTML='<span style="color:var(--text3)">Write more to detect pattern interrupt opportunities.</span>';}
+    else{
+      var gaps=0,gapSents=0,lastPunch=-1,piItems='';
+      for(var i=0;i<data.length;i++){
+        if(allRoles[i]==='punchline'||allRoles[i]==='tag'){
+          if(lastPunch>=0&&(i-lastPunch)>8){
+            gaps++;
+            piItems+='<div class="ret-item"><div class="ret-dot" style="background:var(--amber)"></div><span>Sentences '+(lastPunch+1)+' to '+i+' \u2014 '+((i-lastPunch))+' sentences without a punchline. Consider a pattern interrupt here.</span></div>';
+          }
+          lastPunch=i;
+        }
+      }
+      if(!gaps) piEl.innerHTML='<span style="color:var(--hgood)">No long comedy gaps detected. Good.</span>';
+      else piEl.innerHTML=piItems;
+    }
+  }
+
+  /* Retention map */
+  renderRetentionMap(wcTotal2);
+
+  /* Scene summary */
+  renderSceneSummary(data,sents,text,wcTotal2,lpm,reversals);
+}
+
+function renderRetentionMap(totalWords){
+  var barEl=document.getElementById('retention-bar');
+  var markersEl=document.getElementById('retention-markers');
+  var itemsEl=document.getElementById('retention-items');
+  if(!barEl||!itemsEl) return;
+  if(totalWords<10){
+    barEl.innerHTML='';
+    if(markersEl) markersEl.innerHTML='';
+    itemsEl.innerHTML='<span style="font-size:11px;color:var(--text3)">Write more to see retention analysis.</span>';
+    return;
+  }
+  var totalSecs=Math.round(totalWords/130*60);
+  var totalMins=totalSecs/60;
+  // Danger zones as % of total duration
+  var zones=[
+    {start:0,end:Math.min(7/totalSecs,1),color:'var(--red)',label:'0\u20137s'},
+    {start:Math.min(7/totalSecs,1),end:Math.min(30/totalSecs,1),color:'var(--amber)',label:'7\u201330s'},
+    {start:Math.min(30/totalSecs,1),end:1,color:'var(--green)',label:'30s+'}
+  ];
+  var h='';
+  for(var i=0;i<zones.length;i++){
+    var w=Math.max(0,(zones[i].end-zones[i].start)*100);
+    if(w>0) h+='<div class="ret-zone" style="width:'+w+'%;background:'+zones[i].color+';opacity:0.7;"></div>';
+  }
+  barEl.innerHTML=h;
+  // Markers
+  if(markersEl){
+    var mh='<span style="font-size:9px;color:var(--text3)">0s</span>';
+    var marks=[30,60,120,180,300,600];
+    for(var i=0;i<marks.length;i++){
+      if(marks[i]<totalSecs){
+        var pct=Math.round(marks[i]/totalSecs*100);
+        var lbl=marks[i]<60?marks[i]+'s':Math.floor(marks[i]/60)+'m';
+        mh+='<span style="font-size:9px;color:var(--text3)">'+lbl+'</span>';
+      }
+    }
+    mh+='<span style="font-size:9px;color:var(--text3)">'+Math.floor(totalMins)+'m</span>';
+    markersEl.innerHTML=mh;
+    markersEl.style.display='flex';
+    markersEl.style.justifyContent='space-between';
+  }
+  // Retention items
+  var items='';
+  var dotColor=totalSecs>7?'var(--red)':'var(--green)';
+  items+='<div class="ret-item"><div class="ret-dot" style="background:'+dotColor+'"></div>';
+  items+='<b>First 7 seconds:</b> ';
+  items+=totalSecs>7?'Your script runs '+Math.floor(totalMins)+'m '+Math.round(totalSecs%60)+'s. The opening hook must land in the first 7 seconds \u2014 YouTube data shows 55% of viewers decide whether to stay in this window.':'Short and punchy. Good.';
+  items+='</div>';
+  if(totalSecs>30){
+    items+='<div class="ret-item"><div class="ret-dot" style="background:var(--amber)"></div>';
+    items+='<b>30-second re-engagement:</b> Plan a question, a joke, or a visual surprise at the 30-second mark. Viewers who make it to 30 seconds are 3x more likely to watch to 50%.</div>';
+  }
+  if(totalSecs>180){
+    var intCount=Math.floor(totalMins/3);
+    items+='<div class="ret-item"><div class="ret-dot" style="background:var(--blue)"></div>';
+    items+='<b>Pattern interrupts needed:</b> Your episode is '+Math.floor(totalMins)+'m '+Math.round(totalSecs%60)+'s. You need roughly '+intCount+' pattern interrupt'+(intCount!==1?'s':'')+' \u2014 one every 3 minutes. A change of energy, a hard cut, a physical bit, or a sudden short sentence after a long setup all count.</div>';
+  }
+  itemsEl.innerHTML=items;
+}
+
+function renderSceneSummary(data,sents,text,totalWords,lpm,reversals){
+  var rowsEl=document.getElementById('scene-summary-rows');
+  var verdictEl=document.getElementById('scene-summary-verdict');
+  if(!rowsEl||!verdictEl) return;
+  if(!data.length){rowsEl.innerHTML='';verdictEl.textContent='Write to generate scene summary.';return;}
+
+  var weasels=findWeasels(text).length;
+  var passives=findPassive(text).length;
+  var vagues=findVague(text).length;
+  var qN=0;for(var i=0;i<data.length;i++)if(data[i].isQ)qN++;
+  var qPct=data.length?Math.round(qN/data.length*100):0;
+  var secs=Math.round(totalWords/130*60);
+  var dur=Math.floor(secs/60)+':'+(secs%60<10?'0':'')+secs%60;
+
+  var issues=[],strengths=[];
+  if(weasels>0) issues.push(weasels+' weasel word'+(weasels!==1?'s':''));
+  if(passives>0) issues.push(passives+' passive voice instance'+(passives!==1?'s':''));
+  if(vagues>3) issues.push('vague language ('+vagues+' instances)');
+  if(qPct<10&&data.length>5) issues.push('no rhetorical questions \u2014 try adding one');
+  if(lpm&&lpm<1) issues.push('low laughs per minute ('+lpm.toFixed(1)+')');
+  if(reversals>0) strengths.push(reversals+' reversal'+(reversals!==1?'s':''));
+  if(qPct>=15&&qPct<=30) strengths.push('good rhetorical question density');
+  if(lpm&&lpm>=2) strengths.push('good laugh density ('+lpm.toFixed(1)+' LPM)');
+
+  var h='';
+  h+='<div class="summary-row"><span class="summary-label">Scene duration</span><span class="summary-val">'+dur+'</span></div>';
+  h+='<div class="summary-row"><span class="summary-label">Words</span><span class="summary-val">'+totalWords+'</span></div>';
+  h+='<div class="summary-row"><span class="summary-label">Sentences</span><span class="summary-val">'+data.length+'</span></div>';
+  h+='<div class="summary-row"><span class="summary-label">Laughs per minute</span><span class="summary-val '+(lpm&&lpm>=2?'good':lpm&&lpm>=1?'warn':'bad')+'">'+(lpm?lpm.toFixed(1):'\u2014')+'</span></div>';
+  h+='<div class="summary-row"><span class="summary-label">Rhetorical questions</span><span class="summary-val '+(qPct>=15&&qPct<=30?'good':qPct>0?'warn':'bad')+'">'+qN+' ('+qPct+'%)</span></div>';
+  h+='<div class="summary-row"><span class="summary-label">Reversals</span><span class="summary-val '+(reversals>0?'good':'')+'">'+reversals+'</span></div>';
+  h+='<div class="summary-row"><span class="summary-label">Issues found</span><span class="summary-val '+(issues.length>0?'warn':'good')+'">'+(issues.length||'None \u2714')+'</span></div>';
+  rowsEl.innerHTML=h;
+
+  var verdict='';
+  if(strengths.length) verdict+='Working well: '+strengths.join(', ')+'. ';
+  if(issues.length) verdict+='Fix before recording: '+issues.join(', ')+'.';
+  if(!verdict) verdict='Scene looks solid. Check the bit analysis above for per-paragraph feedback.';
+  verdictEl.textContent=verdict;
+}
+
+function renderEpisodeSummary(){
+  var rowsEl=document.getElementById('episode-summary-rows');
+  var verdictEl=document.getElementById('episode-summary-verdict');
+  if(!rowsEl) return;
+  var scenes=getScenes();
+  var totalWords=0,totalSecs=0,totalSents=0,totalScenes=scenes.length;
+  var emptyScenes=0,allIssues=[];
+  for(var i=0;i<scenes.length;i++){
+    var s=scenes[i];
+    var t=getAnalysisText(s.text||'');
+    var ws=t.trim().split(/\s+/).filter(function(w){return w.length>0;});
+    var wc2=t.trim()?ws.length:0;
+    totalWords+=wc2;
+    totalSecs+=Math.round(wc2/130*60);
+    var sents2=parseSents(t);
+    totalSents+=sents2.length;
+    if(!wc2) emptyScenes++;
+    if(findWeasels(t).length>0) allIssues.push(s.name+': weasel words');
+    if(findPassive(t).length>0) allIssues.push(s.name+': passive voice');
+  }
+  var dur=Math.floor(totalSecs/60)+':'+(totalSecs%60<10?'0':'')+totalSecs%60;
+  var h='';
+  h+='<div class="summary-row"><span class="summary-label">Total episode duration</span><span class="summary-val">'+dur+'</span></div>';
+  h+='<div class="summary-row"><span class="summary-label">Total words</span><span class="summary-val">'+totalWords+'</span></div>';
+  h+='<div class="summary-row"><span class="summary-label">Scenes</span><span class="summary-val">'+totalScenes+'</span></div>';
+  h+='<div class="summary-row"><span class="summary-label">Empty scenes</span><span class="summary-val '+(emptyScenes>0?'warn':'good')+'">'+(emptyScenes||'None \u2714')+'</span></div>';
+  h+='<div class="summary-row"><span class="summary-label">Issues across episode</span><span class="summary-val '+(allIssues.length>0?'warn':'good')+'">'+(allIssues.length||'None \u2714')+'</span></div>';
+  rowsEl.innerHTML=h;
+  if(verdictEl){
+    var verdict='';
+    if(totalSecs<300) verdict='Episode is short ('+dur+'). Target is 10\u201315 minutes for long-form. ';
+    else if(totalSecs>1200) verdict='Episode is long ('+dur+'). Consider trimming or splitting. ';
+    else verdict='Episode length looks good ('+dur+'). ';
+    if(emptyScenes>0) verdict+=emptyScenes+' scene'+(emptyScenes!==1?'s are':' is')+' still empty. ';
+    if(allIssues.length===0) verdict+='No issues found across episode.';
+    else verdict+=allIssues.length+' issue'+(allIssues.length!==1?'s':'')+' to fix before recording.';
+    verdictEl.textContent=verdict;
+  }
 }
 
 function renderSents(data){
@@ -2041,10 +2329,10 @@ function updateLegend(){
 }
 
 /* ======================================================
-   PRACTICE — RHYTHM GUIDE
+   PRACTICE \u2014 RHYTHM GUIDE
    ====================================================== */
 var VIDEO_BEATS = [
-  {label:'Establish',words:20,color:'var(--blue)',height:52,desc:'Set the scene. Who, what, where. Can breathe — 15-25 words.'},
+  {label:'Establish',words:20,color:'var(--blue)',height:52,desc:'Set the scene. Who, what, where. Can breathe \u2014 15-25 words.'},
   {label:'Develop',words:15,color:'var(--blue)',height:42,desc:'Heighten it. Add detail, build absurdity. 10-18 words.'},
   {label:'Punchline',words:6,color:'var(--red)',height:18,desc:'Short. Staccato. Under 8 words. Land it hard.'},
   {label:'Tag',words:10,color:'var(--amber)',height:28,desc:'Optional extra joke riding the first laugh. 8-14 words.'},
@@ -2065,7 +2353,7 @@ function updateRhythmGuide(){
   var map = document.getElementById('rhythm-map');
   if(label) label.textContent = MODE==='video' ? 'Video Show Bit Rhythm' : 'Stand-up Bit Rhythm';
   if(desc) desc.textContent = MODE==='video'
-    ? 'For a scripted video show you can breathe. A bit moves through five beats — punchline doesn\'t have to come on sentence three.'
+    ? 'For a scripted video show you can breathe. A bit moves through five beats \u2014 punchline doesn\'t have to come on sentence three.'
     : 'Stand-up is compression. Setup is already too long. Punchline must arrive before the room cools. Every extra word costs.';
   if(note) note.textContent = MODE==='video'
     ? 'Switch to Stand-up mode in Write tab to see the compression model.'
@@ -2083,17 +2371,17 @@ function updateRhythmGuide(){
 }
 
 /* ======================================================
-   PRACTICE — DRILLS
+   PRACTICE \u2014 DRILLS
    ====================================================== */
 var DRILLS = [
   {
     num:'01', title:'The Whisper Drill',
-    text:'Whisper your entire script out loud. At a whisper, volume can\'t carry the jokes — only rhythm and structure can. Every weak sentence reveals itself immediately. Every strong sentence survives.',
+    text:'Whisper your entire script out loud. At a whisper, volume can\'t carry the jokes \u2014 only rhythm and structure can. Every weak sentence reveals itself immediately. Every strong sentence survives.',
     cue:'Do this once before every recording. It takes 3 minutes and finds more problems than 10 read-throughs.'
   },
   {
     num:'02', title:'The Beat Drill',
-    text:'Read through your script and say the word "BEAT" out loud before every punchline. This forces you to physically mark the pause. After a few runs, the beat becomes instinctive — you\'ll feel where it wants to live.',
+    text:'Read through your script and say the word "BEAT" out loud before every punchline. This forces you to physically mark the pause. After a few runs, the beat becomes instinctive \u2014 you\'ll feel where it wants to live.',
     cue:'If you can\'t find where the beat goes, the setup isn\'t set up yet. Rewrite first.'
   },
   {
@@ -2103,7 +2391,7 @@ var DRILLS = [
   },
   {
     num:'04', title:'The Cut Drill',
-    text:'Read a sentence. Now remove one word — any word — and read it again. Does it still work? If yes, cut it permanently. Do this for every sentence. What survives IS the script. What gets cut was just comfort padding.',
+    text:'Read a sentence. Now remove one word \u2014 any word \u2014 and read it again. Does it still work? If yes, cut it permanently. Do this for every sentence. What survives IS the script. What gets cut was just comfort padding.',
     cue:'If removing a word breaks the rhythm but not the meaning, that word is load-bearing rhythm. Keep it. Seinfeld counts syllables for this reason.'
   },
   {
@@ -2139,18 +2427,18 @@ function toggleDrill(i){
 }
 
 /* ======================================================
-   PRACTICE — CHECKLIST
+   PRACTICE \u2014 CHECKLIST
    ====================================================== */
 var CHECKS = [
-  'Cold open scripted — start mid-action, not at the beginning',
-  'Persona legible in first 30 seconds — don\'t explain yourself, just be yourself',
+  'Cold open scripted \u2014 start mid-action, not at the beginning',
+  'Persona legible in first 30 seconds \u2014 don\'t explain yourself, just be yourself',
   'Opening line is your second-strongest material',
   'At least one act-out identified and rehearsed',
-  'Punchlines end on strong words — no weak enders (a, the, it, was)',
+  'Punchlines end on strong words \u2014 no weak enders (a, the, it, was)',
   'Pattern interrupt planned at the 3-minute mark',
   'Weasel words checked and cut in Analysis tab',
   'Passive voice cleared in Analysis tab',
-  'Closer is your strongest bit — end on a staccato punch'
+  'Closer is your strongest bit \u2014 end on a staccato punch'
 ];
 
 function buildChecklist(){
@@ -2204,7 +2492,7 @@ function resetChecklist(){
 }
 
 /* ======================================================
-   PRACTICE — PERFORMANCE LOG
+   PRACTICE \u2014 PERFORMANCE LOG
    ====================================================== */
 var LOG_KEY='cadence_log';
 
@@ -2259,7 +2547,7 @@ var mirrorSents=[], mirrorIdx=0;
 function startMirror(){
   var text=document.getElementById('editor').value;
   mirrorSents=parseSents(text).map(function(s){return s.trim();}).filter(function(s){return s.length>0&&!isStageLine(s);});
-  if(!mirrorSents.length){alert('Nothing to rehearse — write something first.');return;}
+  if(!mirrorSents.length){alert('Nothing to rehearse \u2014 write something first.');return;}
   mirrorIdx=0;
   updateMirror();
   document.getElementById('mirror-overlay').classList.add('active');
@@ -2364,20 +2652,20 @@ async function aiAnalyze(){
     'Fact: informational, sets up context, presents data or a real detail about the subject\n'+
     'Reaction: the writer\'s personal emotional response to a fact or situation (short, first-person feel)\n'+
     'Setup: builds an expectation or premise in the audience\'s mind that will be subverted\n'+
-    'Punchline: subverts the setup\'s expectation, delivers the laugh or surprise — usually short\n'+
+    'Punchline: subverts the setup\'s expectation, delivers the laugh or surprise \u2014 usually short\n'+
     'Tag: additional short punchline riding the first laugh, no new setup needed\n'+
     'Neutral: transitional, connective, or doesn\'t fit another role\n\n'+
     'Rules:\n'+
     '- A Punchline must follow a Setup (directly or after multiple Setups)\n'+
     '- A Tag must follow a Punchline or another Tag\n'+
-    '- Fact→Reaction is the documentary comedy pattern — information followed by personal response\n'+
-    '- Setup→Punchline is the pure comedy pattern — expectation followed by subversion\n'+
+    '- Fact\u2192Reaction is the documentary comedy pattern \u2014 information followed by personal response\n'+
+    '- Setup\u2192Punchline is the pure comedy pattern \u2014 expectation followed by subversion\n'+
     '- Both patterns can exist in the same script\n'+
     '- Classify by MEANING not length\n'+
     '- One role per sentence\n\n'+
     'Also identify joke/bit groups: each complete sequence with its payoff.\n\n'+
     'Return ONLY valid JSON, no markdown, no explanation:\n'+
-    '{"roles":["Fact","Reaction","Setup","Punchline","Tag","Neutral",...],"groups":[{"type":"Setup→Punchline or Fact→Reaction","sentences":[0,1,2],"note":"why this works or what to fix"}],"overall":"one sentence about the script\'s comic and narrative structure","ratio":"e.g. 60% Fact/Reaction, 40% Setup/Punchline"}\n\n'+
+    '{"roles":["Fact","Reaction","Setup","Punchline","Tag","Neutral",...],"groups":[{"type":"Setup\u2192Punchline or Fact\u2192Reaction","sentences":[0,1,2],"note":"why this works or what to fix"}],"overall":"one sentence about the script\'s comic and narrative structure","ratio":"e.g. 60% Fact/Reaction, 40% Setup/Punchline"}\n\n'+
     'Sentence indices are 0-based. Script:\n'+numbered;
 
   try{
@@ -2480,7 +2768,7 @@ function renderAiPips(roles){
 
 
 /* ======================================================
-   RECORD TAB — WHISPER
+   RECORD TAB \u2014 WHISPER
    ====================================================== */
 var OAI_KEY='cadence_openai_key';
 var recStream=null,recMediaRecorder=null,recChunks=[],recBlob=null;
@@ -2836,7 +3124,7 @@ function selectShortFormat(f){
   var ti=document.getElementById('short-title');
   if(!ta||!ti) return;
   if(f==='Episode Cut'){
-    ti.placeholder='JD Warren Versus [episode title] — clip';
+    ti.placeholder='JD Warren Versus [episode title] \u2014 clip';
     ta.placeholder='Paste or write the specific bit from your episode that stands alone. Under 130 words = under 60 seconds.';
   } else if(f==='One Song Reaction'){
     ti.placeholder='JD Warren heard [song name] today';
@@ -2845,7 +3133,7 @@ function selectShortFormat(f){
     ti.placeholder='JD Warren Versus [topic]';
     ta.placeholder='A self-contained bit that doesn\'t need episode context. Could be a music observation, a music industry take, an absurd personal story that connects to music.';
   } else if(f==='Fake Commercial'){
-    ti.placeholder='JD Warren Versus — [tagline or premise]';
+    ti.placeholder='JD Warren Versus \u2014 [tagline or premise]';
     ta.placeholder='Write it like a real ad but for a ridiculous premise. Commit fully to the bit. No winking at the camera.';
   }
 }
@@ -2916,7 +3204,7 @@ function renderSavedShorts(){
   el.innerHTML=h;
 }
 
-/* ── Harvester ── */
+/* \u2500\u2500 Harvester \u2500\u2500 */
 function scoreHarvestBit(bitText, sceneName){
   var cleanBit=getAnalysisText(bitText);
   var sents=parseSents(cleanBit);
@@ -3184,8 +3472,147 @@ function distillRoughDraft(){
   render();
 }
 
-var SCENE_KEY = 'cadence_scenes';
-var SCENE_CUR = 'cadence_current_scene';
+/* ======================================================
+   EPISODE MANAGEMENT
+   ====================================================== */
+var EP_LIST_KEY='cadence_episodes';
+var EP_CUR_KEY='cadence_current_episode';
+
+function getEpisodes(){
+  try{var s=localStorage.getItem(EP_LIST_KEY);return s?JSON.parse(s):[];}catch(e){return[];}
+}
+
+function saveEpisodes(eps){
+  try{localStorage.setItem(EP_LIST_KEY,JSON.stringify(eps));}catch(e){}
+}
+
+function getCurrentEpisodeId(){
+  try{return localStorage.getItem(EP_CUR_KEY)||null;}catch(e){return null;}
+}
+
+function setCurrentEpisodeId(id){
+  try{localStorage.setItem(EP_CUR_KEY,id);}catch(e){}
+}
+
+function getCurrentEpisode(){
+  var eps=getEpisodes();
+  var id=getCurrentEpisodeId();
+  for(var i=0;i<eps.length;i++) if(eps[i].id===id) return eps[i];
+  return eps[0]||null;
+}
+
+// Episode-namespaced key helpers
+function epKey(base){
+  var ep=getCurrentEpisode();
+  return ep?base+'_'+ep.id:base;
+}
+
+function initEpisodes(){
+  var eps=getEpisodes();
+  if(!eps.length){
+    var id='ep_'+Date.now();
+    var ep={id:id,title:'JD Warren Versus \u2014 Episode 1',created:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})};
+    saveEpisodes([ep]);
+    setCurrentEpisodeId(id);
+  } else if(!getCurrentEpisodeId()){
+    setCurrentEpisodeId(eps[0].id);
+  }
+  updateEpisodeBar();
+}
+
+function updateEpisodeBar(){
+  var ep=getCurrentEpisode();
+  var el=document.getElementById('episode-name');
+  if(el) el.textContent=ep?ep.title:'No episode';
+}
+
+function openEpisodeSheet(){
+  renderEpisodeList();
+  document.getElementById('ep-overlay').classList.add('active');
+  document.getElementById('ep-sheet').classList.add('active');
+}
+
+function closeEpisodeSheet(){
+  document.getElementById('ep-overlay').classList.remove('active');
+  document.getElementById('ep-sheet').classList.remove('active');
+}
+
+function renderEpisodeList(){
+  var el=document.getElementById('ep-list');
+  if(!el) return;
+  var eps=getEpisodes();
+  var curId=getCurrentEpisodeId();
+  if(!eps.length){el.innerHTML='<div style="font-size:12px;color:var(--text3);text-align:center;padding:20px;">No episodes yet. Create your first one below.</div>';return;}
+  var h='';
+  for(var i=0;i<eps.length;i++){
+    var ep=eps[i];
+    var active=ep.id===curId?' active-ep':'';
+    h+='<div class="ep-item'+active+'" onclick="switchEpisode(\''+ep.id+'\')">';
+    h+='<div class="ep-item-info">';
+    h+='<div class="ep-item-title">'+esc(ep.title)+'</div>';
+    h+='<div class="ep-item-meta">Created '+esc(ep.created||'')+(active?' &mdash; Current episode':'')+'</div>';
+    h+='</div>';
+    if(eps.length>1) h+='<button class="ep-item-del" onclick="deleteEpisode(event,\''+ep.id+'\')">&#x2715;</button>';
+    h+='</div>';
+  }
+  el.innerHTML=h;
+}
+
+function createEpisode(){
+  var input=document.getElementById('ep-new-input');
+  var title=(input?input.value.trim():'')||'JD Warren Versus \u2014 Episode '+(getEpisodes().length+1);
+  var id='ep_'+Date.now();
+  var ep={id:id,title:title,created:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})};
+  var eps=getEpisodes();
+  eps.push(ep);
+  saveEpisodes(eps);
+  if(input) input.value='';
+  switchEpisode(id);
+  renderEpisodeList();
+}
+
+function switchEpisode(id){
+  // Save current scene text before switching
+  saveCurrentSceneText();
+  setCurrentEpisodeId(id);
+  updateEpisodeBar();
+  // Reload scenes for new episode
+  var scene=getCurrentScene();
+  setCurrentSceneId(scene.id);
+  document.getElementById('editor').value=scene.text||'';
+  loadRoughDraft();
+  loadResearch();
+  renderSceneStrip();
+  renderSceneNotes();
+  render();
+  closeEpisodeSheet();
+}
+
+function deleteEpisode(e,id){
+  e.stopPropagation();
+  var eps=getEpisodes();
+  if(eps.length<=1){alert('You need at least one episode.');return;}
+  if(!window.confirm('Delete this episode and all its scenes? This cannot be undone.')) return;
+  // Clear episode data
+  try{
+    localStorage.removeItem('cadence_scenes_'+id);
+    localStorage.removeItem('cadence_current_scene_'+id);
+    localStorage.removeItem('cadence_log_'+id);
+    localStorage.removeItem('cadence_shorts_'+id);
+    localStorage.removeItem('cadence_write_mode_'+id);
+  }catch(ex){}
+  eps=eps.filter(function(ep){return ep.id!==id;});
+  saveEpisodes(eps);
+  var curId=getCurrentEpisodeId();
+  if(curId===id) switchEpisode(eps[0].id);
+  else renderEpisodeList();
+}
+
+var SCENE_KEY='cadence_scenes';
+var SCENE_CUR='cadence_current_scene';
+
+function getSceneKey(){ return 'cadence_scenes_'+(getCurrentEpisodeId()||'default'); }
+function getSceneCurKey(){ return 'cadence_current_scene_'+(getCurrentEpisodeId()||'default'); }
 
 var SCENE_TYPES = ['Prologue','Intro','Part','Review','Outro','Voiceover','B-Roll'];
 var SCENE_LOCS  = ['Desk','Couch','Record Player','Voiceover','B-Roll','Other'];
@@ -3193,8 +3620,9 @@ var SCENE_LOCS  = ['Desk','Couch','Record Player','Voiceover','B-Roll','Other'];
 function genId(){ return 'sc_'+Math.random().toString(36).slice(2,9); }
 
 function loadScenes(){
+  var key=getSceneKey();
   try{
-    var s=localStorage.getItem(SCENE_KEY);
+    var s=localStorage.getItem(key);
     if(s){var d=JSON.parse(s);if(Array.isArray(d)&&d.length>0)return d;}
   }catch(e){}
   var def={id:genId(),name:'Intro',type:'Intro',location:'Desk',text:'',order:0};
@@ -3203,8 +3631,9 @@ function loadScenes(){
 }
 
 function saveScenes(scenes){
+  var key=getSceneKey();
   try{
-    localStorage.setItem(SCENE_KEY,JSON.stringify(scenes));
+    localStorage.setItem(key,JSON.stringify(scenes));
     var ind=document.getElementById('save-indicator');
     if(ind){
       ind.textContent='Saved';
@@ -3219,11 +3648,11 @@ function saveScenes(scenes){
 }
 
 function getCurrentSceneId(){
-  try{return localStorage.getItem(SCENE_CUR)||null;}catch(e){return null;}
+  try{return localStorage.getItem(getSceneCurKey())||null;}catch(e){return null;}
 }
 
 function setCurrentSceneId(id){
-  try{localStorage.setItem(SCENE_CUR,id);}catch(e){}
+  try{localStorage.setItem(getSceneCurKey(),id);}catch(e){}
 }
 
 function getScenes(){ return loadScenes().sort(function(a,b){return a.order-b.order;}); }
@@ -3364,7 +3793,7 @@ function exportScript(){
   document.body.appendChild(a);a.click();document.body.removeChild(a);
 }
 
-/* ── Sheet ── */
+/* \u2500\u2500 Sheet \u2500\u2500 */
 var sheetSceneId=null;
 var sheetType='Part', sheetLoc='Desk';
 
@@ -3469,7 +3898,7 @@ function switchPane(name,btn){
   var toolbar=document.getElementById('write-toolbar');
   if(name==='write'){toolbar.classList.remove('hidden');}else{toolbar.classList.add('hidden');}
   if(name==='practice'){renderLog();}
-  if(name==='script'){renderScript();}
+  if(name==='script'){renderScript();renderEpisodeSummary();}
   if(name==='record'){updateOaiCard();renderRecScript();}
   if(name==='shorts'){renderSavedShorts();}
 }
@@ -3536,6 +3965,7 @@ try{var sm=localStorage.getItem('cadence_mode');if(sm==='standup')setMode('stand
 // Restore write mode
 try{var wm=localStorage.getItem('cadence_write_mode');if(wm==='rough')setWriteMode('rough');else if(wm==='research')setWriteMode('research');}catch(e){}
 
+initEpisodes();
 buildLearn();
 buildDrills();
 buildChecklist();
