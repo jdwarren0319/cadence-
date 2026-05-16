@@ -101,7 +101,7 @@ body {
 #pane-write textarea {
   flex: 1; border: none; outline: none; resize: none;
   padding: 20px 20px; font-size: 16px; line-height: 1.85;
-  font-family: var(--mono); background: #f0eeeb;
+  font-family: var(--mono); background: #f5f3f0;
   color: #1a1612; caret-color: #1a1612; font-weight: 500;
   overflow-y: auto; -webkit-overflow-scrolling: touch;
 }
@@ -265,7 +265,7 @@ body {
 .script-panel.hidden { display: none; }
 /* ── Line number gutter ── */
 .editor-wrap { flex: 1; display: flex; overflow: hidden; position: relative; }
-.line-gutter { flex-shrink: 0; width: 32px; background: #e8e5e1; border-right: 1px solid #d8d5d0; overflow: hidden; padding-top: 20px; font-size: 11px; font-family: var(--mono); color: #8b1a1a; font-weight: 700; line-height: 1.85; text-align: right; padding-right: 6px; user-select: none; pointer-events: none; }
+.line-gutter { flex-shrink: 0; width: 36px; background: #ebe8e4; border-right: 1px solid #d8d5d0; overflow: hidden; padding-top: 20px; font-size: 16px; font-family: var(--mono); color: #8b1a1a; font-weight: 700; line-height: 1.85; text-align: right; padding-right: 7px; user-select: none; pointer-events: none; }
 .line-gutter.highlighted span { color: var(--amber); font-weight: 700; }
 #pane-write textarea { flex: 1; min-width: 0; padding-left: 10px; color: var(--text1); }
 /* ── Analysis source toggle ── */
@@ -1392,12 +1392,15 @@ function renderLineGutter(){
   var text=editor.value;
   var lines=text.split('\n');
   var h='';
+  var lineNum=1;
   for(var i=0;i<lines.length;i++){
-    h+='<span style="display:block;height:1.9em;">'+( i+1)+'</span>';
+    var isBlank=lines[i].trim().length===0;
+    // Each span must be exactly one line height — 1.85em at the same font-size as the textarea
+    h+='<span style="display:block;line-height:1.85;color:'+(isBlank?'transparent':'#8b1a1a')+';">'+(isBlank?'&nbsp;':lineNum)+'</span>';
+    if(!isBlank) lineNum++;
   }
-  if(!lines.length) h='<span style="display:block;height:1.9em;">1</span>';
+  if(!lines.length) h='<span style="display:block;line-height:1.85;">1</span>';
   gutter.innerHTML=h;
-  // Sync scroll
   gutter.scrollTop=editor.scrollTop;
 }
 
