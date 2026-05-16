@@ -677,6 +677,9 @@ body {
           contenteditable="true"
           spellcheck="false"
           oninput="saveResearch()"
+          onmouseup="captureResearchSelection()"
+          ontouchend="captureResearchSelection()"
+          onkeyup="captureResearchSelection()"
           data-placeholder="Paste research here. Bold, bullet points, links and formatting are preserved.&#10;&#10;Try sections like ARTIST, ALBUM, TOO WEIRD TO IGNORE, LINKS"></div>
         <div class="rough-footer">
           <span class="rough-hint">Rich text. Paste from anywhere. Saves per scene.</span>
@@ -3061,18 +3064,26 @@ function loadResearch(){
   el.innerHTML=scene.research||'';
 }
 
-function distillResearch(){
+var _researchSel='';
+
+function captureResearchSelection(){
   var sel=window.getSelection&&window.getSelection();
-  var text='';
-  if(sel&&sel.rangeCount>0&&sel.toString().trim()){
-    text=sel.toString().trim();
-  } else {
+  if(sel&&sel.toString().trim()) _researchSel=sel.toString().trim();
+}
+
+function distillResearch(){
+  // Use cached selection first, then live selection, then full content
+  var text=_researchSel||'';
+  _researchSel='';
+  if(!text){
+    var sel=window.getSelection&&window.getSelection();
+    if(sel&&sel.toString().trim()) text=sel.toString().trim();
+  }
+  if(!text){
     var el=document.getElementById('research-editor');
-    // Get plain text from innerHTML
     var tmp=document.createElement('div');
     tmp.innerHTML=el?el.innerHTML:'';
-    text=tmp.innerText||tmp.textContent||'';
-    text=text.trim();
+    text=(tmp.innerText||tmp.textContent||'').trim();
   }
   if(!text){alert('Select the text you want to pull, or add research first.');return;}
   var editor=document.getElementById('editor');
