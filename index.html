@@ -2525,8 +2525,8 @@ async function aiAnalyze(){
 
   var text=document.getElementById('editor').value;
   var sents=parseSents(text).map(function(s){return s.trim();}).filter(function(s){return s.length>0;});
-  if(sents.length<2){ setAiStatus('Write at least 2 sentences to analyze.'); return; }
-  if(sents.length>60){ setAiStatus('Too many sentences \u2014 analyze a single scene at a time.'); return; }
+  if(sents.length<2){ setAiStatus('Write at least 3 sentences to analyze.'); return; }
+  if(sents.length>80){ setAiStatus('Too many sentences \u2014 analyze one scene at a time.'); return; }
 
   setAiBtn(true); setAiStatus('Reading your script\u2026');
   document.getElementById('ai-results').innerHTML='';
@@ -2545,7 +2545,7 @@ async function aiAnalyze(){
     '"Recontextualisation" \u2014 reframes what came before, usually where the laugh is\n'+
     '"Transition" \u2014 moves between ideas\n'+
     '"Redundant" \u2014 could be cut\n\n'+
-    'Only add a note if something specific needs fixing or is working particularly well.\n\n'+
+    'Only add a note if something specific needs fixing or is working particularly well. Notes must be under 12 words. Most sentences get no note.\n\n'+
     'Return ONLY valid JSON, no markdown:\n'+
     '{"sentences":[{"role":"World building","note":""}],"overall":"plain English read on the whole script","one_fix":"the single most important change"}\n\n'+
     'Script:\n'+numbered;
@@ -2556,7 +2556,7 @@ async function aiAnalyze(){
       headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
         model:'claude-sonnet-4-6',
-        max_tokens:1500,
+        max_tokens:2500,
         messages:[{role:'user',content:prompt}]
       })
     });
@@ -2572,7 +2572,16 @@ async function aiAnalyze(){
     var data=await resp.json();
     var raw=data.content&&data.content[0]&&data.content[0].text||'';
     raw=raw.replace(/```json|```/g,'').trim();
-    var result=JSON.parse(raw);
+    var result;
+    try{
+      result=JSON.parse(raw);
+    }catch(parseErr){
+      // Show the raw response so we can debug
+      setAiStatus('Parse error \u2014 raw response below');
+      document.getElementById('ai-results').innerHTML='<div style="font-size:10px;color:var(--text3);font-family:var(--mono);white-space:pre-wrap;padding:6px;background:var(--bg3);border-radius:var(--r);">'+esc(raw.substring(0,500))+'</div>';
+      setAiBtn(false);
+      return;
+    }
 
     // Validate
     if(!Array.isArray(result.roles)||result.roles.length!==sents.length){
