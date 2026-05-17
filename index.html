@@ -244,6 +244,12 @@ body {
 .write-mode-toggle { display: flex; border: 1px solid var(--bdrm); border-radius: 20px; overflow: hidden; }
 .wm-btn { font-size: 11px; font-weight: 600; font-family: var(--sans); padding: 4px 12px; border: none; background: transparent; color: var(--text3); cursor: pointer; touch-action: manipulation; }
 .wm-btn.active { background: var(--text1); color: var(--bg1); }
+/* Research bottom panel */
+.research-bottom-wrap { flex-shrink: 0; border-top: 1px solid var(--bdr); display: flex; flex-direction: column; }
+.research-bottom-toggle { display: flex; align-items: center; justify-content: space-between; padding: 6px 14px; background: var(--bg1); border: none; width: 100%; cursor: pointer; touch-action: manipulation; font-family: var(--sans); font-size: 11px; font-weight: 600; color: var(--text2); }
+.research-bottom-toggle:hover { background: var(--bg2); }
+.research-panel-collapsed #research-panel { display: none; }
+.research-panel-collapsed #research-toggle-arrow { display: inline-block; transform: rotate(180deg); }
 .rough-textarea { flex: 1; border: none; outline: none; resize: none; padding: 20px; font-size: 15px; line-height: 1.9; font-family: var(--mono); background: var(--bg2); color: var(--text2); caret-color: var(--text1); overflow-y: auto; -webkit-overflow-scrolling: touch; }
 .rough-textarea::placeholder { color: var(--text3); }
 .rough-footer { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 7px 14px; border-top: 1px solid var(--bdr); background: var(--bg1); }
@@ -671,15 +677,7 @@ body {
         <span class="scene-notes-text" id="scene-notes-text"></span>
       </div>
 
-      <!-- Write mode toggle -->
-      <div class="write-mode-bar">
-        <div class="write-mode-toggle">
-          <button class="wm-btn active" id="wm-script" onclick="setWriteMode('script')">Script</button>
-          <button class="wm-btn" id="wm-research" onclick="setWriteMode('research')">Research</button>
-        </div>
-      </div>
-
-      <!-- Script panel -->
+      <!-- Script panel - always visible, no toggle -->
       <div class="script-panel" id="script-panel">
         <div class="editor-wrap">
           <div class="line-gutter" id="line-gutter"></div>
@@ -695,8 +693,13 @@ body {
         </div>
       </div>
 
-      <!-- Research panel -->
-      <div class="rough-panel" id="research-panel">
+      <!-- Research panel - collapsible at bottom -->
+      <div class="research-bottom-wrap" id="research-bottom-wrap">
+        <button class="research-bottom-toggle" id="research-bottom-toggle" onclick="toggleResearchPanel()">
+          <span>&#x1F4D3; Research</span>
+          <span id="research-toggle-arrow">&#x25B2;</span>
+        </button>
+        <div class="rough-panel active" id="research-panel" style="max-height:220px;">
         <div class="research-toolbar">
           <button class="research-tool-btn" onclick="researchFormat('bold')" title="Bold"><b>B</b></button>
           <button class="research-tool-btn" onclick="researchFormat('italic')" title="Italic"><i>I</i></button>
@@ -719,6 +722,7 @@ body {
           <button class="rough-distill" onclick="distillResearch()">Pull to Script &#x2192;</button>
         </div>
       </div>
+      </div><!-- end research-bottom-wrap -->
 
     </div>
     <div class="pane hidden" id="pane-analysis">
@@ -2474,8 +2478,20 @@ function closeMirror(){
    AI SEMANTIC ANALYSIS
    ====================================================== */
 var AI_KEY_STORE = 'cadence_api_key';
-var aiRolesCache = null;  // cached AI roles array
-var aiLastText   = null;  // text that produced the cache
+var aiRolesCache = null;
+var aiLastText   = null;
+var aiPrevResult = null;
+
+function getAiMemoryKey(){
+  var scene=getCurrentScene();
+  return scene?'cadence_ai_memo_'+scene.id:null;
+}
+function loadAiMemory(){
+  try{var k=getAiMemoryKey();return k?JSON.parse(localStorage.getItem(k)||'null'):null;}catch(e){return null;}
+}
+function saveAiMemory(result){
+  try{var k=getAiMemoryKey();if(k)localStorage.setItem(k,JSON.stringify(result));}catch(e){}
+}
 
 function getApiKey(){
   try{ return localStorage.getItem(AI_KEY_STORE)||''; }catch(e){ return ''; }
@@ -2534,20 +2550,33 @@ async function aiAnalyze(){
   var numbered='';
   for(var i=0;i<sents.length;i++) numbered+=(i+1)+'. "'+sents[i]+'"\n';
 
-  var prompt='You are a comedy writing analyst specialising in conversational observational comedy \u2014 Seinfeld, Drew Gooden, commentary-comedy YouTube.\n\n'+
-    'Analyse this script. For each sentence determine:\n'+
-    '1. Is it doing work? Every sentence must: (a) build shared reality, (b) earn trust through specificity, or (c) pay off something before it. If none, it should be cut.\n'+
-    '2. Is there recontextualisation? Seinfeld\'s technique is conversational accumulation + a logical observation that reframes everything. The recontextualisation IS the laugh \u2014 it doesn\'t have to be short.\n'+
-    '3. Is there commitment? Any hedging weakens the observation.\n\n'+
-    'Label each sentence briefly:\n'+
+  // Load previous analysis for memory
+  var prevResult=loadAiMemory();
+  var memoryContext='';
+  if(prevResult&&prevResult.overall){
+    memoryContext='PREVIOUS ANALYSIS OF THIS SCENE:\nOverall: '+prevResult.overall+'\nPrevious fix priority: '+(prevResult.one_fix||'none')+'\n\nNote how the script has changed since then and whether previous issues have been addressed.\n\n';
+  }
+
+  var prompt='You are a comedy writing analyst specialising in conversational observational comedy \u2014 Seinfeld, Drew Gooden, commentary-comedy YouTube. The writer\'s show is called JD Warren Versus, a comedy album review show where he hears records for the first time on camera.\n\n'+
+    memoryContext+
+    'Analyse this script deeply. For each sentence determine:\n'+
+    '1. Is it doing work? Every sentence must: (a) build shared reality, (b) earn trust through specificity/truth, or (c) pay off something before it. If none, flag it.\n'+
+    '2. Recontextualisation: Seinfeld\'s technique is conversational accumulation + a logical observation that reframes everything. The reframe IS the laugh \u2014 identify where this happens or where it\'s missing.\n'+
+    '3. Commitment: any hedging (kind of, sort of, maybe, I guess) weakens the observation. Flag it.\n'+
+    '4. Specificity: vague nouns (thing, stuff, people, someone) are missed comedy opportunities. What specific detail would be funnier?\n'+
+    '5. Logic: is the underlying observation actually true and airtight? The audience needs to agree with the premise before the recontextualisation lands.\n\n'+
+    'Labels:\n'+
     '"World building" \u2014 establishes shared reality or premise\n'+
-    '"Observation" \u2014 specific factual claim that earns trust\n'+
-    '"Recontextualisation" \u2014 reframes what came before, usually where the laugh is\n'+
+    '"Observation" \u2014 specific factual claim\n'+
+    '"Recontextualisation" \u2014 reframes what came before, usually the laugh\n'+
+    '"False stop" \u2014 the comedian appears to end then continues (classic comic device)\n'+
     '"Transition" \u2014 moves between ideas\n'+
-    '"Redundant" \u2014 could be cut\n\n'+
-    'Only add a note if something specific needs fixing or is working particularly well. Notes must be under 12 words. Most sentences get no note.\n\n'+
-    'Return ONLY valid JSON, no markdown:\n'+
-    '{"sentences":[{"role":"World building","note":""}],"overall":"plain English read on the whole script","one_fix":"the single most important change"}\n\n'+
+    '"Redundant" \u2014 could be cut without losing anything\n'+
+    '"Needs work" \u2014 has potential but requires revision\n\n'+
+    'Notes: be specific. If something is wrong, say exactly what to change and why. If something works, say exactly why. Under 15 words per note. Most sentences need no note.\n\n'+
+    'Return ONLY valid JSON:\n'+
+    '{"sentences":[{"role":"World building","note":"","fix":false}],"overall":"2-3 sentence plain English read","one_fix":"most important specific change","strengths":"what is working and why"}\n\n'+
+    '"fix":true means the note identifies something to change. "fix":false means observation or praise.\n\n'+
     'Script:\n'+numbered;
 
   try{
@@ -2556,7 +2585,7 @@ async function aiAnalyze(){
       headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
         model:'claude-sonnet-4-6',
-        max_tokens:2500,
+        max_tokens:3000,
         messages:[{role:'user',content:prompt}]
       })
     });
@@ -2576,20 +2605,19 @@ async function aiAnalyze(){
     try{
       result=JSON.parse(raw);
     }catch(parseErr){
-      // Show the raw response so we can debug
       setAiStatus('Parse error \u2014 raw response below');
       document.getElementById('ai-results').innerHTML='<div style="font-size:10px;color:var(--text3);font-family:var(--mono);white-space:pre-wrap;padding:6px;background:var(--bg3);border-radius:var(--r);">'+esc(raw.substring(0,500))+'</div>';
       setAiBtn(false);
       return;
     }
 
-    // Validate
     if(!result.sentences||!Array.isArray(result.sentences)){
       setAiStatus('Unexpected response \u2014 try again.'); setAiBtn(false); return;
     }
 
     aiRolesCache=null;
     aiLastText=text;
+    saveAiMemory(result);
 
     renderAiResults(result, sents);
     setAiStatus('\u2714 Analysis complete');
@@ -2606,30 +2634,48 @@ function renderAiResults(result, sents){
   var el=document.getElementById('ai-results');
   if(!el) return;
   var ROLE_COLORS={
-    'World building':'color:var(--blue);background:var(--lebg);',
-    'Observation':'color:var(--green);background:var(--gobg);',
-    'Recontextualisation':'color:var(--red);background:var(--stbg);font-weight:700;',
-    'Transition':'color:var(--text3);background:var(--bg3);',
-    'Redundant':'color:var(--amber);background:var(--wabg);'
+    'World building':    'color:#1a5fa5;background:#e8f0fb;',
+    'Observation':       'color:#1a7a3a;background:#e6f4ea;',
+    'Recontextualisation':'color:#b91c1c;background:#fde8e8;font-weight:700;',
+    'False stop':        'color:#7c3aed;background:#ede9fe;',
+    'Transition':        'color:#6b7280;background:#f3f4f6;',
+    'Redundant':         'color:#92400e;background:#fef3c7;',
+    'Needs work':        'color:#b91c1c;background:#fde8e8;'
   };
   var h='';
+
   if(result.sentences&&result.sentences.length){
     for(var i=0;i<result.sentences.length;i++){
       var s=result.sentences[i];
       var sentText=sents[i]?sents[i].trim():'';
-      var roleStyle=ROLE_COLORS[s.role]||'color:var(--text3);background:var(--bg3);';
+      var roleStyle=ROLE_COLORS[s.role]||'color:#6b7280;background:#f3f4f6;';
+      var isFix=s.fix===true||s.role==='Redundant'||s.role==='Needs work';
       h+='<div class="ai-sent" style="margin-bottom:8px;align-items:flex-start;">';
-      h+='<span class="ai-role-badge" style="'+roleStyle+'padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;flex-shrink:0;margin-top:1px;white-space:nowrap;">'+esc(s.role||'?')+'</span>';
-      h+='<div style="min-width:0;">';
-      h+='<div class="ai-sent-text" style="font-size:11px;color:var(--text2);line-height:1.5;">'+esc(sentText.substring(0,100))+(sentText.length>100?'\u2026':'')+'</div>';
-      if(s.note) h+='<div class="ai-note" style="font-size:10px;color:var(--purple);margin-top:2px;font-style:italic;">\u2192 '+esc(s.note)+'</div>';
+      h+='<span class="ai-role-badge" style="'+roleStyle+'padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;flex-shrink:0;margin-top:2px;white-space:nowrap;">'+esc(s.role||'?')+'</span>';
+      h+='<div style="min-width:0;flex:1;">';
+      h+='<div style="font-size:11px;color:#1a1612;line-height:1.5;margin-bottom:1px;">'+esc(sentText.substring(0,120))+(sentText.length>120?'\u2026':'')+'</div>';
+      if(s.note){
+        var noteColor=isFix?'color:#b91c1c;':'color:var(--purple);';
+        var notePrefix=isFix?'\u2757 ':'\u2192 ';
+        h+='<div style="font-size:10px;'+noteColor+'margin-top:2px;font-style:italic;">'+notePrefix+esc(s.note)+'</div>';
+      }
       h+='</div></div>';
     }
   }
-  if(result.overall||result.one_fix){
-    h+='<div style="border-top:1px solid var(--bdr);margin-top:8px;padding-top:8px;">';
-    if(result.overall) h+='<div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:6px;">'+esc(result.overall)+'</div>';
-    if(result.one_fix) h+='<div style="font-size:11px;color:var(--purple);font-weight:600;">\u2605 Fix first: '+esc(result.one_fix)+'</div>';
+
+  if(result.strengths||result.overall||result.one_fix){
+    h+='<div style="border-top:1px solid var(--bdr);margin-top:10px;padding-top:10px;display:flex;flex-direction:column;gap:8px;">';
+    if(result.strengths){
+      h+='<div style="font-size:11px;color:#1a7a3a;background:#e6f4ea;padding:8px 10px;border-radius:var(--r);line-height:1.6;">';
+      h+='<span style="font-weight:700;display:block;margin-bottom:2px;">&#x2714; Working</span>'+esc(result.strengths)+'</div>';
+    }
+    if(result.overall){
+      h+='<div style="font-size:12px;color:var(--text2);line-height:1.65;">'+esc(result.overall)+'</div>';
+    }
+    if(result.one_fix){
+      h+='<div style="font-size:11px;color:#b91c1c;background:#fde8e8;padding:8px 10px;border-radius:var(--r);font-weight:600;line-height:1.5;">';
+      h+='\u2757 Fix first: '+esc(result.one_fix)+'</div>';
+    }
     h+='</div>';
   }
   el.innerHTML=h||'<div style="font-size:12px;color:var(--text3);">No analysis returned.</div>';
@@ -3221,16 +3267,19 @@ function useHarvestCandidate(idx){
 }
 
 
-var WRITE_MODE='script'; // 'script' or 'rough'
+var WRITE_MODE='script';
 
 function setWriteMode(mode){
   WRITE_MODE=mode;
-  document.getElementById('wm-script').classList.toggle('active',mode==='script');
-  document.getElementById('wm-research').classList.toggle('active',mode==='research');
-  document.getElementById('script-panel').classList.toggle('hidden',mode!=='script');
-  document.getElementById('research-panel').classList.toggle('active',mode==='research');
-  if(mode==='research') loadResearch();
   try{localStorage.setItem('cadence_write_mode',mode);}catch(e){}
+}
+
+function toggleResearchPanel(){
+  var wrap=document.getElementById('research-bottom-wrap');
+  if(!wrap) return;
+  wrap.classList.toggle('research-panel-collapsed');
+  var expanded=!wrap.classList.contains('research-panel-collapsed');
+  if(expanded) loadResearch();
 }
 
 function saveResearch(){
@@ -3736,6 +3785,15 @@ function switchPane(name,btn){
   if(name==='script'){renderScript();renderEpisodeSummary();}
   if(name==='record'){updateOaiCard();renderRecScript();}
   if(name==='shorts'){renderSavedShorts();}
+  if(name==='analysis'){
+    // Restore previous AI results for this scene if available
+    var prev=loadAiMemory();
+    if(prev){
+      var sents=parseSents(getAnalysisSourceText()).map(function(s){return s.trim();}).filter(function(s){return s.length>0;});
+      renderAiResults(prev,sents);
+      setAiStatus('Previous analysis \u2014 re-analyze to update');
+    }
+  }
 }
 
 /* ======================================================
