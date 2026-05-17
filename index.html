@@ -2575,8 +2575,9 @@ async function aiAnalyze(){
     '"Needs work" \u2014 has potential but requires revision\n\n'+
     'Notes: be specific. If something is wrong, say exactly what to change and why. If something works, say exactly why. Under 15 words per note. Most sentences need no note.\n\n'+
     'Return ONLY valid JSON:\n'+
-    '{"sentences":[{"role":"World building","note":"","fix":false}],"overall":"2-3 sentence plain English read","one_fix":"most important specific change","strengths":"what is working and why"}\n\n'+
-    '"fix":true means the note identifies something to change. "fix":false means observation or praise.\n\n'+
+    '{"sentences":[{"role":"World building","note":"","fix":false}],"overall":"2-3 sentence plain English read","one_fix":"most important specific change","strengths":"what is working and why","surrealism":{"score":7,"read":"plain English explanation of the surreal transitions and leaps in this script","best":"the single most surprising or unpredictable moment and why it works"}}\n\n'+
+    '"fix":true means the note identifies something to change. "fix":false means observation or praise.\n'+
+    'For surrealism score: 1 = completely grounded and logical, 10 = fully absurdist with no logical connective tissue. Seinfeld runs 3-4. Your show should probably run 5-7 — grounded enough to follow, surprising enough to be memorable. Score the actual transitions between ideas, not just the jokes.\n\n'+
     'Script:\n'+numbered;
 
   try{
@@ -2662,6 +2663,25 @@ function renderAiResults(result, sents){
       h+='</div></div>';
     }
   }
+
+    if(result.surrealism){
+      var sc=result.surrealism;
+      var score=sc.score||0;
+      var scoreColor=score<=3?'var(--blue)':score<=6?'var(--purple)':score<=8?'var(--amber)':'var(--red)';
+      var scoreBg=score<=3?'#e8f0fb':score<=6?'#f3e8ff':score<=8?'#fef3c7':'#fde8e8';
+      h+='<div style="background:'+scoreBg+';border-radius:var(--r);padding:10px 12px;margin-top:8px;">';
+      h+='<div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px;">';
+      h+='<span style="font-size:28px;font-weight:700;color:'+scoreColor+';font-variant-numeric:tabular-nums;">'+score+'</span>';
+      h+='<span style="font-size:11px;font-weight:700;color:'+scoreColor+';">/ 10 &mdash; Surrealism &amp; Unpredictability</span>';
+      h+='</div>';
+      h+='<div style="height:6px;border-radius:3px;background:rgba(0,0,0,0.08);overflow:hidden;margin-bottom:8px;">';
+      h+='<div style="height:100%;width:'+Math.round(score*10)+'%;background:'+scoreColor+';border-radius:3px;"></div>';
+      h+='</div>';
+      if(sc.read) h+='<div style="font-size:11px;color:#374151;line-height:1.6;margin-bottom:6px;">'+esc(sc.read)+'</div>';
+      if(sc.best) h+='<div style="font-size:10px;color:'+scoreColor+';font-weight:600;">\u2605 Best moment: '+esc(sc.best)+'</div>';
+      h+='<div style="font-size:9px;color:#9ca3af;margin-top:6px;">Seinfeld: 3\u20134 &nbsp;\u25cf&nbsp; Target: 5\u20137 &nbsp;\u25cf&nbsp; Pure absurdism: 9\u201310</div>';
+      h+='</div>';
+    }
 
   if(result.strengths||result.overall||result.one_fix){
     h+='<div style="border-top:1px solid var(--bdr);margin-top:10px;padding-top:10px;display:flex;flex-direction:column;gap:8px;">';
