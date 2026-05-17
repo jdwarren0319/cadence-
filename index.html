@@ -3472,6 +3472,9 @@ function createEpisode(){
   eps.push(ep);
   saveEpisodes(eps);
   if(input) input.value='';
+  // Seed one clean blank Intro scene so new episodes start fresh
+  var blankScene={id:genId(),name:'Intro',type:'Intro',location:'Desk',text:'',order:0};
+  try{localStorage.setItem('cadence_scenes_'+id,JSON.stringify([blankScene]));}catch(e){}
   switchEpisode(id);
   renderEpisodeList();
 }
