@@ -2584,21 +2584,16 @@ async function aiAnalyze(){
     }
 
     // Validate
-    if(!Array.isArray(result.roles)||result.roles.length!==sents.length){
+    if(!result.sentences||!Array.isArray(result.sentences)){
       setAiStatus('Unexpected response \u2014 try again.'); setAiBtn(false); return;
     }
 
-    // Cache roles for chart
-    aiRolesCache=result.roles;
+    aiRolesCache=null;
     aiLastText=text;
 
-    // Render results
     renderAiResults(result, sents);
-    setAiStatus('\u2714 AI analysis complete');
+    setAiStatus('\u2714 Analysis complete');
     setAiBtn(false);
-
-    // Re-render chart pips with AI roles
-    renderAiPips(result.roles);
 
   }catch(e){
     console.error(e);
