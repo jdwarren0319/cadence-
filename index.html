@@ -453,26 +453,57 @@ body {
 .ai-note { font-size: 10px; color: var(--purple); margin-top: 4px; font-style: italic; }
 .ai-overall { font-size: 11px; color: var(--text2); line-height: 1.5; padding: 8px 0 2px; border-top: 1px solid var(--bdr); margin-top: 6px; }
 /* ── Record tab ── */
+/* ── Talk tab ── */
 #pane-record { display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
+.talk-phase { display: flex; flex-direction: column; flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.talk-phase.hidden { display: none; }
+.talk-prompt { padding: 16px 20px 0; flex-shrink: 0; }
+.talk-prompt-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin-bottom: 4px; }
+.talk-prompt-text { font-size: 14px; font-weight: 600; color: var(--text1); }
+.talk-big-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 30px 20px; min-height: 280px; }
+.talk-record-btn { width: 88px; height: 88px; border-radius: 50%; border: 3px solid var(--text1); background: transparent; cursor: pointer; touch-action: manipulation; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.talk-record-btn .rec-btn-dot { width: 36px; height: 36px; border-radius: 50%; background: var(--red); transition: all 0.2s; }
+.talk-record-btn.recording .rec-btn-dot { width: 20px; height: 20px; border-radius: 5px; }
+.talk-record-label { font-size: 13px; color: var(--text3); font-weight: 500; text-align: center; }
+.talk-timer { min-height: 44px; display: flex; align-items: center; gap: 8px; }
+.talk-hint { font-size: 11px; color: var(--text3); font-style: italic; text-align: center; }
+.talk-actions { display: flex; flex-direction: column; gap: 8px; padding: 12px 16px 20px; flex-shrink: 0; }
+.talk-action-btn { width: 100%; padding: 14px; border-radius: var(--rl); font-size: 14px; font-weight: 700; font-family: var(--sans); border: none; cursor: pointer; touch-action: manipulation; }
+.talk-action-primary { background: var(--text1); color: var(--bg1); }
+.talk-action-secondary { background: var(--bg3); color: var(--text2); border: 1px solid var(--bdrm); }
+.extract-header { padding: 20px 20px 8px; flex-shrink: 0; }
+.extract-title { font-size: 18px; font-weight: 700; color: var(--text1); margin-bottom: 4px; }
+.extract-sub { font-size: 12px; color: var(--text3); line-height: 1.5; }
+.extract-list { flex: 1; overflow-y: auto; padding: 4px 12px 0; display: flex; flex-direction: column; gap: 8px; }
+.extract-item { background: var(--bg2); border: 1.5px solid var(--bdr); border-radius: var(--rl); padding: 12px 14px; transition: border-color 0.15s; }
+.extract-item.kept { border-color: #1a7a3a; background: #e6f4ea; }
+.extract-item.skipped { opacity: 0.35; pointer-events: none; }
+.extract-item-text { font-size: 13px; color: var(--text1); line-height: 1.65; margin-bottom: 6px; font-family: var(--mono); }
+.extract-item-why { font-size: 10px; color: var(--purple); font-style: italic; margin-bottom: 6px; line-height: 1.4; }
+.extract-item-anchor { font-size: 10px; color: var(--text3); margin-bottom: 8px; }
+.extract-item-anchor b { color: var(--text1); font-size: 11px; }
+.extract-item-btns { display: flex; gap: 6px; }
+.extract-keep-btn { flex: 1; padding: 7px; border-radius: var(--r); background: var(--text1); color: var(--bg1); border: none; font-size: 12px; font-weight: 700; font-family: var(--sans); cursor: pointer; touch-action: manipulation; }
+.extract-skip-btn { flex: 1; padding: 7px; border-radius: var(--r); background: transparent; color: var(--text3); border: 1px solid var(--bdrm); font-size: 12px; font-family: var(--sans); cursor: pointer; touch-action: manipulation; }
+.extract-footer { padding: 10px 16px 20px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; border-top: 1px solid var(--bdr); }
+.map-preview { flex: 1; overflow-y: auto; padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; }
+.map-anchor-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--bg2); border-radius: var(--rl); border: 1px solid var(--bdr); }
+.map-anchor-num { font-size: 10px; font-weight: 700; color: var(--text3); width: 16px; flex-shrink: 0; }
+.map-anchor-word { font-size: 15px; font-weight: 700; color: var(--text1); flex-shrink: 0; }
+.map-anchor-hint { font-size: 10px; color: var(--text3); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-left: 6px; }
+/* Map mode fullscreen overlay */
+.map-mode-wrap { position: fixed; inset: 0; background: #f5f3f0; z-index: 200; display: flex; flex-direction: column; }
+.map-mode-wrap.hidden { display: none; }
+.map-mode-anchor { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 30px; text-align: center; }
+.map-anchor-big { font-size: 52px; font-weight: 800; color: #1a1612; line-height: 1.1; margin-bottom: 20px; font-family: var(--mono); }
+.map-anchor-context { font-size: 15px; color: #888; line-height: 1.6; max-width: 280px; }
+.map-mode-nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px max(20px,env(safe-area-inset-bottom)); border-top: 1px solid #d8d5d0; background: #f5f3f0; flex-shrink: 0; }
+.map-nav-btn { font-size: 28px; color: #1a1612; background: transparent; border: none; cursor: pointer; padding: 8px 16px; touch-action: manipulation; }
+.map-nav-btn:disabled { opacity: 0.2; }
+.map-mode-progress { font-size: 13px; color: #999; font-variant-numeric: tabular-nums; font-weight: 600; }
+.map-mode-close { font-size: 13px; font-weight: 700; font-family: var(--sans); color: #888; background: transparent; border: none; cursor: pointer; padding: 8px; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 .rec-dot-live { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--red); margin-right: 4px; animation: blink 1s infinite; vertical-align: middle; }
-.rec-controls { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-top: 1px solid var(--bdr); flex-shrink: 0; background: var(--bg1); }
-.rec-btn { width: 48px; height: 48px; border-radius: 50%; border: 3px solid var(--text1); background: transparent; cursor: pointer; touch-action: manipulation; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.rec-btn-dot { width: 22px; height: 22px; border-radius: 50%; background: var(--red); transition: all 0.2s; }
-.rec-btn.recording .rec-btn-dot { width: 12px; height: 12px; border-radius: 3px; }
-.rec-status { flex: 1; font-size: 11px; color: var(--text3); line-height: 1.5; }
-.rec-transcribe { font-size: 12px; font-weight: 700; font-family: var(--sans); padding: 9px 14px; border-radius: var(--r); background: var(--purple); color: #fff; border: none; cursor: pointer; touch-action: manipulation; flex-shrink: 0; }
-.rec-transcribe:disabled { opacity: 0.4; cursor: default; }
-.rec-results { overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 12px; display: flex; flex-direction: column; gap: 10px; max-height: 280px; }
-.rec-results::-webkit-scrollbar { width: 3px; }
-.pace-gauge { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
-.pace-track { flex: 1; height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; }
-.pace-fill { height: 100%; border-radius: 4px; transition: width 0.4f; }
-.pace-num { font-size: 20px; font-weight: 700; color: var(--text1); font-variant-numeric: tabular-nums; flex-shrink: 0; }
-.pause-map { display: flex; gap: 2px; align-items: flex-end; height: 48px; margin-top: 8px; overflow-x: auto; scrollbar-width: none; }
-.pause-map::-webkit-scrollbar { display: none; }
-.pm-speech { border-radius: 2px 2px 0 0; background: var(--blue); opacity: 0.75; flex-shrink: 0; cursor: default; }
-.pm-gap { background: var(--red); opacity: 0.4; border-radius: 2px; flex-shrink: 0; align-self: center; cursor: default; }
 /* ── Scene notes bar ── */
 .scene-notes-bar {
   flex-shrink: 0; display: flex; align-items: flex-start; gap: 7px;
@@ -481,24 +512,9 @@ body {
 }
 .scene-notes-icon { font-size: 12px; flex-shrink: 0; margin-top: 1px; }
 .scene-notes-text { font-size: 11px; color: var(--wafg); line-height: 1.5; }
-@media (prefers-color-scheme: dark) {
-  .scene-notes-bar { background: var(--wabg); }
-  .scene-notes-text { color: var(--wafg); }
-}
-
-/* ── Record script panel ── */
-.rec-script-wrap { flex: 1; background: #f5f3f0; display: flex; flex-direction: column; overflow: hidden; }
-.rec-script-header { display: flex; align-items: center; justify-content: space-between; padding: 7px 14px; border-bottom: 1px solid #e0ddd9; background: #ebe8e4; flex-shrink: 0; }
-.rec-script-label { font-size: 11px; font-weight: 600; color: var(--text2); }
-.rec-script-toggle { font-size: 11px; color: var(--text3); border: none; background: transparent; cursor: pointer; font-family: var(--sans); padding: 2px 6px; }
-.rec-script-body { padding: 20px; font-size: 17px; font-family: var(--mono); color: #555; line-height: 2.2; overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; }
-.rec-script-body::-webkit-scrollbar { width: 3px; }
-.rec-script-body::-webkit-scrollbar-thumb { background: var(--bdrm); border-radius: 2px; }
-.rec-script-body.hidden { display: none; }
-.rec-script-sentence { display: block; margin-bottom: 4px; padding: 2px 0; }
-.rec-script-sentence.punch { color: var(--red); font-weight: 700; font-size: 18px; }
-.rec-script-sentence.setup { color: #1a1612; font-weight: 500; }
-.rec-script-sentence.neutral { color: #666; }
+/* ── Record script panel (kept for renderRecScript compat) ── */
+.rec-script-body { display: none; }
+.rec-script-sentence { display: block; }
 /* ── AI Tutor ── */
 .tutor-card { background: var(--bg2); border: 1px solid var(--purple); border-radius: var(--rl); padding: 12px 14px; margin: 12px 12px 0; }
 .tutor-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--purple); display: block; margin-bottom: 4px; }
@@ -858,35 +874,34 @@ body {
     </div>
 
     <!-- RECORD PANE -->
+    <!-- TALK PANE -->
     <div class="pane hidden" id="pane-record">
 
-      <!-- Script display - main area -->
-      <div class="rec-script-wrap" id="rec-script-wrap" style="flex:1;overflow-y:auto;">
-        <div class="rec-script-header">
-          <span class="rec-script-label">&#x1F4C4; <span id="rec-script-scene-name">Current scene</span></span>
-          <button class="rec-script-toggle" onclick="toggleRecScript()" id="rec-script-toggle-btn">Hide</button>
+      <!-- Phase 1: Talk -->
+      <div class="talk-phase" id="talk-phase-record">
+        <div class="talk-prompt" id="talk-prompt">
+          <div class="talk-prompt-label">What are you talking about today?</div>
+          <div class="talk-prompt-text" id="talk-prompt-episode">Loading...</div>
         </div>
-        <div class="rec-script-body" id="rec-script-body"></div>
-      </div>
-
-      <!-- Audio playback (hidden until recording done) -->
-      <audio id="rec-playback" controls style="width:100%;display:none;padding:8px 16px;box-sizing:border-box;"></audio>
-
-      <!-- Controls -->
-      <div class="rec-controls">
-        <button class="rec-btn" id="rec-btn" onclick="toggleRecord()">
-          <div class="rec-btn-dot"></div>
-        </button>
-        <span class="rec-status" id="rec-status">Ready to record</span>
-        <div class="rec-timer" id="rec-timer" style="position:static;background:transparent;color:var(--red);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;padding:0;"><span class="rec-dot-live" style="display:none;" id="rec-dot"></span><span id="rec-timer-val">0:00</span></div>
-        <button class="rec-transcribe" id="rec-transcribe-btn" onclick="transcribeRecording()" disabled>Transcribe &#x2728;</button>
-      </div>
-
-      <div class="rec-results" id="rec-results">
-        <div style="text-align:center;padding:28px 20px;font-size:12px;color:var(--text3);line-height:1.8;" id="rec-empty">Record a take, then tap <b>Transcribe</b> to analyze pace, pauses, filler words, and script deviation.</div>
-        <div class="card" id="openai-key-card">
+        <div class="talk-big-area">
+          <button class="talk-record-btn" id="rec-btn" onclick="toggleRecord()">
+            <div class="rec-btn-dot"></div>
+          </button>
+          <div class="talk-record-label" id="rec-status">Tap to talk</div>
+          <div class="talk-timer" id="rec-timer">
+            <span class="rec-dot-live" style="display:none;" id="rec-dot"></span>
+            <span id="rec-timer-val" style="font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text1);">0:00</span>
+          </div>
+          <div class="talk-hint">No script. No plan. Just talk.</div>
+        </div>
+        <audio id="rec-playback" controls style="width:100%;display:none;padding:0 16px 8px;box-sizing:border-box;"></audio>
+        <div class="talk-actions" id="talk-actions" style="display:none;">
+          <button class="talk-action-btn talk-action-primary" onclick="startExtract()">&#x2728; Find my best moments</button>
+          <button class="talk-action-btn talk-action-secondary" onclick="resetTalk()">Try again</button>
+        </div>
+        <div class="card" id="openai-key-card" style="margin:0 12px 12px;">
           <span class="card-label">Whisper API Key (OpenAI)</span>
-          <div class="card-desc">For speech transcription. Get a key at platform.openai.com &#x2192; API Keys. Stored only in your browser, sent only to OpenAI.</div>
+          <div class="card-desc">For transcription. Get a key at platform.openai.com → API Keys.</div>
           <div style="display:flex;gap:6px;margin-top:6px;">
             <input class="sheet-input" id="openai-key-input" type="password" placeholder="sk-..." style="flex:1;font-size:12px;">
             <button class="sheet-btn primary" onclick="saveOpenAiKey()" style="flex:0;padding:8px 12px;font-size:12px;">Save</button>
@@ -894,6 +909,33 @@ body {
           <div id="openai-key-status" style="font-size:11px;color:var(--text3);margin-top:5px;"></div>
         </div>
       </div>
+
+      <!-- Phase 2: Extract - AI finds best moments -->
+      <div class="talk-phase hidden" id="talk-phase-extract">
+        <div class="extract-header">
+          <div class="extract-title">&#x2728; Your best moments</div>
+          <div class="extract-sub" id="extract-sub">Keep the ones that worked. Skip the rest.</div>
+        </div>
+        <div class="extract-list" id="extract-list"></div>
+        <div class="extract-footer">
+          <button class="talk-action-btn talk-action-primary" id="extract-build-btn" onclick="buildMapFromExtract()">Build my map &#x2192;</button>
+          <button class="talk-action-btn talk-action-secondary" onclick="backToTalk()">&#x2190; Record again</button>
+        </div>
+      </div>
+
+      <!-- Phase 3: Map built confirmation -->
+      <div class="talk-phase hidden" id="talk-phase-map">
+        <div class="extract-header">
+          <div class="extract-title">&#x2714; Map built</div>
+          <div class="extract-sub">Your anchors are saved. Go to Practice → Map mode to use them on camera.</div>
+        </div>
+        <div class="map-preview" id="map-preview"></div>
+        <div class="extract-footer" style="flex-direction:column;gap:8px;">
+          <button class="talk-action-btn talk-action-primary" onclick="switchPane('practice', document.querySelector('.tab-item:nth-child(6)'))">Go to Map mode &#x2192;</button>
+          <button class="talk-action-btn talk-action-secondary" onclick="backToTalk()">Record another take</button>
+        </div>
+      </div>
+
     </div>
 
     <!-- SHORTS PANE -->
@@ -968,6 +1010,14 @@ body {
 
     <!-- PRACTICE PANE -->
     <div class="pane hidden" id="pane-practice">
+
+      <!-- Map Mode launcher -->
+      <div class="card">
+        <span class="card-label">&#x1F5FA; Map Mode</span>
+        <div class="card-desc">Your anchor words — one at a time, full screen, on camera. Tap the arrows to move through your map. No script, just anchors.</div>
+        <button onclick="startMapMode()" id="map-mode-launch-btn" style="width:100%;margin-top:8px;padding:12px;background:var(--text1);color:var(--bg1);border:none;border-radius:var(--r);font-size:14px;font-weight:700;font-family:var(--sans);cursor:pointer;touch-action:manipulation;">Start Map Mode</button>
+        <div id="map-mode-empty" style="font-size:11px;color:var(--text3);margin-top:8px;display:none;">No map built yet. Go to Talk tab, record something, and build your map first.</div>
+      </div>
 
       <!-- Mirror Mode launcher -->
       <div class="card" style="margin:12px 12px 0">
@@ -1092,7 +1142,7 @@ body {
     </button>
     <button class="tab-item" onclick="switchPane('record',this)">
       <span class="tab-icon">&#x1F3A4;</span>
-      <span class="tab-label">Record</span>
+      <span class="tab-label">Talk</span>
     </button>
     <button class="tab-item" onclick="switchPane('practice',this)">
       <span class="tab-icon">&#x25B6;</span>
@@ -1104,8 +1154,23 @@ body {
     </button>
   </nav>
 
-</div>
+  <!-- Map mode fullscreen overlay -->
+  <div class="map-mode-wrap hidden" id="map-mode-wrap">
+    <div class="map-mode-anchor">
+      <div class="map-anchor-big" id="map-anchor-big">—</div>
+      <div class="map-anchor-context" id="map-anchor-context"></div>
+    </div>
+    <div class="map-mode-nav">
+      <button class="map-nav-btn" id="map-nav-prev" onclick="mapNav(-1)" disabled>&#x2190;</button>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <span class="map-mode-progress" id="map-mode-progress">1 / 1</span>
+        <button class="map-mode-close" onclick="closeMapMode()">Done</button>
+      </div>
+      <button class="map-nav-btn" id="map-nav-next" onclick="mapNav(1)">&#x2192;</button>
+    </div>
+  </div>
 
+</div>
 <script>
 /* ======================================================
    ANALYSIS ENGINE
@@ -2720,6 +2785,205 @@ function renderAiPips(roles){
 
 
 /* ======================================================
+   TALK TAB — WORKFLOW
+   ====================================================== */
+function getTalkMapKey(){ return epKey('cadence_map'); }
+function loadMap(){ try{var s=localStorage.getItem(getTalkMapKey());return s?JSON.parse(s):[];}catch(e){return[];} }
+function saveMap(anchors){ try{localStorage.setItem(getTalkMapKey(),JSON.stringify(anchors));}catch(e){} }
+
+function initTalkTab(){
+  var ep=getCurrentEpisode();
+  var epEl=document.getElementById('talk-prompt-episode');
+  if(epEl) epEl.textContent=ep?ep.title:'Current episode';
+  document.getElementById('talk-actions').style.display='none';
+  var pb=document.getElementById('rec-playback');
+  if(pb) pb.style.display='none';
+  setRecSt('Tap to talk');
+}
+
+function setTalkPhase(phase){
+  document.getElementById('talk-phase-record').classList.toggle('hidden',phase!=='record');
+  document.getElementById('talk-phase-extract').classList.toggle('hidden',phase!=='extract');
+  document.getElementById('talk-phase-map').classList.toggle('hidden',phase!=='map');
+}
+
+function backToTalk(){ setTalkPhase('record'); resetTalk(); }
+
+function resetTalk(){
+  if(recIsRecording) stopRecord();
+  recBlob=null; recChunks=[];
+  var pb=document.getElementById('rec-playback');
+  if(pb){pb.style.display='none';pb.src='';}
+  document.getElementById('talk-actions').style.display='none';
+  document.getElementById('rec-timer-val').textContent='0:00';
+  var dot=document.getElementById('rec-dot');
+  if(dot) dot.style.display='none';
+  setRecSt('Tap to talk');
+}
+
+async function startExtract(){
+  if(!recBlob){setRecSt('No recording \u2014 record something first.');return;}
+  var oaiKey=''; try{oaiKey=localStorage.getItem('cadence_openai_key')||'';}catch(e){}
+  var antKey=''; try{antKey=localStorage.getItem(AI_KEY_STORE)||'';}catch(e){}
+  setTalkPhase('extract');
+  document.getElementById('extract-list').innerHTML='<div style="text-align:center;padding:30px;font-size:13px;color:var(--text3);">Transcribing\u2026</div>';
+  document.getElementById('extract-sub').textContent='Listening to what you said\u2026';
+  var transcript='';
+  if(oaiKey){
+    try{
+      var fd=new FormData();
+      fd.append('file',recBlob,'talk.webm');
+      fd.append('model','whisper-1');
+      fd.append('response_format','text');
+      var resp=await fetch('https://api.openai.com/v1/audio/transcriptions',{method:'POST',headers:{'Authorization':'Bearer '+oaiKey},body:fd});
+      if(resp.ok) transcript=await resp.text();
+    }catch(e){}
+  }
+  if(!transcript.trim()){
+    document.getElementById('extract-list').innerHTML=
+      '<div style="padding:12px;">'+
+      '<div style="font-size:12px;color:var(--text3);margin-bottom:8px;">No OpenAI key or transcription failed. Paste your transcript:</div>'+
+      '<textarea id="manual-transcript" style="width:100%;height:120px;font-size:12px;font-family:var(--mono);padding:8px;border:1px solid var(--bdrm);border-radius:var(--r);background:var(--bg2);color:var(--text1);outline:none;resize:none;box-sizing:border-box;" placeholder="Paste transcript here\u2026"></textarea>'+
+      '<button onclick="extractFromText()" style="margin-top:8px;width:100%;padding:10px;background:var(--text1);color:var(--bg1);border:none;border-radius:var(--r);font-size:13px;font-weight:700;font-family:var(--sans);cursor:pointer;">Find my best moments</button>'+
+      '</div>';
+    document.getElementById('extract-sub').textContent='Paste your transcript below.';
+    return;
+  }
+  await extractFromTranscript(transcript,antKey);
+}
+
+async function extractFromText(){
+  var ta=document.getElementById('manual-transcript');
+  var text=ta?ta.value.trim():'';
+  if(!text){alert('Paste your transcript first.');return;}
+  var antKey=''; try{antKey=localStorage.getItem(AI_KEY_STORE)||'';}catch(e){}
+  document.getElementById('extract-list').innerHTML='<div style="text-align:center;padding:30px;font-size:13px;color:var(--text3);">Finding your best moments\u2026</div>';
+  await extractFromTranscript(text,antKey);
+}
+
+async function extractFromTranscript(transcript,antKey){
+  document.getElementById('extract-sub').textContent='Finding your best moments\u2026';
+  if(!antKey){
+    var sents=transcript.split(/[.!?]+/).filter(function(s){return s.trim().length>15;});
+    var moments=sents.slice(0,6).map(function(s){
+      return{text:s.trim(),why:'Add Anthropic API key for smarter selection',anchor:s.trim().split(/\s+/).slice(0,2).join(' '),kept:false};
+    });
+    renderExtractItems(moments); return;
+  }
+  try{
+    var prompt='You are helping a comedy performer who thinks out loud on camera. He just recorded himself talking freely about an album or artist.\n\n'+
+      'Read this transcript and find his 5-7 best moments \u2014 the observations that are specific, the lines that surprised even him, the bits where his natural voice comes through strongest. Look for recontextualisations, unexpected connections, and moments of genuine personality.\n\n'+
+      'For each moment:\n1. The exact quote (verbatim, keep his voice)\n2. Why this moment works (one sentence, specific)\n3. A 1-3 word anchor \u2014 the shortest possible reminder\n\n'+
+      'Return ONLY valid JSON:\n{"moments":[{"text":"exact quote","why":"why it works","anchor":"1-3 word anchor"}]}\n\nTranscript:\n'+transcript.substring(0,3000);
+    var resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':antKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:prompt}]})
+    });
+    var data=await resp.json();
+    var raw=(data.content&&data.content[0]&&data.content[0].text)||'';
+    raw=raw.replace(/```json|```/g,'').trim();
+    var result=JSON.parse(raw);
+    var moments=(result.moments||[]).map(function(m){return Object.assign({kept:false},m);});
+    renderExtractItems(moments);
+  }catch(e){
+    var sents=transcript.split(/[.!?]+/).filter(function(s){return s.trim().length>15;});
+    var moments=sents.slice(0,6).map(function(s){
+      return{text:s.trim(),why:'',anchor:s.trim().split(/\s+/).slice(0,2).join(' '),kept:false};
+    });
+    renderExtractItems(moments);
+  }
+}
+
+var extractMoments=[];
+
+function renderExtractItems(moments){
+  extractMoments=moments;
+  document.getElementById('extract-sub').textContent='Keep the ones that worked. Skip the rest.';
+  var h='';
+  for(var i=0;i<moments.length;i++){
+    var m=moments[i];
+    h+='<div class="extract-item" id="extract-item-'+i+'">';
+    h+='<div class="extract-item-text">'+esc(m.text.substring(0,200))+(m.text.length>200?'\u2026':'')+'</div>';
+    if(m.why) h+='<div class="extract-item-why">\u2192 '+esc(m.why)+'</div>';
+    h+='<div class="extract-item-anchor">Anchor: <b>'+esc(m.anchor)+'</b></div>';
+    h+='<div class="extract-item-btns"><button class="extract-keep-btn" onclick="keepMoment('+i+')">&#x2714; Keep</button><button class="extract-skip-btn" onclick="skipMoment('+i+')">Skip</button></div>';
+    h+='</div>';
+  }
+  if(!h) h='<div style="padding:20px;text-align:center;font-size:13px;color:var(--text3);">Nothing extracted. Try a longer take.</div>';
+  document.getElementById('extract-list').innerHTML=h;
+}
+
+function keepMoment(i){
+  extractMoments[i].kept=true;
+  var item=document.getElementById('extract-item-'+i);
+  if(item) item.classList.add('kept');
+  var btn=item.querySelector('.extract-keep-btn');
+  if(btn){btn.textContent='\u2714 Kept';btn.disabled=true;}
+}
+
+function skipMoment(i){
+  extractMoments[i].kept=false;
+  var item=document.getElementById('extract-item-'+i);
+  if(item) item.classList.add('skipped');
+}
+
+function buildMapFromExtract(){
+  var kept=extractMoments.filter(function(m){return m.kept;});
+  if(!kept.length){ if(!confirm('No moments kept. Build map from all moments?')) return; kept=extractMoments; }
+  saveMap(kept);
+  renderMapPreview(kept);
+  setTalkPhase('map');
+}
+
+function renderMapPreview(anchors){
+  var h='';
+  for(var i=0;i<anchors.length;i++){
+    h+='<div class="map-anchor-item"><span class="map-anchor-num">'+(i+1)+'</span><span class="map-anchor-word">'+esc(anchors[i].anchor)+'</span><span class="map-anchor-hint">'+esc((anchors[i].text||'').substring(0,50))+'</span></div>';
+  }
+  var el=document.getElementById('map-preview');
+  if(el) el.innerHTML=h||'<div style="font-size:12px;color:var(--text3);">No anchors.</div>';
+}
+
+/* ── MAP MODE ── */
+var mapCurrentIdx=0;
+
+function startMapMode(){
+  var anchors=loadMap();
+  var emptyEl=document.getElementById('map-mode-empty');
+  var btnEl=document.getElementById('map-mode-launch-btn');
+  if(!anchors.length){
+    if(emptyEl) emptyEl.style.display='block';
+    if(btnEl) btnEl.style.display='none';
+    return;
+  }
+  if(emptyEl) emptyEl.style.display='none';
+  if(btnEl) btnEl.style.display='block';
+  mapCurrentIdx=0;
+  renderMapSlide(anchors,0);
+  document.getElementById('map-mode-wrap').classList.remove('hidden');
+}
+
+function renderMapSlide(anchors,idx){
+  var a=anchors[idx];
+  document.getElementById('map-anchor-big').textContent=a.anchor||'\u2014';
+  document.getElementById('map-anchor-context').textContent=a.text?(a.text.substring(0,100)+(a.text.length>100?'\u2026':'')):'';
+  document.getElementById('map-mode-progress').textContent=(idx+1)+' / '+anchors.length;
+  document.getElementById('map-nav-prev').disabled=(idx===0);
+  document.getElementById('map-nav-next').disabled=(idx===anchors.length-1);
+}
+
+function mapNav(dir){
+  var anchors=loadMap();
+  mapCurrentIdx=Math.max(0,Math.min(anchors.length-1,mapCurrentIdx+dir));
+  renderMapSlide(anchors,mapCurrentIdx);
+}
+
+function closeMapMode(){
+  document.getElementById('map-mode-wrap').classList.add('hidden');
+}
+
+/* ======================================================
    RECORD TAB \u2014 WHISPER
    ====================================================== */
 var OAI_KEY='cadence_openai_key';
@@ -2848,12 +3112,13 @@ async function startRecord(){
     if(!recChunks.length){setRecSt('No audio captured. Try again.');return;}
     recBlob=new Blob(recChunks,{type:recMediaRecorder.mimeType||'audio/webm'});
     var url=URL.createObjectURL(recBlob);
+    var playback=document.getElementById('rec-playback');
     if(playback){
       playback.src=url;
       playback.style.display='block';
     }
-    document.getElementById('rec-transcribe-btn').disabled=false;
-    setRecSt('Take recorded ('+fmtRecTime(recSecs)+'). Tap Transcribe to analyze.');
+    document.getElementById('talk-actions').style.display='flex';
+    setRecSt('Done \u2014 '+fmtRecTime(recSecs)+'. Listen back or find your best moments.');
   };
 
   try{recMediaRecorder.start(500);}
@@ -2867,7 +3132,8 @@ async function startRecord(){
     recSecs++;
     document.getElementById('rec-timer-val').textContent=fmtRecTime(recSecs);
   },1000);
-  document.getElementById('rec-btn').classList.add('recording');
+  var recBtnEl=document.getElementById('rec-btn');
+  if(recBtnEl) recBtnEl.classList.add('recording');
   setRecSt('Recording\u2026');
 }
 
@@ -2877,7 +3143,8 @@ function stopRecord(){
   clearInterval(recInterval);
   var dot=document.getElementById('rec-dot');
   if(dot) dot.style.display='none';
-  document.getElementById('rec-btn').classList.remove('recording');
+  var recBtnEl=document.getElementById('rec-btn');
+  if(recBtnEl) recBtnEl.classList.remove('recording');
   recIsRecording=false;
 }
 
@@ -3806,7 +4073,7 @@ function switchPane(name,btn){
   if(name==='write'){toolbar.classList.remove('hidden');}else{toolbar.classList.add('hidden');}
   if(name==='practice'){renderLog();}
   if(name==='script'){renderScript();renderEpisodeSummary();}
-  if(name==='record'){updateOaiCard();renderRecScript();}
+  if(name==='record'){updateOaiCard();initTalkTab();}
   if(name==='shorts'){renderSavedShorts();}
   if(name==='analysis'){
     // Restore previous AI results for this scene if available
