@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Cadence — Practice</title>
+<style>
+  :root {
+    --bg:    #f5f3f0;
+    --bg2:   #ebe8e4;
+    --bdr:   #d8d5d0;
+    --text1: #1a1612;
+    --text2: #4a4744;
+    --text3: #9a9794;
+    --red:   #c0392b;
+    --purple:#7c3aed;
+    --green: #1a7a3a;
+    --gobg:  #e6f4ea;
+    --sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono:  'SF Mono', 'Fira Mono', 'Consolas', monospace;
+    --r:     8px;
+    --rl:    12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; background: var(--bg); color: var(--text1); font-family: var(--sans); overflow: hidden; }
+
+  .app { height: 100%; display: flex; flex-direction: column; }
+
+  /* ── Header ── */
+  .header {
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px max(12px, env(safe-area-inset-top));
+    padding-top: max(12px, env(safe-area-inset-top));
+    background: var(--bg); border-bottom: 1px solid var(--bdr);
+  }
+  .header-title { font-size: 13px; font-weight: 700; color: var(--text1); letter-spacing: 0.04em; }
+  .header-ep { font-size: 11px; color: var(--text3); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .header-link { font-size: 11px; color: var(--purple); font-weight: 600; text-decoration: none; }
+
+  /* ── Tab bar ── */
+  .tab-bar {
+    flex-shrink: 0;
+    display: flex; border-bottom: 1px solid var(--bdr);
+    background: var(--bg);
+  }
+  .tab-btn {
+    flex: 1; padding: 10px 4px 10px;
+    border: none; background: transparent; cursor: pointer;
+    font-size: 10px; font-weight: 600; font-family: var(--sans);
+    color: var(--text3); display: flex; flex-direction: column; align-items: center; gap: 3px;
+    touch-action: manipulation; border-bottom: 2px solid transparent;
+  }
+  .tab-btn.active { color: var(--text1); border-bottom-color: var(--text1); }
+  .tab-icon { font-size: 18px; }
+
+  /* ── Panes ── */
+  .pane { flex: 1; overflow: hidden; display: none; flex-direction: column; }
+  .pane.active { display: flex; }
+
+  /* ======== MAP MODE ======== */
+  .map-pane { background: var(--bg); }
+  .map-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 30px; text-align: center; gap: 12px; }
+  .map-empty-icon { font-size: 48px; }
+  .map-empty-title { font-size: 16px; font-weight: 700; color: var(--text1); }
+  .map-empty-desc { font-size: 13px; color: var(--text3); line-height: 1.6; }
+  .map-empty-link { font-size: 13px; color: var(--purple); font-weight: 600; text-decoration: none; }
+
+  .map-slider { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .map-slide { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 30px; text-align: center; cursor: pointer; user-select: none; }
+  .map-slide-num { font-size: 11px; color: var(--text3); font-weight: 600; margin-bottom: 20px; font-variant-numeric: tabular-nums; }
+  .map-anchor-word { font-size: 58px; font-weight: 800; color: var(--text1); line-height: 1.1; margin-bottom: 20px; font-family: var(--mono); }
+  .map-context { font-size: 14px; color: var(--text3); line-height: 1.6; max-width: 280px; }
+  .map-nav { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 12px 16px max(20px, env(safe-area-inset-bottom)); border-top: 1px solid var(--bdr); }
+  .map-nav-btn { font-size: 28px; background: transparent; border: none; color: var(--text1); cursor: pointer; padding: 10px 20px; touch-action: manipulation; }
+  .map-nav-btn:disabled { opacity: 0.2; }
+  .map-restart-btn { font-size: 12px; font-weight: 600; color: var(--text3); background: transparent; border: none; font-family: var(--sans); cursor: pointer; padding: 8px; }
+
+  /* ── Map list view ── */
+  .map-list-wrap { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .map-list-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: #fff; border: 1px solid var(--bdr); border-radius: var(--rl); cursor: pointer; touch-action: manipulation; }
+  .map-list-item:active { background: var(--bg2); }
+  .map-list-num { font-size: 11px; font-weight: 700; color: var(--text3); width: 18px; flex-shrink: 0; }
+  .map-list-anchor { font-size: 16px; font-weight: 700; color: var(--text1); flex-shrink: 0; }
+  .map-list-hint { font-size: 11px; color: var(--text3); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .map-list-go { font-size: 11px; color: var(--purple); font-weight: 600; flex-shrink: 0; }
+  .map-view-toggle { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 8px; border-bottom: 1px solid var(--bdr); flex-shrink: 0; }
+  .map-view-btn { font-size: 11px; font-weight: 600; font-family: var(--sans); padding: 4px 14px; border-radius: 20px; border: 1px solid var(--bdr); background: transparent; color: var(--text3); cursor: pointer; touch-action: manipulation; }
+  .map-view-btn.active { background: var(--text1); color: var(--bg); border-color: var(--text1); }
+
+  /* ======== TALK TAB ======== */
+  .talk-pane { background: var(--bg); }
+  .talk-phase { flex: 1; display: flex; flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .talk-phase.hidden { display: none; }
+
+  /* Record phase */
+  .talk-ep-label { padding: 16px 20px 0; flex-shrink: 0; }
+  .talk-ep-name { font-size: 14px; font-weight: 600; color: var(--text1); line-height: 1.4; }
+  .talk-ep-sub { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin-bottom: 4px; }
+  .talk-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 30px 20px; min-height: 260px; }
+  .rec-btn-big { width: 96px; height: 96px; border-radius: 50%; border: 3px solid var(--text1); background: transparent; cursor: pointer; touch-action: manipulation; display: flex; align-items: center; justify-content: center; }
+  .rec-dot { width: 40px; height: 40px; border-radius: 50%; background: var(--red); transition: all 0.2s; }
+  .rec-btn-big.recording .rec-dot { width: 22px; height: 22px; border-radius: 5px; }
+  .talk-status { font-size: 13px; color: var(--text3); font-weight: 500; text-align: center; }
+  .talk-timer-big { font-size: 36px; font-weight: 700; color: var(--text1); font-variant-numeric: tabular-nums; min-height: 50px; display: flex; align-items: center; gap: 8px; }
+  .talk-hint-txt { font-size: 11px; color: var(--text3); font-style: italic; text-align: center; max-width: 240px; }
+  .talk-after-btns { display: flex; flex-direction: column; gap: 8px; padding: 12px 16px max(20px, env(safe-area-inset-bottom)); flex-shrink: 0; }
+  .big-btn { width: 100%; padding: 15px; border-radius: var(--rl); font-size: 15px; font-weight: 700; font-family: var(--sans); border: none; cursor: pointer; touch-action: manipulation; }
+  .big-btn-primary { background: var(--text1); color: var(--bg); }
+  .big-btn-secondary { background: var(--bg2); color: var(--text2); border: 1px solid var(--bdr); }
+  audio#playback { width: 100%; padding: 0 16px; display: none; }
+
+  /* Extract phase */
+  .extract-header { padding: 20px 20px 8px; flex-shrink: 0; }
+  .extract-title { font-size: 20px; font-weight: 700; color: var(--text1); margin-bottom: 4px; }
+  .extract-sub { font-size: 12px; color: var(--text3); line-height: 1.5; }
+  .extract-list { flex: 1; overflow-y: auto; padding: 8px 12px; display: flex; flex-direction: column; gap: 8px; }
+  .extract-item { background: #fff; border: 1.5px solid var(--bdr); border-radius: var(--rl); padding: 14px; }
+  .extract-item.kept { border-color: var(--green); background: var(--gobg); }
+  .extract-item.skipped { opacity: 0.3; pointer-events: none; }
+  .extract-quote { font-size: 13px; color: var(--text1); line-height: 1.65; margin-bottom: 6px; font-family: var(--mono); }
+  .extract-why { font-size: 10px; color: var(--purple); font-style: italic; margin-bottom: 6px; line-height: 1.4; }
+  .extract-anchor-row { font-size: 10px; color: var(--text3); margin-bottom: 10px; }
+  .extract-anchor-row b { color: var(--text1); font-size: 12px; }
+  .extract-btns { display: flex; gap: 6px; }
+  .keep-btn { flex: 1; padding: 9px; border-radius: var(--r); background: var(--text1); color: var(--bg); border: none; font-size: 13px; font-weight: 700; font-family: var(--sans); cursor: pointer; touch-action: manipulation; }
+  .skip-btn { flex: 1; padding: 9px; border-radius: var(--r); background: transparent; color: var(--text3); border: 1px solid var(--bdr); font-size: 13px; font-family: var(--sans); cursor: pointer; touch-action: manipulation; }
+  .extract-footer { padding: 10px 16px max(20px, env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; border-top: 1px solid var(--bdr); }
+
+  /* Map built phase */
+  .map-built-header { padding: 24px 20px 8px; flex-shrink: 0; text-align: center; }
+  .map-built-icon { font-size: 40px; margin-bottom: 8px; }
+  .map-built-title { font-size: 20px; font-weight: 700; color: var(--text1); margin-bottom: 4px; }
+  .map-built-sub { font-size: 12px; color: var(--text3); line-height: 1.6; }
+  .map-built-list { flex: 1; overflow-y: auto; padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; }
+  .built-anchor { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: #fff; border: 1px solid var(--bdr); border-radius: var(--rl); }
+  .built-num { font-size: 11px; font-weight: 700; color: var(--text3); width: 18px; }
+  .built-word { font-size: 16px; font-weight: 700; color: var(--text1); flex-shrink: 0; }
+  .built-hint { font-size: 11px; color: var(--text3); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-left: 6px; }
+
+  /* ======== TRANSCRIPT TAB ======== */
+  .transcript-pane { background: var(--bg); }
+  .trans-inner { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .trans-saved { background: #fff; border: 1px solid var(--bdr); border-radius: var(--rl); padding: 14px; }
+  .trans-saved-meta { font-size: 10px; color: var(--text3); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+  .trans-saved-text { font-size: 13px; color: var(--text2); line-height: 1.75; font-family: var(--mono); }
+  .trans-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 30px; gap: 10px; }
+  .trans-empty-icon { font-size: 40px; }
+  .trans-empty-desc { font-size: 13px; color: var(--text3); line-height: 1.6; }
+
+  /* Misc */
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .blink-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--red); margin-right: 4px; animation: blink 1s infinite; vertical-align: middle; }
+  .card-sm { background: #fff; border: 1px solid var(--bdr); border-radius: var(--rl); padding: 14px; }
+  .card-sm-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); display: block; margin-bottom: 6px; }
+  .key-input { width: 100%; padding: 9px 10px; font-size: 13px; font-family: var(--sans); border: 1px solid var(--bdr); border-radius: var(--r); background: var(--bg); color: var(--text1); outline: none; }
+  .key-input::placeholder { color: var(--text3); }
+  .key-save-btn { margin-top: 6px; width: 100%; padding: 10px; background: var(--text1); color: var(--bg); border: none; border-radius: var(--r); font-size: 13px; font-weight: 700; font-family: var(--sans); cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <div class="header-title">CADENCE</div>
+      <div class="header-ep" id="header-ep">Loading...</div>
+    </div>
+    <a class="header-link" href="index.html">← Full app</a>
+  </div>
+
+  <!-- Tab bar -->
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-map" onclick="showPane('map',this)">
+      <span class="tab-icon">🗺</span>
+      <span>Map</span>
+    </button>
+    <button class="tab-btn" id="tab-talk" onclick="showPane('talk',this)">
+      <span class="tab-icon">🎤</span>
+      <span>Talk</span>
+    </button>
+    <button class="tab-btn" id="tab-trans" onclick="showPane('trans',this)">
+      <span class="tab-icon">📝</span>
+      <span>Transcripts</span>
+    </button>
+  </div>
+
+  <!-- MAP PANE -->
+  <div class="pane map-pane active" id="pane-map">
+    <div id="map-empty-state" class="map-empty" style="display:none;">
+      <div class="map-empty-icon">🗺</div>
+      <div class="map-empty-title">No map yet</div>
+      <div class="map-empty-desc">Go to the Talk tab, record yourself talking, and tap "Find my best moments" to build a map.</div>
+      <a class="map-empty-link" href="index.html">Build map in full app →</a>
+    </div>
+
+    <div id="map-content" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
+      <!-- View toggle -->
+      <div class="map-view-toggle">
+        <button class="map-view-btn active" id="map-view-slide-btn" onclick="setMapView('slide')">Full screen</button>
+        <button class="map-view-btn" id="map-view-list-btn" onclick="setMapView('list')">List</button>
+      </div>
+
+      <!-- Slide view -->
+      <div id="map-slide-view" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+        <div class="map-slide" id="map-slide" onclick="mapNavSlide(1)">
+          <div class="map-slide-num" id="map-slide-num">1 / 1</div>
+          <div class="map-anchor-word" id="map-slide-anchor">—</div>
+          <div class="map-context" id="map-slide-context"></div>
+          <div style="font-size:10px;color:var(--text3);margin-top:24px;">tap to advance →</div>
+        </div>
+        <div class="map-nav">
+          <button class="map-nav-btn" id="slide-prev" onclick="mapNavSlide(-1);event.stopPropagation();" disabled>←</button>
+          <button class="map-restart-btn" onclick="mapRestart()">↺ restart</button>
+          <button class="map-nav-btn" id="slide-next" onclick="mapNavSlide(1)">→</button>
+        </div>
+      </div>
+
+      <!-- List view -->
+      <div id="map-list-view" style="flex:1;overflow:hidden;display:none;">
+        <div class="map-list-wrap" id="map-list-wrap"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TALK PANE -->
+  <div class="pane talk-pane" id="pane-talk">
+
+    <!-- Phase 1: Record -->
+    <div class="talk-phase" id="tp-record">
+      <div class="talk-ep-label">
+        <div class="talk-ep-sub">Talking about</div>
+        <div class="talk-ep-name" id="talk-ep-name">Loading...</div>
+      </div>
+      <div class="talk-center">
+        <button class="rec-btn-big" id="rec-btn" onclick="toggleRecord()">
+          <div class="rec-dot" id="rec-dot-inner"></div>
+        </button>
+        <div class="talk-status" id="rec-status">Tap to talk</div>
+        <div class="talk-timer-big">
+          <span class="blink-dot" id="blink-dot" style="display:none;"></span>
+          <span id="timer-val">0:00</span>
+        </div>
+        <div class="talk-hint-txt">No script. No plan. Just talk.</div>
+      </div>
+      <audio id="playback" controls></audio>
+      <div class="talk-after-btns" id="after-btns" style="display:none;">
+        <button class="big-btn big-btn-primary" onclick="startExtract()">✨ Find my best moments</button>
+        <button class="big-btn big-btn-secondary" onclick="resetTalk()">Try again</button>
+      </div>
+      <!-- OpenAI key -->
+      <div style="padding:0 12px 16px;" id="oai-key-wrap">
+        <div class="card-sm">
+          <span class="card-sm-label">Whisper API Key (OpenAI)</span>
+          <input class="key-input" id="oai-key-input" type="password" placeholder="sk-...">
+          <button class="key-save-btn" onclick="saveOaiKey()">Save key</button>
+          <div id="oai-key-status" style="font-size:11px;color:var(--text3);margin-top:5px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 2: Extract -->
+    <div class="talk-phase hidden" id="tp-extract">
+      <div class="extract-header">
+        <div class="extract-title">✨ Your best moments</div>
+        <div class="extract-sub" id="extract-sub-txt">Keep the ones that worked.</div>
+      </div>
+      <div class="extract-list" id="extract-list"></div>
+      <div class="extract-footer">
+        <button class="big-btn big-btn-primary" onclick="buildMap()">Build my map →</button>
+        <button class="big-btn big-btn-secondary" onclick="backToRecord()">← Record again</button>
+      </div>
+    </div>
+
+    <!-- Phase 3: Map built -->
+    <div class="talk-phase hidden" id="tp-built">
+      <div class="map-built-header">
+        <div class="map-built-icon">✅</div>
+        <div class="map-built-title">Map built</div>
+        <div class="map-built-sub">Your anchors are ready. Switch to the Map tab to use them on camera.</div>
+      </div>
+      <div class="map-built-list" id="built-list"></div>
+      <div class="extract-footer">
+        <button class="big-btn big-btn-primary" onclick="showPane('map',document.getElementById('tab-map'));initMapPane()">Go to Map →</button>
+        <button class="big-btn big-btn-secondary" onclick="backToRecord()">Record another take</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TRANSCRIPT PANE -->
+  <div class="pane transcript-pane" id="pane-trans">
+    <div class="trans-inner" id="trans-inner">
+      <div class="trans-empty" id="trans-empty">
+        <div class="trans-empty-icon">📝</div>
+        <div class="trans-empty-desc">Transcripts from your Talk sessions appear here. Record a take and tap "Find my best moments" to transcribe.</div>
+      </div>
+    </div>
+    <!-- Anthropic key for extraction -->
+    <div style="padding:0 12px 16px;flex-shrink:0;">
+      <div class="card-sm">
+        <span class="card-sm-label">Anthropic API Key (for moment extraction)</span>
+        <input class="key-input" id="ant-key-input" type="password" placeholder="sk-ant-...">
+        <button class="key-save-btn" onclick="saveAntKey()">Save key</button>
+        <div id="ant-key-status" style="font-size:11px;color:var(--text3);margin-top:5px;"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end .app -->
+
+<script>
+/* ── Storage keys (must match main app) ── */
+var EP_LIST_KEY = 'cadence_episodes';
+var EP_CUR_KEY  = 'cadence_current_episode';
+var OAI_KEY     = 'cadence_openai_key';
+var ANT_KEY     = 'cadence_api_key';
+var TRANS_KEY   = 'cadence_practice_transcripts';
+
+function epKey(base){
+  var id = null;
+  try{ id = localStorage.getItem(EP_CUR_KEY); }catch(e){}
+  return id ? base+'_'+id : base;
+}
+
+function getTalkMapKey(){ return epKey('cadence_map'); }
+
+function loadMap(){
+  try{ var s=localStorage.getItem(getTalkMapKey()); return s?JSON.parse(s):[]; }catch(e){ return []; }
+}
+
+function saveMap(anchors){
+  try{ localStorage.setItem(getTalkMapKey(), JSON.stringify(anchors)); }catch(e){}
+}
+
+function getCurrentEpisode(){
+  try{
+    var id = localStorage.getItem(EP_CUR_KEY);
+    var eps = JSON.parse(localStorage.getItem(EP_LIST_KEY)||'[]');
+    for(var i=0;i<eps.length;i++) if(eps[i].id===id) return eps[i];
+    return eps[0]||null;
+  }catch(e){ return null; }
+}
+
+function fmtTime(s){
+  var m=Math.floor(s/60); s=s%60;
+  return m+':'+(s<10?'0':'')+s;
+}
+
+function esc(s){ var d=document.createElement('div');d.textContent=s;return d.innerHTML; }
+
+/* ── Tab switching ── */
+function showPane(name, btn){
+  document.querySelectorAll('.pane').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('pane-'+name).classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(name==='map') initMapPane();
+  if(name==='talk') initTalkPane();
+  if(name==='trans') renderTranscripts();
+}
+
+/* ══════════════════════════════════════
+   MAP PANE
+══════════════════════════════════════ */
+var mapIdx = 0;
+var mapView = 'slide';
+
+function initMapPane(){
+  var anchors = loadMap();
+  var ep = getCurrentEpisode();
+  document.getElementById('header-ep').textContent = ep ? ep.title : 'No episode';
+
+  if(!anchors.length){
+    document.getElementById('map-empty-state').style.display = 'flex';
+    document.getElementById('map-content').style.display = 'none';
+    return;
+  }
+  document.getElementById('map-empty-state').style.display = 'none';
+  document.getElementById('map-content').style.display = 'flex';
+  mapIdx = 0;
+  renderMapSlide(anchors, 0);
+  renderMapList(anchors);
+}
+
+function renderMapSlide(anchors, idx){
+  var a = anchors[idx];
+  document.getElementById('map-slide-anchor').textContent = a.anchor || '—';
+  document.getElementById('map-slide-context').textContent = a.text ? (a.text.substring(0,100)+(a.text.length>100?'…':'')) : '';
+  document.getElementById('map-slide-num').textContent = (idx+1)+' / '+anchors.length;
+  document.getElementById('slide-prev').disabled = idx===0;
+  document.getElementById('slide-next').disabled = idx===anchors.length-1;
+}
+
+function mapNavSlide(dir){
+  var anchors = loadMap();
+  if(!anchors.length) return;
+  mapIdx = Math.max(0, Math.min(anchors.length-1, mapIdx+dir));
+  renderMapSlide(anchors, mapIdx);
+}
+
+function mapRestart(){
+  mapIdx = 0;
+  var anchors = loadMap();
+  if(anchors.length) renderMapSlide(anchors, 0);
+}
+
+function renderMapList(anchors){
+  var h='';
+  for(var i=0;i<anchors.length;i++){
+    h+='<div class="map-list-item" onclick="goToSlide('+i+')">';
+    h+='<span class="map-list-num">'+(i+1)+'</span>';
+    h+='<span class="map-list-anchor">'+esc(anchors[i].anchor)+'</span>';
+    h+='<span class="map-list-hint">'+esc((anchors[i].text||'').substring(0,50))+'</span>';
+    h+='<span class="map-list-go">▶</span>';
+    h+='</div>';
+  }
+  document.getElementById('map-list-wrap').innerHTML = h;
+}
+
+function goToSlide(idx){
+  mapIdx = idx;
+  setMapView('slide');
+  var anchors = loadMap();
+  renderMapSlide(anchors, idx);
+}
+
+function setMapView(v){
+  mapView = v;
+  document.getElementById('map-slide-view').style.display = v==='slide'?'flex':'none';
+  document.getElementById('map-list-view').style.display = v==='list'?'flex':'none';
+  document.getElementById('map-view-slide-btn').classList.toggle('active', v==='slide');
+  document.getElementById('map-view-list-btn').classList.toggle('active', v==='list');
+}
+
+/* ══════════════════════════════════════
+   TALK PANE — RECORD
+══════════════════════════════════════ */
+var recStream=null, recRecorder=null, recChunks=[], recBlob=null;
+var recInterval=null, recSecs=0, recIsRecording=false;
+
+function initTalkPane(){
+  var ep = getCurrentEpisode();
+  var el = document.getElementById('talk-ep-name');
+  if(el) el.textContent = ep ? ep.title : 'Current episode';
+  updateOaiKeyCard();
+}
+
+function setPhase(phase){
+  document.getElementById('tp-record').classList.toggle('hidden', phase!=='record');
+  document.getElementById('tp-extract').classList.toggle('hidden', phase!=='extract');
+  document.getElementById('tp-built').classList.toggle('hidden', phase!=='built');
+}
+
+async function toggleRecord(){
+  if(recIsRecording) stopRec();
+  else await startRec();
+}
+
+async function startRec(){
+  try{
+    recStream = await navigator.mediaDevices.getUserMedia({audio:true, video:false});
+  }catch(e){
+    document.getElementById('rec-status').textContent = 'Mic access denied — check permissions.';
+    return;
+  }
+  recChunks = [];
+  recBlob = null;
+  document.getElementById('playback').style.display='none';
+  document.getElementById('after-btns').style.display='none';
+
+  var mimes = ['audio/webm;codecs=opus','audio/webm','audio/mp4',''];
+  var mime = '';
+  for(var i=0;i<mimes.length;i++){
+    if(!mimes[i]||MediaRecorder.isTypeSupported(mimes[i])){ mime=mimes[i]; break; }
+  }
+  try{
+    recRecorder = mime ? new MediaRecorder(recStream,{mimeType:mime}) : new MediaRecorder(recStream);
+  }catch(e){
+    recRecorder = new MediaRecorder(recStream);
+  }
+
+  recRecorder.ondataavailable = function(e){ if(e.data&&e.data.size>0) recChunks.push(e.data); };
+  recRecorder.onstop = function(){
+    recBlob = new Blob(recChunks, {type: recRecorder.mimeType||'audio/webm'});
+    var url = URL.createObjectURL(recBlob);
+    var pb = document.getElementById('playback');
+    pb.src = url;
+    pb.style.display = 'block';
+    document.getElementById('after-btns').style.display = 'flex';
+    document.getElementById('rec-status').textContent = 'Done — '+fmtTime(recSecs)+'. Listen back or find your best moments.';
+  };
+
+  recRecorder.start(500);
+  recIsRecording = true; recSecs = 0;
+  document.getElementById('rec-btn').classList.add('recording');
+  document.getElementById('blink-dot').style.display = 'inline-block';
+  document.getElementById('rec-status').textContent = 'Recording…';
+  recInterval = setInterval(function(){
+    recSecs++;
+    document.getElementById('timer-val').textContent = fmtTime(recSecs);
+  }, 1000);
+}
+
+function stopRec(){
+  if(recRecorder&&recRecorder.state!=='inactive') recRecorder.stop();
+  if(recStream) recStream.getTracks().forEach(function(t){t.stop();});
+  clearInterval(recInterval);
+  document.getElementById('rec-btn').classList.remove('recording');
+  document.getElementById('blink-dot').style.display = 'none';
+  recIsRecording = false;
+}
+
+function resetTalk(){
+  stopRec();
+  recBlob=null; recChunks=[];
+  document.getElementById('playback').style.display='none';
+  document.getElementById('playback').src='';
+  document.getElementById('after-btns').style.display='none';
+  document.getElementById('timer-val').textContent='0:00';
+  document.getElementById('blink-dot').style.display='none';
+  document.getElementById('rec-status').textContent='Tap to talk';
+  setPhase('record');
+}
+
+function backToRecord(){ resetTalk(); }
+
+/* ══════════════════════════════════════
+   EXTRACT — FIND BEST MOMENTS
+══════════════════════════════════════ */
+var extractMoments = [];
+
+async function startExtract(){
+  if(!recBlob){ alert('No recording found.'); return; }
+  var oaiKey = ''; try{ oaiKey=localStorage.getItem(OAI_KEY)||''; }catch(e){}
+  var antKey = ''; try{ antKey=localStorage.getItem(ANT_KEY)||''; }catch(e){}
+
+  setPhase('extract');
+  document.getElementById('extract-list').innerHTML = '<div style="text-align:center;padding:40px;font-size:13px;color:var(--text3);">Transcribing…</div>';
+  document.getElementById('extract-sub-txt').textContent = 'Listening to what you said…';
+
+  var transcript = '';
+  if(oaiKey){
+    try{
+      var fd = new FormData();
+      fd.append('file', recBlob, 'talk.webm');
+      fd.append('model', 'whisper-1');
+      fd.append('response_format', 'text');
+      var resp = await fetch('https://api.openai.com/v1/audio/transcriptions',{
+        method:'POST', headers:{'Authorization':'Bearer '+oaiKey}, body:fd
+      });
+      if(resp.ok) transcript = await resp.text();
+    }catch(e){}
+  }
+
+  // Save transcript
+  if(transcript.trim()) saveTranscript(transcript);
+
+  if(!transcript.trim()){
+    document.getElementById('extract-list').innerHTML =
+      '<div style="padding:12px;">'+
+      '<div style="font-size:12px;color:var(--text3);margin-bottom:8px;">No OpenAI key or transcription failed. Paste transcript below:</div>'+
+      '<textarea id="manual-transcript" style="width:100%;height:130px;font-size:12px;font-family:var(--mono);padding:10px;border:1px solid var(--bdr);border-radius:var(--r);background:#fff;color:var(--text1);outline:none;resize:none;box-sizing:border-box;" placeholder="Paste your transcript here…"></textarea>'+
+      '<button onclick="manualExtract()" style="margin-top:8px;width:100%;padding:12px;background:var(--text1);color:var(--bg);border:none;border-radius:var(--r);font-size:14px;font-weight:700;font-family:var(--sans);cursor:pointer;">Find my best moments</button>'+
+      '</div>';
+    document.getElementById('extract-sub-txt').textContent = 'No OpenAI key — paste transcript manually.';
+    return;
+  }
+
+  await runExtraction(transcript, antKey);
+}
+
+async function manualExtract(){
+  var ta = document.getElementById('manual-transcript');
+  var text = ta ? ta.value.trim() : '';
+  if(!text){ alert('Paste your transcript first.'); return; }
+  if(text) saveTranscript(text);
+  var antKey = ''; try{ antKey=localStorage.getItem(ANT_KEY)||''; }catch(e){}
+  document.getElementById('extract-list').innerHTML = '<div style="text-align:center;padding:40px;font-size:13px;color:var(--text3);">Finding your best moments…</div>';
+  await runExtraction(text, antKey);
+}
+
+async function runExtraction(transcript, antKey){
+  document.getElementById('extract-sub-txt').textContent = 'Finding your best moments…';
+  if(!antKey){
+    var sents = transcript.split(/[.!?]+/).filter(function(s){return s.trim().length>15;});
+    var moments = sents.slice(0,6).map(function(s){
+      return{text:s.trim(), why:'Add Anthropic key for smarter selection', anchor:s.trim().split(/\s+/).slice(0,2).join(' '), kept:false};
+    });
+    renderExtract(moments); return;
+  }
+  try{
+    var prompt =
+      'You are helping a comedy performer who thinks out loud on camera. He just recorded himself talking freely about an album or artist.\n\n'+
+      'Find his 5-7 best moments — the observations that are specific, the lines that surprised even him, the bits where his natural voice comes through strongest.\n\n'+
+      'For each moment:\n1. Exact quote (verbatim)\n2. Why it works (one sentence)\n3. 1-3 word anchor — shortest possible reminder\n\n'+
+      'Return ONLY valid JSON:\n{"moments":[{"text":"exact quote","why":"why it works","anchor":"anchor"}]}\n\n'+
+      'Transcript:\n'+transcript.substring(0,3000);
+    var resp = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':antKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-6', max_tokens:1500, messages:[{role:'user',content:prompt}]})
+    });
+    var data = await resp.json();
+    var raw = (data.content&&data.content[0]&&data.content[0].text)||'';
+    raw = raw.replace(/```json|```/g,'').trim();
+    var result = JSON.parse(raw);
+    var moments = (result.moments||[]).map(function(m){return Object.assign({kept:false},m);});
+    renderExtract(moments);
+  }catch(e){
+    var sents = transcript.split(/[.!?]+/).filter(function(s){return s.trim().length>15;});
+    var moments = sents.slice(0,6).map(function(s){
+      return{text:s.trim(), why:'', anchor:s.trim().split(/\s+/).slice(0,2).join(' '), kept:false};
+    });
+    renderExtract(moments);
+  }
+}
+
+function renderExtract(moments){
+  extractMoments = moments;
+  document.getElementById('extract-sub-txt').textContent = 'Keep the ones that worked. Skip the rest.';
+  var h='';
+  for(var i=0;i<moments.length;i++){
+    var m=moments[i];
+    h+='<div class="extract-item" id="ei-'+i+'">';
+    h+='<div class="extract-quote">'+esc(m.text.substring(0,200))+(m.text.length>200?'…':'')+'</div>';
+    if(m.why) h+='<div class="extract-why">→ '+esc(m.why)+'</div>';
+    h+='<div class="extract-anchor-row">Anchor: <b>'+esc(m.anchor)+'</b></div>';
+    h+='<div class="extract-btns"><button class="keep-btn" onclick="keepM('+i+')">✔ Keep</button><button class="skip-btn" onclick="skipM('+i+')">Skip</button></div>';
+    h+='</div>';
+  }
+  if(!h) h='<div style="padding:24px;text-align:center;font-size:13px;color:var(--text3);">Nothing extracted. Try a longer take.</div>';
+  document.getElementById('extract-list').innerHTML = h;
+}
+
+function keepM(i){
+  extractMoments[i].kept=true;
+  var el=document.getElementById('ei-'+i);
+  if(el) el.classList.add('kept');
+  var btn=el.querySelector('.keep-btn');
+  if(btn){btn.textContent='✔ Kept';btn.disabled=true;}
+}
+
+function skipM(i){
+  extractMoments[i].kept=false;
+  var el=document.getElementById('ei-'+i);
+  if(el) el.classList.add('skipped');
+}
+
+function buildMap(){
+  var kept = extractMoments.filter(function(m){return m.kept;});
+  if(!kept.length){ if(!confirm('No moments kept. Use all?')) return; kept=extractMoments; }
+  saveMap(kept);
+  renderBuiltList(kept);
+  setPhase('built');
+}
+
+function renderBuiltList(anchors){
+  var h='';
+  for(var i=0;i<anchors.length;i++){
+    h+='<div class="built-anchor"><span class="built-num">'+(i+1)+'</span><span class="built-word">'+esc(anchors[i].anchor)+'</span><span class="built-hint">'+esc((anchors[i].text||'').substring(0,50))+'</span></div>';
+  }
+  document.getElementById('built-list').innerHTML=h;
+}
+
+/* ══════════════════════════════════════
+   TRANSCRIPTS
+══════════════════════════════════════ */
+function saveTranscript(text){
+  try{
+    var all = JSON.parse(localStorage.getItem(TRANS_KEY)||'[]');
+    all.unshift({
+      text: text,
+      date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),
+      ep: (getCurrentEpisode()||{}).title||''
+    });
+    if(all.length>20) all=all.slice(0,20);
+    localStorage.setItem(TRANS_KEY, JSON.stringify(all));
+  }catch(e){}
+}
+
+function renderTranscripts(){
+  var el = document.getElementById('trans-inner');
+  var emptyEl = document.getElementById('trans-empty');
+  try{
+    var all = JSON.parse(localStorage.getItem(TRANS_KEY)||'[]');
+    if(!all.length){ if(emptyEl) emptyEl.style.display='flex'; return; }
+    if(emptyEl) emptyEl.style.display='none';
+    var h='';
+    for(var i=0;i<all.length;i++){
+      var t=all[i];
+      h+='<div class="trans-saved">';
+      h+='<div class="trans-saved-meta">'+esc(t.date)+(t.ep?' — '+esc(t.ep):'')+'</div>';
+      h+='<div class="trans-saved-text">'+esc(t.text.substring(0,600))+(t.text.length>600?'…':'')+'</div>';
+      h+='</div>';
+    }
+    el.innerHTML = h;
+  }catch(e){}
+}
+
+/* ── Key management ── */
+function updateOaiKeyCard(){
+  var key=''; try{key=localStorage.getItem(OAI_KEY)||'';}catch(e){}
+  var wrap=document.getElementById('oai-key-wrap');
+  if(key&&wrap) wrap.style.display='none';
+  var el=document.getElementById('oai-key-input');
+  if(el&&key) el.value=key;
+}
+
+function saveOaiKey(){
+  var val=document.getElementById('oai-key-input').value.trim();
+  if(!val){alert('Paste your OpenAI key first.');return;}
+  try{localStorage.setItem(OAI_KEY,val);}catch(e){}
+  document.getElementById('oai-key-status').textContent='Saved.';
+  setTimeout(function(){document.getElementById('oai-key-wrap').style.display='none';},800);
+}
+
+function saveAntKey(){
+  var val=document.getElementById('ant-key-input').value.trim();
+  if(!val){alert('Paste your Anthropic key first.');return;}
+  try{localStorage.setItem(ANT_KEY,val);}catch(e){}
+  document.getElementById('ant-key-status').textContent='Saved.';
+}
+
+/* ── Init ── */
+(function(){
+  var ep = getCurrentEpisode();
+  document.getElementById('header-ep').textContent = ep ? ep.title : 'No episode — open full app first';
+  document.getElementById('talk-ep-name').textContent = ep ? ep.title : 'Current episode';
+  initMapPane();
+  updateOaiKeyCard();
+})();
+</script>
+</body>
+</html>
